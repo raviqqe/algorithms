@@ -1,3 +1,5 @@
+use core::cmp::Ordering;
+
 pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
     let mut middle = xs.len() / 2;
     let mut left = 0;
@@ -6,12 +8,10 @@ pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
     while left < right {
         let x = &xs[middle];
 
-        if x == y {
-            return Ok(middle);
-        } else if y > x {
-            left = middle + 1;
-        } else {
-            right = middle;
+        match x.cmp(y) {
+            Ordering::Equal => return Ok(middle),
+            Ordering::Less => left = middle + 1,
+            Ordering::Greater => right = middle,
         }
 
         middle = (left + right) / 2;
