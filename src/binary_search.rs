@@ -1,28 +1,23 @@
 pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
-    let mut index = xs.len() / 2;
-    let mut step = xs.len();
+    let mut middle = xs.len() / 2;
+    let mut left = 0;
+    let mut right = xs.len();
 
-    while index < xs.len() {
-        step = step / 2;
-
-        let x = &xs[index];
+    while left < right {
+        let x = &xs[middle];
 
         if x == y {
-            return Ok(index);
-        }
-
-        let less = y < x;
-
-        if step == 0 {
-            return Err(index + if less { 0 } else { 1 });
-        } else if less {
-            index -= step;
+            return Ok(middle);
+        } else if y > x {
+            left = middle + 1;
         } else {
-            index += step;
+            right = middle;
         }
+
+        middle = (left + right) / 2;
     }
 
-    Err(index)
+    Err(left)
 }
 
 #[cfg(test)]
