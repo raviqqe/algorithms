@@ -6,9 +6,7 @@ pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
     let mut right = xs.len();
 
     while left < right {
-        let x = &xs[middle];
-
-        match x.cmp(y) {
+        match xs[middle].cmp(y) {
             Ordering::Equal => return Ok(middle),
             Ordering::Less => left = middle + 1,
             Ordering::Greater => right = middle,
