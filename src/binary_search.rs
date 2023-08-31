@@ -13,14 +13,12 @@ pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
 
         let less = y < x;
 
-        if less {
+        if step == 0 {
+            return Err(index + if less { 0 } else { 1 });
+        } else if less {
             index -= step;
         } else {
             index += step;
-        }
-
-        if step == 0 {
-            return Err(index + if less { 0 } else { 1 });
         }
     }
 
