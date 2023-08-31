@@ -1,18 +1,17 @@
 use core::cmp::Ordering;
 
 pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
-    let mut middle = xs.len() / 2;
     let mut left = 0;
     let mut right = xs.len();
 
     while left < right {
+        let middle = (left + right) / 2;
+
         match xs[middle].cmp(y) {
             Ordering::Equal => return Ok(middle),
             Ordering::Less => left = middle + 1,
             Ordering::Greater => right = middle,
         }
-
-        middle = (left + right) / 2;
     }
 
     Err(left)
