@@ -1,54 +1,15 @@
 //! Put Marbles in Bags.
 
 pub fn marble_bag(weights: Vec<i32>, bag_count: i32) -> i64 {
-    let mut min = i64::MAX;
-    let mut max = i64::MIN;
+    let mut xs = Vec::with_capacity(weights.len() - 1);
+    xs.extend((0..weights.len() - 1).map(|i| (weights[i] + weights[i + 1]) as i64));
+    xs.sort();
 
-    take_marble(
-        0,
-        weights[0],
-        &weights,
-        bag_count as usize,
-        &mut min,
-        &mut max,
-    );
-
-    max - min
-}
-
-fn take_marble(
-    sum: i64,
-    first_weight: i32,
-    weights: &[i32],
-    bag_count: usize,
-    min: &mut i64,
-    max: &mut i64,
-) {
-    if weights.len() == 1 {
-        debug_assert!(bag_count == 1);
-
-        let sum = sum + (first_weight as i64 + *weights.last().unwrap() as i64);
-
-        *min = sum.min(*min);
-        *max = sum.max(*max);
-
-        return;
-    }
-
-    if weights.len() > bag_count {
-        take_marble(sum, first_weight, &weights[1..], bag_count, min, max);
-    }
-
-    if bag_count > 1 {
-        take_marble(
-            sum + first_weight as i64 + weights[0] as i64,
-            weights[1],
-            &weights[1..],
-            bag_count - 1,
-            min,
-            max,
-        );
-    }
+    xs[xs.len() + 1 - bag_count as usize..]
+        .iter()
+        .copied()
+        .sum::<i64>()
+        - xs[..bag_count as usize - 1].iter().copied().sum::<i64>()
 }
 
 #[cfg(test)]
@@ -57,10 +18,24 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn test() {
+    fn small_input() {
         assert_eq!(marble_bag(vec![1], 1), 0);
         assert_eq!(marble_bag(vec![1, 1], 1), 0);
         assert_eq!(marble_bag(vec![1, 1, 1], 2), 0);
         assert_eq!(marble_bag(vec![1, 3, 5, 1], 2), 4);
+    }
+
+    #[test]
+    fn large_input() {
+        assert_eq!(
+            marble_bag(
+                vec![
+                    1, 5, 64, 42, 40, 60, 7, 54, 25, 71, 11, 17, 2, 52, 54, 41, 1, 28, 2, 1, 68,
+                    13, 25, 16, 26, 39, 36, 24, 13, 61, 51, 11, 3, 36, 58, 15
+                ],
+                17
+            ),
+            850
+        );
     }
 }
