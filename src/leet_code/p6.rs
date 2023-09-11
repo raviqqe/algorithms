@@ -1,3 +1,3 @@
-pub fn convert(s: String, num_rows: i32) -> String {
+pub fn convert(s: String, row_count: i32) -> String {
     "".into()
 }
