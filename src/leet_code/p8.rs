@@ -1,4 +1,4 @@
-pub fn atoi(s: String) -> i32 {
+pub fn parse(s: String) -> i32 {
     let xs = s.as_bytes();
     let mut i = 0;
     let mut y = 0i32;
@@ -40,36 +40,36 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!(atoi("0".into()), 0);
-        assert_eq!(atoi("1".into()), 1);
-        assert_eq!(atoi("+1".into()), 1);
-        assert_eq!(atoi("-1".into()), -1);
+        assert_eq!(parse("0".into()), 0);
+        assert_eq!(parse("1".into()), 1);
+        assert_eq!(parse("+1".into()), 1);
+        assert_eq!(parse("-1".into()), -1);
     }
 
     #[test]
     fn digits() {
-        assert_eq!(atoi("42".into()), 42);
-        assert_eq!(atoi("1234".into()), 1234);
-        assert_eq!(atoi("+42".into()), 42);
-        assert_eq!(atoi("+1234".into()), 1234);
-        assert_eq!(atoi("-42".into()), -42);
-        assert_eq!(atoi("-1234".into()), -1234);
+        assert_eq!(parse("42".into()), 42);
+        assert_eq!(parse("1234".into()), 1234);
+        assert_eq!(parse("+42".into()), 42);
+        assert_eq!(parse("+1234".into()), 1234);
+        assert_eq!(parse("-42".into()), -42);
+        assert_eq!(parse("-1234".into()), -1234);
     }
 
     #[test]
     fn space() {
-        assert_eq!(atoi(" 1".into()), 1);
-        assert_eq!(atoi("  1".into()), 1);
+        assert_eq!(parse(" 1".into()), 1);
+        assert_eq!(parse("  1".into()), 1);
     }
 
     #[test]
     fn invalid() {
-        assert_eq!(atoi("words and 987".into()), 0);
-        assert_eq!(atoi("+-12".into()), 0);
+        assert_eq!(parse("words and 987".into()), 0);
+        assert_eq!(parse("+-12".into()), 0);
     }
 
     #[test]
     fn big() {
-        assert_eq!(atoi("-91283472332".into()), -2147483648);
+        assert_eq!(parse("-91283472332".into()), -2147483648);
     }
 }
