@@ -8,9 +8,11 @@ pub fn pascal_triangle(row_count: i32) -> Vec<Vec<i32>> {
         xs.push(
             (0..i + 1)
                 .map(|j| {
-                    xs.get(i - 1)
-                        .map(|xs| xs[j] + xs.get(j + 1).copied().unwrap_or_default())
-                        .unwrap_or(1) as i32
+                    if let Some(xs) = xs.get(i - 1) {
+                        xs[j] + xs.get(j + 1).copied().unwrap_or_default()
+                    } else {
+                        1
+                    }
                 })
                 .collect(),
         );
