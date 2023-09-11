@@ -5,7 +5,7 @@ pub fn length_of_longest_substring(s: String) -> i32 {
     let mut cs = HashSet::<char>::new();
     let mut len = 0;
 
-    for c in s.chars() {
+    for c in s.chars().chain(['\0']) {
         if cs.contains(&c) {
             max = max.max(len);
             cs = [c].into_iter().collect();
@@ -26,6 +26,8 @@ mod tests {
 
     #[test]
     fn simple() {
+        assert_eq!(length_of_longest_substring("".into()), 0);
+        assert_eq!(length_of_longest_substring(" ".into()), 1);
         assert_eq!(length_of_longest_substring("abcabcbb".into()), 3);
         assert_eq!(length_of_longest_substring("bbbbb".into()), 1);
         assert_eq!(length_of_longest_substring("abcabcdbb".into()), 4);
