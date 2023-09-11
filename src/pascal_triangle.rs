@@ -1,3 +1,5 @@
+//! Pascal's triangle.
+
 use alloc::vec;
 use alloc::vec::Vec;
 
