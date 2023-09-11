@@ -20,7 +20,7 @@ pub fn atoi(s: String) -> i32 {
     while i < xs.len() && is_digit(xs[i]) {
         let x = xs[i];
 
-        y = y * 10 + s * (x - b'0') as i32;
+        y = y.saturating_mul(10).saturating_add(s * (x - b'0') as i32);
         i += 1;
     }
 
@@ -63,5 +63,10 @@ mod tests {
     #[test]
     fn invalid() {
         assert_eq!(atoi("words and 987".into()), 0);
+    }
+
+    #[test]
+    fn big() {
+        assert_eq!(atoi("-91283472332".into()), -2147483648);
     }
 }
