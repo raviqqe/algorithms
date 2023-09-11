@@ -26,6 +26,8 @@ mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
 
+    // spell-checker: disable
+
     #[test]
     fn zero() {
         assert_eq!(longest_palindrome("".into()), "".to_string());
