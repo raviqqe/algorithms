@@ -1,5 +1,3 @@
-//! Pascal's triangle.
-
 pub fn pascal_triangle(row_count: i32) -> Vec<Vec<i32>> {
     let mut xs = vec![] as Vec<Vec<i32>>;
 

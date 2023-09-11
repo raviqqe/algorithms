@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
-    let mut xs = HashMap::<i32, usize>::with_capacity(nums.len());
+pub fn two_sum(ns: Vec<i32>, target: i32) -> Vec<i32> {
+    let mut xs = HashMap::<i32, usize>::with_capacity(ns.len());
 
-    for (i, &x) in nums.iter().enumerate() {
+    for (i, &x) in ns.iter().enumerate() {
         if let Some(j) = xs.get(&(target - x)) {
             return vec![*j as i32, i as i32];
         }

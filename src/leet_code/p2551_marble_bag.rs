@@ -1,5 +1,3 @@
-//! Put Marbles in Bags.
-
 pub fn marble_bag(weights: Vec<i32>, bag_count: i32) -> i64 {
     let mut xs = Vec::with_capacity(weights.len() - 1);
     xs.extend((0..weights.len() - 1).map(|i| (weights[i] + weights[i + 1]) as i64));
