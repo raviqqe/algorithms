@@ -24,5 +24,6 @@ mod tests {
     fn test() {
         assert_eq!(convert("".into(), 0), "".to_string());
         assert_eq!(convert("foo".into(), 3), "foo".to_string());
+        assert_eq!(convert("PAYPALISHIRING", 3), "PINALSIGYAHRPI");
     }
 }
