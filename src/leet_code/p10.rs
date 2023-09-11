@@ -2,9 +2,8 @@ pub fn is_match(s: String, p: String) -> bool {
     let xs = s.as_bytes();
     let ys = p.as_bytes();
     let mut i = 0;
-    let mut j = 0;
 
-    while j < ys.len() {
+    for j in 0..ys.len() {
         if ys[j] == b'*' {
         } else if ys.get(j + 1) == Some(&b'*') {
             while i < xs.len() && (ys[j] == b'.' || xs[i] == ys[j]) {
@@ -17,11 +16,9 @@ pub fn is_match(s: String, p: String) -> bool {
 
             i += 1;
         }
-
-        j += 1;
     }
 
-    i == xs.len() && j == ys.len()
+    i == xs.len()
 }
 
 #[cfg(test)]
