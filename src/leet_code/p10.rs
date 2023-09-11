@@ -53,6 +53,10 @@ mod tests {
         assert_eq!(is_match("aa".into(), "a*".into()), true);
         assert_eq!(is_match("aaa".into(), "a*".into()), true);
         assert_eq!(is_match("ab".into(), "..".into()), true);
+    }
+
+    #[test]
+    fn non_exhaustive_asterisk() {
         assert_eq!(is_match("aaa".into(), "a*a".into()), true);
     }
 }
