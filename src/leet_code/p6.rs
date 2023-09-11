@@ -29,5 +29,6 @@ mod tests {
         assert_eq!(convert("".into(), 1), "".to_string());
         assert_eq!(convert("foo".into(), 3), "foo".to_string());
         assert_eq!(convert("PAYPALISHIRING".into(), 3), "PAHNAPLSIIGYIR");
+        assert_eq!(convert("PAYPALISHIRING".into(), 4), "PINALSIGYAHRPI");
     }
 }
