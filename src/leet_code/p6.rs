@@ -31,7 +31,7 @@ mod tests {
     // spell-checker: disable
 
     #[test]
-    fn test() {
+    fn simple() {
         assert_eq!(convert("".into(), 1), "".to_string());
         assert_eq!(convert("a".into(), 1), "a".to_string());
         assert_eq!(convert("ab".into(), 1), "ab".to_string());

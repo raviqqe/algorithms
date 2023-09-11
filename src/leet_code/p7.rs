@@ -19,7 +19,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn test() {
+    fn simple() {
         assert_eq!(reverse(0), 0);
         assert_eq!(reverse(1), 1);
         assert_eq!(reverse(2), 2);
