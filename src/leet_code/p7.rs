@@ -21,5 +21,6 @@ mod tests {
         assert_eq!(reverse(2), 2);
         assert_eq!(reverse(42), 24);
         assert_eq!(reverse(-42), -24);
+        assert_eq!(reverse(120), 21);
     }
 }
