@@ -3,7 +3,7 @@ pub fn is_palindrome(x: i32) -> bool {
         || x > 0 && {
             let n = x.ilog10();
 
-            (0..n / 2).all(|i| digit(x, i) == digit(x, n - i))
+            (0..(n + 1) / 2).all(|i| digit(x, i) == digit(x, n - i))
         }
 }
 
