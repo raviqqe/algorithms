@@ -13,12 +13,11 @@ pub fn length_of_longest_substring(s: String) -> i32 {
                 ys.remove(&xs[i]);
                 i += 1;
             }
-
-            ys.insert(x);
         } else {
             max = max.max(j - i + 1);
-            ys.insert(x);
         }
+
+        ys.insert(x);
     }
 
     max as i32
