@@ -9,7 +9,7 @@ pub fn reverse(mut x: i32) -> i32 {
         x /= 10;
     }
 
-    0
+    y
 }
 
 #[cfg(test)]
