@@ -1,9 +1,10 @@
 pub fn is_palindrome(x: i32) -> bool {
-    x >= 0 && {
-        let n = x.ilog10();
+    x == 0
+        || x > 0 && {
+            let n = x.ilog10();
 
-        (0..n / 2).all(|i| digit(x, i) == digit(x, n - i))
-    }
+            (0..n / 2).all(|i| digit(x, i) == digit(x, n - i))
+        }
 }
 
 fn digit(x: i32, y: u32) -> i32 {
@@ -17,6 +18,7 @@ mod tests {
 
     #[test]
     fn simple() {
+        assert_eq!(is_palindrome(0), true);
         assert_eq!(is_palindrome(-1), false);
         assert_eq!(is_palindrome(1), true);
         assert_eq!(is_palindrome(11), true);
