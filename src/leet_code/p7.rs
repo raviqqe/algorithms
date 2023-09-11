@@ -14,8 +14,6 @@ mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
 
-    // spell-checker: disable
-
     #[test]
     fn test() {
         assert_eq!(reverse(0), 0);
