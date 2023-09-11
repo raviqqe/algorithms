@@ -1,3 +1,6 @@
-pub mod p118_pascal_triangle;
-pub mod p1_two_sum;
-pub mod p2551_marble_bag;
+pub mod p1;
+pub mod p118;
+pub mod p2;
+pub mod p2551;
+pub mod p3;
+pub mod p4;
