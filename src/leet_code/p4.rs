@@ -1,3 +1,5 @@
+// TODO Use binary search.
+// https://leetcode.com/problems/median-of-two-sorted-arrays/solutions/4009065/best-o-log-min-n1-n2-solution/
 pub fn find_median_sorted_arrays(xs: Vec<i32>, ys: Vec<i32>) -> f64 {
     let mut zs = xs.iter().chain(&ys).copied().collect::<Vec<_>>();
 
