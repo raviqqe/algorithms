@@ -11,10 +11,12 @@ pub fn pascal_triangle(row_count: i32) -> Vec<Vec<i32>> {
         let mut ys = Vec::with_capacity(len);
 
         for j in 0..len {
-            ys.push(if let Some(xs) = xs.get(i.saturating_sub(1)) {
-                (if j == 0 { 0 } else { xs[j - 1] }) + xs.get(j).copied().unwrap_or_default()
-            } else {
+            ys.push(if i == 0 {
                 1
+            } else {
+                let xs = &xs[i - 1];
+
+                (if j == 0 { 0 } else { xs[j - 1] }) + xs.get(j).copied().unwrap_or_default()
             });
         }
 
