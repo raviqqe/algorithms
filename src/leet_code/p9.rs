@@ -1,27 +1,16 @@
 pub fn is_palindrome(x: i32) -> bool {
-    match x {
-        0 => true,
-        x if x < 0 => false,
-        x => {
-            let n = x.ilog10();
-            let m = 10i32.pow(n);
-            let mut d = 1;
+    x >= 0
+        && x == {
+            let mut x = x;
+            let mut y = 0;
 
-            for _ in 0..(n + 1) / 2 {
-                if digit(x, d) != digit(x, m / d) {
-                    return false;
-                }
-
-                d *= 10;
+            while x != 0 {
+                y = y * 10 + x % 10;
+                x /= 10;
             }
 
-            true
+            y
         }
-    }
-}
-
-fn digit(x: i32, y: i32) -> i32 {
-    x / y % 10
 }
 
 #[cfg(test)]
