@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
 pub fn length_of_longest_substring(s: String) -> i32 {
-    dbg!("START");
     let xs = s.as_bytes();
 
     let mut max = 0;
