@@ -1,35 +1,66 @@
 //! Put Marbles in Bags.
 
-use alloc::vec;
-use alloc::vec::Vec;
+pub fn marble_bag(weights: Vec<i32>, bag_count: i32) -> i64 {
+    let mut min = i64::MAX;
+    let mut max = i64::MIN;
 
-pub fn marble_bag(row_count: i32) -> Vec<Vec<i32>> {
-    let mut xs = vec![] as Vec<Vec<i32>>;
+    take_marble(
+        0,
+        weights[0],
+        &weights,
+        bag_count as usize,
+        &mut min,
+        &mut max,
+    );
 
-    for i in 0..row_count as usize {
-        let len = i + 1;
-        let mut ys = Vec::with_capacity(len);
+    max - min
+}
 
-        for j in 0..len {
-            ys.push(if i == 0 {
-                1
-            } else {
-                let xs = &xs[i - 1];
+fn take_marble(
+    sum: i64,
+    first_weight: i32,
+    weights: &[i32],
+    bag_count: usize,
+    min: &mut i64,
+    max: &mut i64,
+) {
+    if weights.len() == 1 {
+        debug_assert!(bag_count == 1);
 
-                (if j == 0 { 0 } else { xs[j - 1] }) + xs.get(j).copied().unwrap_or_default()
-            });
-        }
+        let sum = sum + (first_weight as i64 + *weights.last().unwrap() as i64);
 
-        xs.push(ys);
+        *min = sum.min(*min);
+        *max = sum.max(*max);
+
+        return;
     }
 
-    xs
+    if weights.len() > bag_count {
+        take_marble(sum, first_weight, &weights[1..], bag_count, min, max);
+    }
+
+    if bag_count > 1 {
+        take_marble(
+            sum + first_weight as i64 + weights[0] as i64,
+            weights[1],
+            &weights[1..],
+            bag_count - 1,
+            min,
+            max,
+        );
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
-    fn test() {}
+    fn test() {
+        assert_eq!(marble_bag(vec![1], 1), 0);
+        assert_eq!(marble_bag(vec![1, 1], 1), 0);
+        assert_eq!(marble_bag(vec![1, 1, 1], 2), 0);
+        assert_eq!(marble_bag(vec![1, 3, 5, 1], 2), 4);
+    }
 }
