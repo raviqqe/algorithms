@@ -53,5 +53,6 @@ mod tests {
         assert_eq!(is_match("aa".into(), "a*".into()), true);
         assert_eq!(is_match("aaa".into(), "a*".into()), true);
         assert_eq!(is_match("ab".into(), "..".into()), true);
+        assert_eq!(is_match("aaa".into(), "a*a".into()), true);
     }
 }
