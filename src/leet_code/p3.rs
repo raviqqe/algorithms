@@ -30,6 +30,7 @@ mod tests {
 
     #[test]
     fn simple() {
+        // spell-checker: disable
         assert_eq!(length_of_longest_substring("".into()), 0);
         assert_eq!(length_of_longest_substring(" ".into()), 1);
         assert_eq!(length_of_longest_substring("abcabcbb".into()), 3);
