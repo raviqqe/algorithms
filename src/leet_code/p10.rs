@@ -20,7 +20,7 @@ pub fn is_match(s: String, p: String) -> bool {
         y = z;
     }
 
-    xs.count() == 0
+    xs.next().is_none()
 }
 
 #[cfg(test)]
