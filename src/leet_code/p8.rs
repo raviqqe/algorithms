@@ -3,21 +3,23 @@ pub fn atoi(s: String) -> i32 {
     let mut i = 0;
     let mut y = 0i32;
 
-    while xs[i] == b' ' {
+    while xs.get(i) == Some(&b' ') {
         i += 1;
     }
 
-    if !is_digit(xs[i]) && !b"+-".contains(&xs[i]) {
-        return 0;
-    }
+    let s = match xs.get(i) {
+        Some(b'-') => {
+            i += 1;
+            -1
+        }
+        Some(b'+') => {
+            i += 1;
+            1
+        }
+        _ => 1,
+    };
 
-    let s = if xs[i] == b'-' { -1 } else { 1 };
-
-    while !is_digit(xs[i]) {
-        i += 1;
-    }
-
-    while i < xs.len() && is_digit(xs[i]) {
+    while is_digit(xs.get(i)) {
         let x = xs[i];
 
         y = y.saturating_mul(10).saturating_add(s * (x - b'0') as i32);
@@ -27,8 +29,8 @@ pub fn atoi(s: String) -> i32 {
     y
 }
 
-fn is_digit(x: u8) -> bool {
-    matches!(x, b'0'..=b'9')
+fn is_digit(x: Option<&u8>) -> bool {
+    matches!(x, Some(b'0'..=b'9'))
 }
 
 #[cfg(test)]
@@ -63,6 +65,7 @@ mod tests {
     #[test]
     fn invalid() {
         assert_eq!(atoi("words and 987".into()), 0);
+        assert_eq!(atoi("+-12".into()), 0);
     }
 
     #[test]
