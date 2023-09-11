@@ -1,8 +1,12 @@
 pub fn reverse(mut x: i32) -> i32 {
-    let mut y = 0;
+    let mut y = 0i32;
 
     while x != 0 {
-        y = y * 10 + x % 10;
+        let Some(z) = y.checked_mul(10).and_then(|y| y.checked_add(x % 10)) else {
+            return 0;
+        };
+
+        y = z;
         x /= 10;
     }
 
@@ -22,5 +26,6 @@ mod tests {
         assert_eq!(reverse(42), 24);
         assert_eq!(reverse(-42), -24);
         assert_eq!(reverse(120), 21);
+        assert_eq!(reverse(1534236469), 0);
     }
 }
