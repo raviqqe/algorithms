@@ -20,3 +20,20 @@ pub fn pascal_triangle(row_count: i32) -> Vec<Vec<i32>> {
 
     xs
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test() {
+        assert_eq!(pascal_triangle(0), vec![] as Vec<Vec<_>>);
+        assert_eq!(pascal_triangle(1), vec![vec![1]]);
+        assert_eq!(pascal_triangle(2), vec![vec![1], vec![1, 1]]);
+        assert_eq!(pascal_triangle(3), vec![vec![1], vec![1, 1], vec![1, 2, 1]]);
+        assert_eq!(
+            pascal_triangle(4),
+            vec![vec![1], vec![1, 1], vec![1, 2, 1], vec![1, 3, 3, 1]]
+        );
+    }
+}
