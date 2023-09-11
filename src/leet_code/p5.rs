@@ -1,32 +1,24 @@
 pub fn longest_palindrome(s: String) -> String {
     let xs = s.as_bytes();
-    let mut s = b"" as &[u8];
+    let mut ys = b"" as &[u8];
 
     for i in 0..xs.len() {
-        for j in i..xs.len() {
-            let ys = &xs[i..j + 1];
+        for k in 0..2 {
+            for j in 0.. {
+                if i >= j && xs.get(i - j) == xs.get(i + j + k) {
+                    let zs = &xs[i - j..i + j + k + 1];
 
-            for k in 0..2 {
-                let j = j + k;
-
-                if j + ys.len() > xs.len() {
-                    continue;
-                }
-
-                let zs = &xs[j..j + ys.len()];
-
-                if ys.len() == zs.len() && ys.iter().zip(zs.iter().rev()).all(|(y, z)| y == z) {
-                    let vs = &xs[i..j + ys.len()];
-
-                    if vs.len() > s.len() {
-                        s = vs;
+                    if zs.len() > ys.len() {
+                        ys = zs;
                     }
+                } else {
+                    break;
                 }
             }
         }
     }
 
-    String::from_utf8(s.to_vec()).unwrap()
+    String::from_utf8(ys.to_vec()).unwrap()
 }
 
 #[cfg(test)]
@@ -54,6 +46,7 @@ mod tests {
 
     #[test]
     fn more() {
+        assert_eq!(longest_palindrome("aaaa".into()), "aaaa".to_string());
         assert_eq!(longest_palindrome("abcba".into()), "abcba".to_string());
         assert_eq!(longest_palindrome("xabcbay".into()), "abcba".to_string());
     }
