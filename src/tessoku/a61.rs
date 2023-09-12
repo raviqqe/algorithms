@@ -9,5 +9,5 @@ pub fn run() {
         .map(|s| s.split(' ').collect::<Vec<_>>())
         .collect::<Vec<_>>();
 
-    let [n, m] = &xs[0];
+    let [n, m] = &xs[0][..] else { return };
 }
