@@ -1,3 +1,4 @@
+// TODO Simplify indexing.
 pub fn is_match(s: String, p: String) -> bool {
     let xs = s.as_bytes();
     let ys = p.as_bytes();
