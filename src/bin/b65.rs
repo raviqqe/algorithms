@@ -47,7 +47,7 @@ fn visit(x: usize, ys: &[HashSet<usize>], zs: &mut [usize]) {
     for &y in &ys[x] {
         if zs[y] == usize::MAX {
             visit(y, ys, zs);
-            zs[x] += zs[y] + 1;
+            zs[x] = zs[x].max(zs[y] + 1);
         }
     }
 }
