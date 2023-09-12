@@ -1,5 +1,6 @@
 use std::{
-    collections::{HashMap, VecDeque},
+    cmp::{Ordering, Reverse},
+    collections::{BinaryHeap, HashMap},
     io::{stdin, Read},
 };
 
@@ -33,29 +34,53 @@ fn main() {
         ys[j].insert(i, w);
     }
 
-    let mut zs = vec![usize::MAX; *n];
-
-    distance(&ys, &mut zs);
-
-    for z in zs {
+    for z in distance(&ys) {
         println!("{}", if z == usize::MAX { -1 } else { z as isize });
     }
 }
 
-fn distance(ys: &[HashMap<usize, usize>], zs: &mut [usize]) {
-    let mut q = VecDeque::new();
+fn distance(ys: &[HashMap<usize, usize>]) -> Vec<usize> {
+    let mut zs = vec![usize::MAX; ys.len()];
+    let mut bs = vec![false; ys.len()];
+    let mut q = BinaryHeap::new();
 
-    q.push_back(0);
+    q.push(Reverse(Node { index: 0, cost: 0 }));
     zs[0] = 0;
 
-    while let Some(x) = q.pop_front() {
-        for (&y, &w) in &ys[x] {
-            let z = zs[x] + w;
-
-            if z < zs[y] {
-                q.push_back(y);
-                zs[y] = z;
-            }
+    while let Some(Reverse(x)) = q.pop() {
+        if bs[x.index] {
+            continue;
         }
+
+        bs[x.index] = true;
+
+        for (&y, &w) in &ys[x.index] {
+            zs[y] = (zs[x.index] + w).min(zs[y]);
+
+            q.push(Reverse(Node {
+                index: y,
+                cost: zs[y],
+            }));
+        }
+    }
+
+    zs
+}
+
+#[derive(Clone, Copy, Eq, PartialEq)]
+struct Node {
+    index: usize,
+    cost: usize,
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.cost.cmp(&other.cost)
+    }
+}
+
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
 }
