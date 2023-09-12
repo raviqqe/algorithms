@@ -13,7 +13,7 @@ pub fn is_match(s: String, p: String) -> bool {
             zs[i][j] = match (xs.get(ii), ys.get(jj), z) {
                 (None, None, _) => true,
                 (None, Some(b'*'), _) => zs[i][j - 2],
-                (Some(&x), Some(b'*'), _) => zs[i][j - 2] || x == ys[j - 2],
+                (Some(&x), Some(b'*'), _) => zs[i][j - 2] || x == ys[j - 2] || ys[j - 2] == b'.',
                 (None, Some(_), _) => false,
                 (Some(_), None, _) => false,
                 (Some(_), Some(b'.'), Some(&z)) => z && true,
