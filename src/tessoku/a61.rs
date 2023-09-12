@@ -6,8 +6,14 @@ pub fn run() {
 
     let xs = s
         .split('\n')
-        .map(|s| s.split(' ').collect::<Vec<_>>())
+        .map(|s| {
+            s.split(' ')
+                .map(|s| s.parse().unwrap())
+                .collect::<Vec<usize>>()
+        })
         .collect::<Vec<_>>();
 
     let [n, m] = &xs[0][..] else { return };
+
+    let mut ys = vec![vec![]; n];
 }
