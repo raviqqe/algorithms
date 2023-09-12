@@ -24,9 +24,9 @@ fn main() {
 
     let mut ys = vec![HashSet::new(); *n];
 
-    for zs in &xs[1..] {
-        let i = zs[0];
-        let j = zs[1];
+    for xs in &xs[1..] {
+        let i = xs[0];
+        let j = xs[1];
 
         ys[i - 1].insert(j);
         ys[j - 1].insert(i);

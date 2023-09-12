@@ -1,5 +1,6 @@
 use std::{
     collections::HashSet,
+    convert::identity,
     io::{stdin, Read},
 };
 
@@ -24,15 +25,27 @@ fn main() {
 
     let mut ys = vec![HashSet::new(); *n];
 
-    for zs in &xs[1..] {
-        let i = zs[0];
-        let j = zs[1];
+    for xs in &xs[1..] {
+        let i = xs[0] - 1;
+        let j = xs[1] - 1;
 
-        ys[i - 1].insert(j);
-        ys[j - 1].insert(i);
+        ys[i].insert(j);
+        ys[j].insert(i);
     }
 
-    for (i, ys) in ys.iter().enumerate() {
-        println!("{}: {:?}", i + 1, ys);
+    let mut zs = vec![false; *n];
+
+    visit(0, &ys, &mut zs);
+
+    println!("{}", zs.into_iter().all(identity));
+}
+
+fn visit(x: usize, ys: &[HashSet<usize>], zs: &mut [bool]) {
+    zs[x] = true;
+
+    for &y in &ys[x] {
+        if !zs[y] {
+            visit(y, &ys, zs);
+        }
     }
 }
