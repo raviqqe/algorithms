@@ -1,1 +1,1 @@
-pub fn sovle() -> foo {}
+pub fn run() {}
