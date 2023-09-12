@@ -3,7 +3,7 @@ use std::{
     io::{stdin, Read},
 };
 
-pub fn run() {
+fn main() {
     let mut s = String::new();
     stdin().read_to_string(&mut s).unwrap();
 
