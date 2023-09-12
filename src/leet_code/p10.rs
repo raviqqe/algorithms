@@ -10,23 +10,19 @@ pub fn is_match(s: String, p: String) -> bool {
 
     for i in 0..=xs.len() {
         for j in 0..ys.len() {
-            let ii = i.wrapping_sub(1);
-
-            zs[i][j + 1] = match (xs.get(ii), ys[j], zs.get(ii).map(|zs| zs[j])) {
-                (_, b'*', _) => {
-                    zs[i][j - 1]
-                        || zs[i][j]
-                        || i > 0 && (zs[i - 1][j + 1] && (xs[ii] == ys[j - 1] || ys[j - 1] == b'.'))
-                }
-                (Some(_), b'.', Some(z)) => z && true,
-                (Some(&x), y, Some(z)) => z && x == y,
-                (None, _, _) => false,
-                (Some(_), _, None) => unreachable!(),
-            };
+            zs[i][j + 1] = ys[j] == b'*'
+                && (zs[i][j - 1]
+                    || zs[i][j]
+                    || i > 0 && (zs[i - 1][j + 1] && is_byte_match(xs[i - 1], ys[j - 1])))
+                || i > 0 && zs[i - 1][j] && is_byte_match(xs[i - 1], ys[j]);
         }
     }
 
     zs[xs.len()][ys.len()]
+}
+
+fn is_byte_match(x: u8, y: u8) -> bool {
+    [x, b'.'].contains(&y)
 }
 
 #[cfg(test)]
