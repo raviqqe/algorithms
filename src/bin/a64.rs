@@ -33,16 +33,16 @@ fn main() {
         ys[j].insert(i, w);
     }
 
-    let mut zs = vec![-1isize; *n];
+    let mut zs = vec![usize::MAX; *n];
 
     distance(&ys, &mut zs);
 
     for z in zs {
-        println!("{}", z);
+        println!("{}", if z == usize::MAX { -1 } else { z as isize });
     }
 }
 
-fn distance(ys: &[HashMap<usize, usize>], zs: &mut [isize]) {
+fn distance(ys: &[HashMap<usize, usize>], zs: &mut [usize]) {
     let mut q = VecDeque::new();
 
     q.push_back(0);
@@ -50,9 +50,9 @@ fn distance(ys: &[HashMap<usize, usize>], zs: &mut [isize]) {
 
     while let Some(x) = q.pop_front() {
         for (&y, &w) in &ys[x] {
-            let z = zs[x] + w as isize;
+            let z = zs[x] + w;
 
-            if zs[y] < 0 || z < zs[y] {
+            if z < zs[y] {
                 q.push_back(y);
                 zs[y] = z;
             }
