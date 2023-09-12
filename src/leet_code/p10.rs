@@ -6,8 +6,8 @@ pub fn is_match(s: String, p: String) -> bool {
 
     let mut zs = vec![vec![false; ys.len() + 1]; xs.len() + 1];
 
-    for i in 0..xs.len() + 1 {
-        for j in 0..ys.len() + 1 {
+    for i in 0..=xs.len() {
+        for j in 0..=ys.len() {
             let ii = i.wrapping_sub(1);
             let jj = j.wrapping_sub(1);
 
