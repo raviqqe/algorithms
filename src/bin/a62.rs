@@ -52,7 +52,7 @@ fn visit(x: usize, ys: &[HashSet<usize>], zs: &mut [bool]) {
 
     for &y in &ys[x] {
         if !zs[y] {
-            visit(y, &ys, zs);
+            visit(y, ys, zs);
         }
     }
 }
