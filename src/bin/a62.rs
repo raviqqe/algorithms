@@ -37,7 +37,14 @@ fn main() {
 
     visit(0, &ys, &mut zs);
 
-    println!("{}", zs.into_iter().all(identity));
+    println!(
+        "The graph is{} connected.",
+        if zs.into_iter().all(identity) {
+            ""
+        } else {
+            " not"
+        }
+    );
 }
 
 fn visit(x: usize, ys: &[HashSet<usize>], zs: &mut [bool]) {
