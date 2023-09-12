@@ -6,22 +6,22 @@ pub fn is_match(s: String, p: String) -> bool {
 
     let mut zs = vec![vec![false; ys.len() + 1]; xs.len() + 1];
 
-    for i in 0..=xs.len() {
-        for j in 0..=ys.len() {
-            let ii = i.wrapping_sub(1);
-            let jj = j.wrapping_sub(1);
+    zs[0][0] = true;
 
-            zs[i][j] = match (xs.get(ii), ys.get(jj), zs.get(ii).and_then(|zs| zs.get(jj))) {
-                (None, None, _) => true,
-                (_, Some(b'*'), _) => {
-                    zs[i][j - 2]
-                        || zs[i][j - 1]
-                        || i > 0 && (zs[i - 1][j] && (xs[ii] == ys[j - 2] || ys[j - 2] == b'.'))
+    for i in 0..=xs.len() {
+        for j in 0..ys.len() {
+            let ii = i.wrapping_sub(1);
+
+            zs[i][j + 1] = match (xs.get(ii), ys[j], zs.get(ii).map(|zs| zs[j])) {
+                (_, b'*', _) => {
+                    zs[i][j - 1]
+                        || zs[i][j]
+                        || i > 0 && (zs[i - 1][j + 1] && (xs[ii] == ys[j - 1] || ys[j - 1] == b'.'))
                 }
-                (Some(_), Some(b'.'), Some(&z)) => z && true,
-                (Some(x), Some(y), Some(&z)) => z && x == y,
-                (None, Some(_), _) | (Some(_), None, _) => false,
-                (Some(_), Some(_), None) => unreachable!(),
+                (Some(_), b'.', Some(z)) => z && true,
+                (Some(&x), y, Some(z)) => z && x == y,
+                (None, _, _) => false,
+                (Some(_), _, None) => unreachable!(),
             };
         }
     }
