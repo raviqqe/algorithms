@@ -12,10 +12,10 @@ pub fn is_match(s: String, p: String) -> bool {
             zs[i][j] = match (xs.get(ii), ys.get(jj), zs.get(ii).and_then(|zs| zs.get(jj))) {
                 (None, None, _) => true,
                 (None, Some(b'*'), _) => zs[i][j - 2],
-                (Some(&x), Some(b'*'), Some(&z)) => {
+                (Some(&x), Some(b'*'), _) => {
                     zs[i][j - 2]
                         || zs[i][j - 1]
-                        || ((z || zs[i - 1][j]) && (x == ys[j - 2] || ys[j - 2] == b'.'))
+                        || (zs[i - 1][j] && (x == ys[j - 2] || ys[j - 2] == b'.'))
                 }
                 (Some(_), Some(b'.'), Some(&z)) => z && true,
                 (Some(x), Some(y), Some(&z)) => z && x == y,
