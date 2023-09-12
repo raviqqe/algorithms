@@ -8,4 +8,6 @@ pub fn run() {
         .split('\n')
         .map(|s| s.split(' ').collect::<Vec<_>>())
         .collect::<Vec<_>>();
+
+    let [n, m] = &xs[0];
 }
