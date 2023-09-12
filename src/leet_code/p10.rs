@@ -13,8 +13,8 @@ pub fn is_match(s: String, p: String) -> bool {
                 (None, None, _) => true,
                 (None, Some(b'*'), _) => zs[i][j - 2],
                 (Some(&x), Some(b'*'), Some(&z)) => {
-                    zs[i][j - 1]
-                        || zs[i][j - 2]
+                    zs[i][j - 2]
+                        || zs[i][j - 1]
                         || ((z || zs[i - 1][j]) && (x == ys[j - 2] || ys[j - 2] == b'.'))
                 }
                 (Some(_), Some(b'.'), Some(&z)) => z && true,
