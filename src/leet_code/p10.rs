@@ -8,9 +8,8 @@ pub fn is_match(s: String, p: String) -> bool {
         for j in 0..ys.len() + 1 {
             let ii = i.wrapping_sub(1);
             let jj = j.wrapping_sub(1);
-            let z = zs.get(ii).and_then(|zs| zs.get(jj));
 
-            zs[i][j] = match (xs.get(ii), ys.get(jj), z) {
+            zs[i][j] = match (xs.get(ii), ys.get(jj), zs.get(ii).and_then(|zs| zs.get(jj))) {
                 (None, None, _) => true,
                 (None, Some(b'*'), _) => zs[i][j - 2],
                 (Some(&x), Some(b'*'), _) => zs[i][j - 2] || x == ys[j - 2] || ys[j - 2] == b'.',
