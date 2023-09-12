@@ -55,12 +55,16 @@ fn distance(ys: &[HashMap<usize, usize>]) -> Vec<usize> {
         bs[x.index] = true;
 
         for (&y, &w) in &ys[x.index] {
-            zs[y] = (zs[x.index] + w).min(zs[y]);
+            let z = zs[x.index] + w;
 
-            q.push(Reverse(Node {
-                index: y,
-                cost: zs[y],
-            }));
+            if z < zs[y] {
+                zs[y] = z;
+
+                q.push(Reverse(Node {
+                    index: y,
+                    cost: zs[y],
+                }));
+            }
         }
     }
 
