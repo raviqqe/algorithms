@@ -1,5 +1,4 @@
 pub fn is_match(s: String, p: String) -> bool {
-    dbg!("START");
     let xs = s.as_bytes();
     let ys = p.as_bytes();
 
@@ -23,7 +22,6 @@ pub fn is_match(s: String, p: String) -> bool {
             };
         }
     }
-    dbg!(&zs);
 
     zs[xs.len()][ys.len()]
 }
