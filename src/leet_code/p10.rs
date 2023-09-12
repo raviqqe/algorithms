@@ -64,4 +64,9 @@ mod tests {
     fn non_exhaustive_asterisk() {
         assert_eq!(is_match("aaa".into(), "a*a".into()), true);
     }
+
+    #[test]
+    fn multiple_asterisks() {
+        assert_eq!(is_match("mississippi".into(), "mis*is*p*.".into()), false);
+    }
 }
