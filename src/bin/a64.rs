@@ -52,12 +52,10 @@ fn distance(ys: &[HashMap<usize, usize>], zs: &mut [isize]) {
         for (&y, &w) in &ys[x] {
             let z = zs[x] + w as isize;
 
-            zs[y] = if zs[y] < 0 {
+            if zs[y] < 0 || z < zs[y] {
                 q.push_back(y);
-                z
-            } else {
-                zs[y].min(z)
-            };
+                zs[y] = z;
+            }
         }
     }
 }
