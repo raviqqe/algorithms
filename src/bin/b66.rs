@@ -5,7 +5,8 @@ fn main() {
     input! {
         n: usize,
         m: usize,
-        qs: [(Usize1, Usize1, Usize1); m],
+        es: [(Usize1, Usize1, Usize1); m],
+        qs: [(Usize1, Usize1, Usize1)],
     }
 
     let mut zs = vec![None; n];
