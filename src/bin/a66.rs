@@ -43,7 +43,7 @@ fn main() {
 }
 
 fn union(x: usize, y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
-    if ns[x] > ns[y] {
+    if ns[x] < ns[y] {
         union(y, x, zs, ns);
     }
 
