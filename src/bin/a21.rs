@@ -1,3 +1,4 @@
+use algorithms::utility::print_table;
 use proconio::{input, marker::Usize1};
 
 fn main() {
@@ -18,22 +19,34 @@ fn solve(xs: &[(usize, usize)]) -> usize {
             dp[i][j] = if i == 0 && j == 0 {
                 0
             } else {
-                [if i > 0 {
-                    let (y, v) = &xs[i - 1];
+                [
+                    if i > 0 {
+                        let (y, v) = xs[i - 1];
 
-                    Some(dp[i - 1][j] + if i < y && y < xs.len() - j { v } else { 0 })
-                } else {
-                    None
-                }]
+                        Some(dp[i - 1][j] + if i - 1 < y && y < xs.len() - j { v } else { 0 })
+                    } else {
+                        None
+                    },
+                    if j > 0 {
+                        let (y, v) = xs[xs.len() - j];
+
+                        Some(dp[i][j - 1] + if i < y + 1 && y < xs.len() - j { v } else { 0 })
+                    } else {
+                        None
+                    },
+                ]
                 .into_iter()
                 .flatten()
-                .min()
+                .max()
                 .unwrap()
             }
         }
     }
 
-    0
+    println!("TABLE");
+    print_table(&dp);
+
+    dp.into_iter().flatten().max().unwrap_or_default()
 }
 
 #[cfg(test)]
@@ -42,7 +55,13 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn simple() {
+    fn nothing() {
         assert_eq!(solve(&[]), 0);
+    }
+
+    #[test]
+    fn simple() {
+        assert_eq!(solve(&[(0, 1)]), 0);
+        assert_eq!(solve(&[(1, 1), (1, 1)]), 1);
     }
 }
