@@ -4,7 +4,7 @@ fn main() {
     input! {
         n: usize,
         ls: [usize; n - 1],
-        ms: [usize; n - 1],
+        ms: [usize; n - 2],
     }
 
     let mut xs = vec![[0; 2]; n - 1];
@@ -16,4 +16,6 @@ fn main() {
     for (i, &m) in ms.iter().enumerate() {
         xs[i][1] = m;
     }
+
+    dbg!(&xs);
 }
