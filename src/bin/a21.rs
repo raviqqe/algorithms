@@ -6,7 +6,7 @@ fn main() {
         xs: [(usize, usize); n],
     }
 
-    println!("{}", solve(usize));
+    println!("{}", solve(&xs));
 }
 
 fn solve(xs: &[(usize, usize)]) -> usize {
