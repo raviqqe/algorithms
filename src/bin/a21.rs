@@ -19,7 +19,11 @@ fn solve(xs: &[(usize, usize)]) -> usize {
                 0
             } else {
                 [if i > 0 {
-                    dp[i - 1][j]
+                    let (y, v) = &xs[i - 1];
+
+                    Some(dp[i - 1][j] + if i < y && y < xs.len() - j { v } else { 0 })
+                } else {
+                    None
                 }]
             }
         }
