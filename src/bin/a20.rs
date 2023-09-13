@@ -21,5 +21,5 @@ fn main() {
         }
     }
 
-    println!("{}", dp.iter().flatten().max().unwrap());
+    println!("{}", dp[s.len()][t.len()]);
 }
