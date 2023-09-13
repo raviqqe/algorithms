@@ -1,5 +1,4 @@
 use proconio::input;
-use std::convert::identity;
 
 fn main() {
     input! {
@@ -17,16 +16,23 @@ fn main() {
         }
     }
 
-    println!(
-        "{}",
-        if dp
-            .into_iter()
-            .flat_map(|dp| dp.last().copied())
-            .any(identity)
-        {
-            "Yes"
-        } else {
-            "No"
+    let mut j = y;
+    let mut ys = vec![];
+
+    for i in (1..=n).rev() {
+        if dp[i][j] {
+            ys.push(i);
+            j -= xs[i - 1];
+
+            if j == 0 {
+                break;
+            }
         }
-    )
+    }
+
+    println!("{}", ys.len());
+
+    for y in ys.iter().rev() {
+        print!("{} ", y);
+    }
 }
