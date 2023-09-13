@@ -1,9 +1,9 @@
-use proconio::input;
+use proconio::{input, marker::Usize1};
 
 fn main() {
     input! {
         n: usize,
-        xs: [(usize, usize); n],
+        xs: [(Usize1, usize); n],
     }
 
     println!("{}", solve(&xs));
