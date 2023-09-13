@@ -18,7 +18,6 @@ fn main() {
     }
 
     let mut ys = vec![];
-
     let mut i = xs.len() - 1;
 
     while i > 0 {
