@@ -6,7 +6,8 @@ fn main() {
         n: usize,
         m: usize,
         es: [(Usize1, Usize1); m],
-        qs: [(Usize1, Usize1, Usize1)],
+        q: usize,
+        qs: [(Usize1, Usize1, Usize1);q],
     }
 
     let mut tree = Tree::new(n);
