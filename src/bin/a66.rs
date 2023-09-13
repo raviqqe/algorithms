@@ -56,12 +56,10 @@ fn union(x: usize, y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
     }
 }
 
-fn root(x: usize, ys: &[Option<usize>]) -> usize {
-    let y = ys[x];
-
-    if let Some(y) = y {
-        root(y, ys)
-    } else {
-        x
+fn root(mut x: usize, ys: &[Option<usize>]) -> usize {
+    while let Some(y) = ys[x] {
+        x = y;
     }
+
+    x
 }
