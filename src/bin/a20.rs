@@ -2,25 +2,28 @@ use proconio::input;
 
 fn main() {
     input! {
-        n: usize,
-        w: usize,
-        xs: [(usize, usize); n],
+        s: String,
+        t: String,
     }
 
-    let mut dp = vec![vec![None; w + 1]; n + 1];
-    dp[0][0] = Some(0);
+    let s = s.as_bytes();
+    let t = t.as_bytes();
 
-    for i in 1..=n {
-        for j in 0..=w {
-            let (w, v) = xs[i - 1];
+    let mut dp = vec![vec![0; t.len()]; s.len()];
 
-            dp[i][j] = dp[i - 1][j].max(if j >= w {
-                dp[i - 1][j - w].map(|x| x + v)
+    for i in 0..s.len() {
+        for j in 0..t.len() {
+            dp[i][j] = if s[i] == t[j] {
+                (if i > 0 && j > 0 { dp[i - 1][j - 1] } else { 0 }) + 1
+            } else if j > 0 {
+                dp[i][j - 1]
+            } else if i > 0 {
+                *dp[i - 1].last().unwrap()
             } else {
-                None
-            });
+                0
+            };
         }
     }
 
-    println!("{}", dp.iter().flatten().flatten().max().unwrap());
+    println!("{}", dp.iter().flatten().max().unwrap());
 }
