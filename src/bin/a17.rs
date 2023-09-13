@@ -17,17 +17,16 @@ fn main() {
         });
     }
 
-    let mut ys = vec![];
-    let mut i = xs.len() - 1;
+    let mut ys = vec![xs.len() - 1];
 
-    while i > 0 {
-        i = i - if xs[i] == xs[i - 1] + ls[i - 1] { 1 } else { 2 };
-        ys.push(i);
+    while ys[ys.len() - 1] > 0 {
+        let i = ys[ys.len() - 1];
+        ys.push(i - if xs[i] == xs[i - 1] + ls[i - 1] { 1 } else { 2 });
     }
 
-    println!("{}", ys.len() + 1);
+    println!("{}", ys.len());
 
-    for i in ys.into_iter().rev().chain([xs.len() - 1]) {
+    for i in ys.into_iter().rev() {
         print!("{} ", i + 1);
     }
 }
