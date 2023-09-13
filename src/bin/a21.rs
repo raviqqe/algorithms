@@ -6,20 +6,20 @@ fn main() {
         xs: [(usize, usize); n],
     }
 
-    let s = s.as_bytes();
-    let t = t.as_bytes();
+    println!("{}", solve(usize));
+}
 
-    let mut dp = vec![vec![0; t.len() + 1]; s.len() + 1];
+fn solve(xs: &[(usize, usize)]) -> usize {
+    0
+}
 
-    for i in 1..=s.len() {
-        for j in 1..=t.len() {
-            dp[i][j] = if s[i - 1] == t[j - 1] {
-                dp[i - 1][j - 1] + 1
-            } else {
-                dp[i][j - 1].max(dp[i - 1][j])
-            };
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use pretty_assertions::assert_eq;
+
+    #[test]
+    fn simple() {
+        assert_eq!();
     }
-
-    println!("{}", dp[s.len()][t.len()]);
 }
