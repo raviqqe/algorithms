@@ -3,18 +3,20 @@ use proconio::input;
 fn main() {
     input! {
         n: usize,
-        hs: [usize; n],
+        hs: [isize; n],
     }
 
     let mut xs = vec![0; n];
 
-    for i in 0..xs.len() {
-        xs[i] = (if i == 0 { 0 } else { xs[i - 1] } + ls[i]).min(if i == 0 {
+    let cost = |i, j| ((hs[i] - hs[j]) as isize).abs() as usize;
+
+    for i in 1..xs.len() {
+        xs[i] = (xs[i - 1] + cost(i - 1, i)).min(if i == 1 {
             usize::MAX
         } else {
-            (if i == 1 { 0 } else { xs[i - 2] }) + ms[i - 1]
+            xs[i - 2] + cost(i - 2, i)
         });
     }
 
-    println!("{}", xs.last().copied().unwrap_or_default())
+    println!("{}", xs.last().unwrap())
 }
