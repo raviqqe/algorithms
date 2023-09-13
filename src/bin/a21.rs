@@ -20,6 +20,6 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!();
+        assert_eq!(solve(&[]), 0);
     }
 }
