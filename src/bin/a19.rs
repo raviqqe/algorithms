@@ -1,6 +1,6 @@
 use proconio::input;
 
-const M: usize = 1000;
+const V: usize = 1000;
 
 fn main() {
     input! {
@@ -9,11 +9,12 @@ fn main() {
         xs: [(usize, usize); n],
     }
 
-    let mut dp = vec![vec![None; M + 1]; n + 1];
+    let m = V * n;
+    let mut dp = vec![vec![None; m + 1]; n + 1];
     dp[0][0] = Some(0);
 
     for i in 1..=n {
-        for j in 0..M + 1 {
+        for j in 0..m + 1 {
             let (w, v) = xs[i - 1];
 
             dp[i][j] = match (
