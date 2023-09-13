@@ -15,12 +15,8 @@ fn main() {
         for j in 0..t.len() {
             dp[i][j] = if s[i] == t[j] {
                 (if i > 0 && j > 0 { dp[i - 1][j - 1] } else { 0 }) + 1
-            } else if j > 0 {
-                dp[i][j - 1]
-            } else if i > 0 {
-                *dp[i - 1].last().unwrap()
             } else {
-                0
+                (if j > 0 { dp[i][j - 1] } else { 0 }).max(if i > 0 { dp[i - 1][j] } else { 0 })
             };
         }
     }
