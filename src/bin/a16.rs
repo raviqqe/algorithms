@@ -1,5 +1,4 @@
-use proconio::{input, marker::Usize1};
-use std::{collections::HashSet, mem::swap};
+use proconio::input;
 
 fn main() {
     input! {
@@ -8,30 +7,13 @@ fn main() {
         ms: [usize; n - 1],
     }
 
-    let mut tree = Tree::new(n);
-    let set = qs
-        .iter()
-        .flat_map(|q| (q.len() == 1).then_some(q[0]))
-        .collect::<HashSet<_>>();
+    let mut xs = vec![[0; 2]; n - 1];
 
-    for (i, (x, y)) in es.iter().enumerate() {
-        if !set.contains(&i) {
-            tree.union(*x, *y);
-        }
+    for (i, &l) in ls.iter().enumerate() {
+        xs[i][0] = l;
     }
 
-    let mut ys = vec![];
-
-    for q in qs.iter().rev() {
-        if q.len() == 1 {
-            let (x, y) = &es[q[0]];
-            tree.union(*x, *y);
-        } else {
-            ys.push(tree.root(q[0]) == tree.root(q[1]));
-        }
-    }
-
-    for y in ys.into_iter().rev() {
-        println!("{} ", if y { "Yes" } else { "No" });
+    for (i, &m) in ms.iter().enumerate() {
+        xs[i][1] = m;
     }
 }
