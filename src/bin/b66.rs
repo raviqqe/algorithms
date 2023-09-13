@@ -12,6 +12,10 @@ fn main() {
 
     let mut tree = Tree::new(n);
 
+    for (i, j) in es {
+        tree.union(i, j);
+    }
+
     for (q, i, j) in qs {
         if q == 0 {
             tree.union(i, j);
