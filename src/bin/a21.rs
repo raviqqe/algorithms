@@ -1,4 +1,3 @@
-use algorithms::utility::print_table;
 use proconio::{input, marker::Usize1};
 
 fn main() {
@@ -21,16 +20,16 @@ fn solve(xs: &[(usize, usize)]) -> usize {
             } else {
                 [
                     if i > 0 {
-                        let (y, v) = xs[i - 1];
+                        let (k, v) = xs[i - 1];
 
-                        Some(dp[i - 1][j] + if i - 1 < y && y < xs.len() - j { v } else { 0 })
+                        Some(dp[i - 1][j] + take(i, j, k, v, xs.len()))
                     } else {
                         None
                     },
                     if j > 0 {
-                        let (y, v) = xs[xs.len() - j];
+                        let (k, v) = xs[xs.len() - j];
 
-                        Some(dp[i][j - 1] + if i < y + 1 && y < xs.len() - j { v } else { 0 })
+                        Some(dp[i][j - 1] + take(i, j, k, v, xs.len()))
                     } else {
                         None
                     },
@@ -43,10 +42,15 @@ fn solve(xs: &[(usize, usize)]) -> usize {
         }
     }
 
-    println!("TABLE");
-    print_table(&dp);
-
     dp.into_iter().flatten().max().unwrap_or_default()
+}
+
+fn take(i: usize, j: usize, k: usize, v: usize, n: usize) -> usize {
+    if i < k + 1 && k < n - j {
+        v
+    } else {
+        0
+    }
 }
 
 #[cfg(test)]
@@ -60,8 +64,22 @@ mod tests {
     }
 
     #[test]
-    fn simple() {
+    fn take_left() {
+        assert_eq!(solve(&[(1, 1)]), 0);
+        assert_eq!(solve(&[(1, 1), (2, 1)]), 1);
+        assert_eq!(solve(&[(1, 1), (2, 1), (3, 1)]), 2);
+    }
+
+    #[test]
+    fn take_right() {
         assert_eq!(solve(&[(0, 1)]), 0);
-        assert_eq!(solve(&[(1, 1), (1, 1)]), 1);
+        assert_eq!(solve(&[(1, 1), (0, 1)]), 1);
+        assert_eq!(solve(&[(0, 1), (0, 1), (1, 1)]), 2);
+        assert_eq!(solve(&[(0, 1), (0, 1), (1, 1), (2, 1)]), 3);
+    }
+
+    #[test]
+    fn complex() {
+        assert_eq!(solve(&[(3, 20), (2, 30), (1, 40), (0, 10)]), 60);
     }
 }
