@@ -5,20 +5,19 @@ fn main() {
     input! {
         n: usize,
         m: usize,
-        es: [(Usize1, Usize1, Usize1); m],
+        es: [(Usize1, Usize1); m],
         qs: [(Usize1, Usize1, Usize1)],
     }
 
-    let mut zs = vec![None; n];
-    let mut ns = vec![1; n];
+    let mut tree = Tree::new(n);
 
     for (q, i, j) in qs {
         if q == 0 {
-            union(i, j, &mut zs, &mut ns);
+            tree.union(i, j);
         } else {
             println!(
                 "{} ",
-                if root(i, &zs) == root(j, &zs) {
+                if tree.root(i) == tree.root(j) {
                     "Yes"
                 } else {
                     "No"
@@ -28,24 +27,38 @@ fn main() {
     }
 }
 
-fn union(x: usize, y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
-    let mut x = root(x, zs);
-    let mut y = root(y, zs);
-
-    if x == y {
-        return;
-    } else if ns[x] > ns[y] {
-        swap(&mut x, &mut y);
-    }
-
-    zs[x] = Some(y);
-    ns[y] += ns[x];
+struct Tree {
+    parents: Vec<Option<usize>>,
+    sizes: Vec<usize>,
 }
 
-fn root(mut x: usize, ys: &[Option<usize>]) -> usize {
-    while let Some(y) = ys[x] {
-        x = y;
+impl Tree {
+    pub fn new(n: usize) -> Self {
+        Self {
+            parents: vec![None; n],
+            sizes: vec![1; n],
+        }
     }
 
-    x
+    fn union(&mut self, x: usize, y: usize) {
+        let mut x = self.root(x);
+        let mut y = self.root(y);
+
+        if x == y {
+            return;
+        } else if self.sizes[x] > self.sizes[y] {
+            swap(&mut x, &mut y);
+        }
+
+        self.parents[x] = Some(y);
+        self.sizes[y] += self.sizes[x];
+    }
+
+    fn root(&self, mut x: usize) -> usize {
+        while let Some(y) = self.parents[x] {
+            x = y;
+        }
+
+        x
+    }
 }
