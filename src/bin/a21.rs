@@ -2,8 +2,8 @@ use proconio::input;
 
 fn main() {
     input! {
-        s: String,
-        t: String,
+        n: usize,
+        xs: [(usize, usize); n],
     }
 
     let s = s.as_bytes();
