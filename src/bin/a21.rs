@@ -25,6 +25,10 @@ fn solve(xs: &[(usize, usize)]) -> usize {
                 } else {
                     None
                 }]
+                .into_iter()
+                .flatten()
+                .min()
+                .unwrap()
             }
         }
     }
