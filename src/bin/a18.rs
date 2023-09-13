@@ -1,4 +1,5 @@
 use proconio::input;
+use std::convert::identity;
 
 fn main() {
     input! {
@@ -7,15 +8,29 @@ fn main() {
         xs: [usize; n],
     }
 
-    let mut xs = vec![0; n];
+    let mut dp = vec![vec![false; y + 1]; n + 1];
+    dp[0][0] = true;
 
-    for i in 1..xs.len() {
-        xs[i] = (xs[i - 1] + ls[i - 1]).min(if i == 1 {
-            usize::MAX
-        } else {
-            xs[i - 2] + ms[i - 2]
-        });
+    for i in 1..=n {
+        for j in 0..=y {
+            dp[i][j] = dp[i - 1][j]
+                || dp[i - 1]
+                    .get(j.wrapping_sub(xs[i - 1]))
+                    .copied()
+                    .unwrap_or_default();
+        }
     }
 
-    println!("{}", xs.last().copied().unwrap_or_default())
+    println!(
+        "{}",
+        if dp
+            .into_iter()
+            .flat_map(|dp| dp.last().copied())
+            .any(identity)
+        {
+            "Yes"
+        } else {
+            "No"
+        }
+    )
 }
