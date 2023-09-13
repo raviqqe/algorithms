@@ -9,14 +9,14 @@ fn main() {
     let s = s.as_bytes();
     let t = t.as_bytes();
 
-    let mut dp = vec![vec![0; t.len()]; s.len()];
+    let mut dp = vec![vec![0; t.len() + 1]; s.len() + 1];
 
-    for i in 0..s.len() {
-        for j in 0..t.len() {
-            dp[i][j] = if s[i] == t[j] {
-                (if i > 0 && j > 0 { dp[i - 1][j - 1] } else { 0 }) + 1
+    for i in 1..=s.len() {
+        for j in 1..=t.len() {
+            dp[i][j] = if s[i - 1] == t[j - 1] {
+                dp[i - 1][j - 1] + 1
             } else {
-                (if j > 0 { dp[i][j - 1] } else { 0 }).max(if i > 0 { dp[i - 1][j] } else { 0 })
+                dp[i][j - 1].max(dp[i - 1][j])
             };
         }
     }
