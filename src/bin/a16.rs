@@ -7,15 +7,15 @@ fn main() {
         ms: [usize; n - 2],
     }
 
-    let mut xs = vec![[0; 2]; n - 1];
+    let mut xs = vec![0; n - 1];
 
-    for (i, &l) in ls.iter().enumerate() {
-        xs[i][0] = l;
+    for i in 0..xs.len() {
+        xs[i] = (if i == 0 { 0 } else { xs[i - 1] } + ls[i]).min(if i == 0 {
+            usize::MAX
+        } else {
+            (if i == 1 { 0 } else { xs[i - 2] }) + ms[i - 1]
+        });
     }
 
-    for (i, &m) in ms.iter().enumerate() {
-        xs[i + 1][1] = m;
-    }
-
-    dbg!(&xs);
+    println!("{}", xs.last().copied().unwrap_or_default())
 }
