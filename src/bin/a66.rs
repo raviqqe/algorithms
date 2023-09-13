@@ -1,4 +1,7 @@
-use std::io::{stdin, Read};
+use std::{
+    io::{stdin, Read},
+    mem::swap,
+};
 
 fn main() {
     let mut s = String::new();
@@ -42,9 +45,9 @@ fn main() {
     }
 }
 
-fn union(x: usize, y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
+fn union(mut x: usize, mut y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
     if ns[x] > ns[y] {
-        union(y, x, zs, ns);
+        swap(&mut x, &mut y);
     }
 
     let x = root(x, zs);
