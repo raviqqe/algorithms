@@ -14,7 +14,7 @@ fn main() {
     }
 
     for (i, &m) in ms.iter().enumerate() {
-        xs[i][1] = m;
+        xs[i + 1][1] = m;
     }
 
     dbg!(&xs);
