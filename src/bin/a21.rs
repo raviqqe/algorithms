@@ -10,6 +10,21 @@ fn main() {
 }
 
 fn solve(xs: &[(usize, usize)]) -> usize {
+    // left * right
+    let mut dp = vec![vec![0; xs.len() + 1]; xs.len() + 1];
+
+    for i in 0..=xs.len() {
+        for j in 0..=xs.len() {
+            dp[i][j] = if i == 0 && j == 0 {
+                0
+            } else {
+                [if i > 0 {
+                    dp[i - 1][j]
+                }]
+            }
+        }
+    }
+
     0
 }
 
