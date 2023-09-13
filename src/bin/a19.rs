@@ -3,38 +3,24 @@ use proconio::input;
 fn main() {
     input! {
         n: usize,
-        y: usize,
-        xs: [usize; n],
+        w: usize,
+        xs: [(usize, usize); n],
     }
 
-    let mut dp = vec![vec![false; y + 1]; n + 1];
-    dp[0][0] = true;
+    let mut dp = vec![vec![None; w + 1]; n + 1];
+    dp[0][0] = Some(0);
 
     for i in 1..=n {
-        for j in 0..=y {
-            dp[i][j] = dp[i - 1][j] || j >= xs[i - 1] && dp[i - 1][j - xs[i - 1]];
+        for j in 0..=w {
+            let (w, v) = xs[i - 1];
+
+            dp[i][j] = dp[i - 1][j].max(if j >= w {
+                dp[i - 1][j - w].map(|x| x + v)
+            } else {
+                None
+            });
         }
     }
 
-    let Some(mut i) = dp.iter().position(|dp| dp.last().copied().unwrap()) else {
-        println!("-1");
-        return;
-    };
-    let mut j = y;
-    let mut ys = vec![];
-
-    while j > 0 {
-        if !dp[i - 1][j] {
-            ys.push(i);
-            j -= xs[i - 1];
-        }
-
-        i -= 1;
-    }
-
-    println!("{}", ys.len());
-
-    for y in ys.iter().rev() {
-        print!("{} ", y);
-    }
+    println!("{}", dp.iter().flatten().flatten().max().unwrap());
 }
