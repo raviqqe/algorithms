@@ -16,10 +16,14 @@ fn main() {
         }
     }
 
+    let Some(mut k) = dp.iter().position(|dp| dp.last().copied().unwrap()) else {
+        println!("-1");
+        return;
+    };
     let mut j = y;
     let mut ys = vec![];
 
-    for i in (1..=n).rev() {
+    loop {
         if dp[i][j] {
             ys.push(i);
             j -= xs[i - 1];
