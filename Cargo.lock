@@ -7,6 +7,7 @@ name = "algorithms"
 version = "0.1.0"
 dependencies = [
  "pretty_assertions",
+ "proconio",
 ]
 
 [[package]]
@@ -24,6 +25,12 @@ dependencies = [
  "diff",
  "yansi",
 ]
+
+[[package]]
+name = "proconio"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0eb404616795079e2390e7115acf0ada24e9332e8476de2aada7bacb9992dc9e"
 
 [[package]]
 name = "yansi"
