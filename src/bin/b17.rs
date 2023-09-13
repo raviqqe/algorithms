@@ -8,7 +8,10 @@ fn main() {
 
     let mut xs = vec![0; n];
 
-    let cost = |i, j| ((hs[i] - hs[j]) as isize).abs() as usize;
+    let cost = |i, j| {
+        let c: isize = hs[i] - hs[j];
+        c.unsigned_abs()
+    };
 
     for i in 1..xs.len() {
         xs[i] = (xs[i - 1] + cost(i - 1, i)).min(if i == 1 {
