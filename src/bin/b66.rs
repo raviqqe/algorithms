@@ -13,7 +13,7 @@ fn main() {
     let mut tree = Tree::new(n);
     let set = qs
         .iter()
-        .flat_map(|q| (q[0] == 0).then_some(q[1]))
+        .flat_map(|q| (q.len() == 1).then_some(q[0]))
         .collect::<HashSet<_>>();
 
     for (i, (x, y)) in es.iter().enumerate() {
@@ -25,11 +25,11 @@ fn main() {
     let mut ys = vec![];
 
     for q in qs.iter().rev() {
-        if q[0] == 0 {
-            let (x, y) = &es[q[1]];
+        if q.len() == 1 {
+            let (x, y) = &es[q[0]];
             tree.union(*x, *y);
         } else {
-            ys.push(tree.root(q[1]) == tree.root(q[2]));
+            ys.push(tree.root(q[0]) == tree.root(q[1]));
         }
     }
 
