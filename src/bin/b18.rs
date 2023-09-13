@@ -16,22 +16,20 @@ fn main() {
         }
     }
 
-    let Some(mut k) = dp.iter().position(|dp| dp.last().copied().unwrap()) else {
+    let Some(mut i) = dp.iter().position(|dp| dp.last().copied().unwrap()) else {
         println!("-1");
         return;
     };
     let mut j = y;
     let mut ys = vec![];
 
-    loop {
-        if dp[i][j] {
+    while j > 0 {
+        if !dp[i - 1][j] {
             ys.push(i);
             j -= xs[i - 1];
-
-            if j == 0 {
-                break;
-            }
         }
+
+        i -= 1;
     }
 
     println!("{}", ys.len());
