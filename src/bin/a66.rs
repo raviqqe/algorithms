@@ -19,7 +19,8 @@ fn main() {
 
     let [n, _] = &xs[0][..] else { return };
 
-    let mut ys = vec![None; *n];
+    let mut zs = vec![None; *n];
+    let mut ns = vec![1; *n];
 
     for xs in &xs[1..] {
         let q = xs[0];
@@ -27,11 +28,11 @@ fn main() {
         let j = xs[2] - 1;
 
         if q == 1 {
-            union(i, j, &mut ys);
+            union(i, j, &mut zs, &mut ns);
         } else {
             println!(
                 "{} ",
-                if root(i, &ys) == root(j, &ys) {
+                if root(i, &zs) == root(j, &zs) {
                     "Yes"
                 } else {
                     "No"
@@ -41,11 +42,17 @@ fn main() {
     }
 }
 
-fn union(x: usize, y: usize, zs: &mut [Option<usize>]) {
-    match (zs[x], zs[y]) {
-        (None, None) | (None, Some(_)) => zs[x] = Some(y),
-        (Some(_), None) => union(y, x, zs),
-        (Some(_), Some(_)) => zs[root(x, zs)] = Some(root(y, zs)),
+fn union(x: usize, y: usize, zs: &mut [Option<usize>], ns: &mut [usize]) {
+    if ns[x] > ns[y] {
+        union(y, x, zs, ns);
+    }
+
+    let x = root(x, zs);
+    let y = root(y, zs);
+
+    if x != y {
+        zs[x] = Some(y);
+        ns[y] += ns[x];
     }
 }
 
