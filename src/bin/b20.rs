@@ -1,4 +1,3 @@
-use algorithms::utility::print_table;
 use proconio::input;
 
 fn main() {
@@ -11,36 +10,36 @@ fn main() {
 }
 
 fn distance(s: &[u8], t: &[u8]) -> usize {
-    let mut dp = vec![vec![None; t.len() + 1]; s.len() + 1];
-    dp[0][0] = Some(0);
+    let mut dp = vec![vec![usize::MAX; t.len() + 1]; s.len() + 1];
 
     for i in 0..=s.len() {
         for j in 0..=t.len() {
-            if i == 0 && j == 0 {
-                continue;
-            }
-
-            if i > 0 && j > 0 && s[i - 1] == t[j - 1] {
-                dp[i][j] = dp[i - 1][j - 1];
+            dp[i][j] = if i == 0 && j == 0 {
+                0
             } else {
-                dp[i][j] = match (
-                    if i > 0 { dp[i - 1][j] } else { None },
-                    if j > 0 { dp[i][j - 1] } else { None },
-                ) {
-                    (Some(d1), Some(d2)) => Some(d1.min(d2) + 1),
-                    (Some(d), None) | (None, Some(d)) => Some(d + 1),
-                    (None, None) => {
-                        dbg!(i, j);
+                [
+                    if i > 0 && j > 0 && s[i - 1] == t[j - 1] {
+                        Some(dp[i - 1][j - 1])
+                    } else {
                         None
-                    }
-                };
+                    },
+                    if i > 0 && j > 0 && s[i - 1] != t[j - 1] {
+                        Some(dp[i - 1][j - 1] + 1)
+                    } else {
+                        None
+                    },
+                    if i > 0 { Some(dp[i - 1][j] + 1) } else { None },
+                    if j > 0 { Some(dp[i][j - 1] + 1) } else { None },
+                ]
+                .into_iter()
+                .flatten()
+                .min()
+                .unwrap()
             }
         }
     }
 
-    print_table(&dp);
-
-    dp[s.len()][t.len()].unwrap()
+    dp[s.len()][t.len()]
 }
 
 #[cfg(test)]
@@ -49,7 +48,7 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn simple() {
+    fn equal() {
         assert_eq!(distance(b"", b""), 0);
         assert_eq!(distance(b"a", b"a"), 0);
         assert_eq!(distance(b"ab", b"ab"), 0);
@@ -74,5 +73,13 @@ mod tests {
         assert_eq!(distance(b"a", b"ab"), 1);
         assert_eq!(distance(b"b", b"ab"), 1);
         assert_eq!(distance(b"ac", b"abc"), 1);
+    }
+
+    #[test]
+    fn replace() {
+        assert_eq!(distance(b"a", b"b"), 1);
+        assert_eq!(distance(b"ab", b"cd"), 2);
+        assert_eq!(distance(b"abc", b"def"), 3);
+        assert_eq!(distance(b"abc", b"adc"), 1);
     }
 }
