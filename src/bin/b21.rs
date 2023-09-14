@@ -17,7 +17,14 @@ fn solve(s: &[u8]) -> usize {
             dp[i][j] = if i == j {
                 1
             } else {
-                dp[i + 1][j - 1] + if s[i] == s[j] { 2 } else { 0 }
+                [
+                    dp[i + 1][j - 1] + if s[i] == s[j] { 2 } else { 0 },
+                    dp[i + 1][j],
+                    dp[i][j - 1],
+                ]
+                .into_iter()
+                .max()
+                .unwrap()
             };
         }
     }
@@ -46,5 +53,14 @@ mod tests {
         assert_eq!(solve(b"abcbe"), 3);
         assert_eq!(solve(b"abcdcba"), 7);
         assert_eq!(solve(b"programming"), 4);
+        assert_eq!(solve(b"axcyexg"), 3);
+        assert_eq!(solve(b"axcyyfxh"), 4);
+        assert_eq!(solve(b"axcyeygxi"), 5);
+    }
+
+    #[test]
+    fn asymmetric() {
+        assert_eq!(solve(b"axbcxd"), 3);
+        assert_eq!(solve(b"axyybxc"), 4);
     }
 }
