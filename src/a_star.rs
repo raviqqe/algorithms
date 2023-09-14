@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, BinaryHeap};
 
 fn search(
     start: usize,
@@ -6,7 +6,7 @@ fn search(
     node_count: usize,
     h: impl Fn(usize) -> usize,
 ) -> Option<usize> {
-    let mut open = vec![start];
+    let mut open = BinaryHeap::from_iter([start]);
     let mut closed = HashMap::new();
 
     let mut g = vec![usize::MAX; node_count];
@@ -17,10 +17,10 @@ fn search(
 
     while let Some(i) = open.pop() {}
     // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
-    // current := the node in openSet having the lowest fScore[] value
-    // if current = goal {
-    //     return Some()
-    // }
+    current = the node in openSet having the lowest fScore[] value
+    if current = goal {
+        return Some()
+    }
 
     // openSet.Remove(current)
     // for each neighbor of current
