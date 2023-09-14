@@ -1,8 +1,7 @@
-// A* finds a path from start to goal.
-// h is the heuristic function. h(n) estimates the cost to reach goal from node n.
-fn search(start: (usize, usize), goal:(usize, usize), h: Fn() -> usize) {
-    let open= vec![ start ];
+use std::collections::HashMap;
 
+fn search(start: (usize, usize), goal:(usize, usize), h: impl Fn() -> usize) {
+    let open= vec![ start ];
     let closed = HashMap::new();
 
     // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
