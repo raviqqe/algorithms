@@ -6,7 +6,7 @@ pub fn search(
     end: usize,
     nodes: &[HashSet<(usize, usize)>],
     h: impl Fn(usize) -> usize,
-) -> Option<usize> {
+) -> Option<(usize, Vec<usize>)> {
     let mut q = BinaryHeap::from_iter([start]);
     let mut from = HashMap::new();
 
@@ -15,19 +15,21 @@ pub fn search(
 
     while let Some(i) = q.pop() {
         if i == end {
-            return Some(f[&end]);
+            return Some((g[&end], reconstruct(end, &from)));
         }
 
         for &(j, w) in &nodes[i] {
-            let gg = g[&i] + w;
+            let c = g[&i] + w;
 
-            if gg < g.get(&j).copied().unwrap_or(usize::MAX) {
+            if c < g.get(&j).copied().unwrap_or(usize::MAX) {
                 from.insert(j, i);
 
-                g.insert(j, gg);
-                f.insert(j, gg + h(j));
+                g.insert(j, c);
+                f.insert(j, c + h(j));
 
-                q.push(j);
+                if !q.iter().any(|&i| i == j) {
+                    q.push(j);
+                }
             }
         }
     }
@@ -54,8 +56,16 @@ mod tests {
     #[test]
     fn simple() {
         assert_eq!(
-            search(0, 1, &[[(1, 1)].into_iter().collect()], |_| 0),
-            Some(1)
+            search(
+                0,
+                1,
+                &[
+                    [(1, 1)].into_iter().collect(),
+                    [(0, 1)].into_iter().collect()
+                ],
+                |_| 0
+            ),
+            Some((1, vec![0, 1]))
         );
     }
 }
