@@ -14,6 +14,10 @@ fn main() {
         }
     }
 
+    while xs.len() < 10 {
+        xs.push(0)
+    }
+
     for x in xs.into_iter().rev() {
         print!("{}", x);
     }
