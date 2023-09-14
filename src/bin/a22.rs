@@ -18,8 +18,9 @@ fn solve(xs: &[usize], ys: &[usize]) -> usize {
     let mut dp = vec![0; n];
 
     for i in 0..n - 1 {
-        dp[xs[i]] = dp[xs[i]].max(dp[i] + A);
-        dp[ys[i]] = dp[ys[i]].max(dp[i] + B);
+        for (j, v) in [(xs[i], A), (ys[i], B)] {
+            dp[j] = dp[j].max(dp[i] + v);
+        }
     }
 
     dbg!(&dp);
