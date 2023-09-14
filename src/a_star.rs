@@ -1,13 +1,18 @@
 use std::collections::HashMap;
 
-fn search(start: usize, goal: usize, node_count: usize, h: impl Fn(i) -> usize) -> Option<usize> {
-    let open = vec![start];
-    let closed = HashMap::new();
+fn search(
+    start: usize,
+    goal: usize,
+    node_count: usize,
+    h: impl Fn(usize) -> usize,
+) -> Option<usize> {
+    let mut open = vec![start];
+    let mut closed = HashMap::new();
 
     let mut g = vec![usize::MAX; node_count];
     g[start] = 0;
 
-    let f = vec![usize::MAX, node_count];
+    let mut f = vec![usize::MAX, node_count];
     f[start] = g[start] + h(start);
 
     while let Some(i) = open.pop() {}
