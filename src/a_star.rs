@@ -21,7 +21,7 @@ pub fn search(
         for &(j, w) in &nodes[i] {
             let gg = g[&i] + w;
 
-            if gg < g[&j] {
+            if gg < g.get(&j).copied().unwrap_or(usize::MAX) {
                 //     cameFrom[neighbor] := current
                 g.insert(j, gg);
                 f.insert(j, gg + h(j));
