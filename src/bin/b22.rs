@@ -15,10 +15,14 @@ fn solve(xs: &[usize], ys: &[usize]) -> usize {
     let mut dp = vec![0; n];
 
     for i in 0..n {
-        dp[i] = 0;
+        if i < n - 1 {
+            dp[i] = 0;
+        } else if i < n - 2 {
+            dp[i + 2] = foo;
+        }
     }
 
-    0
+    dp[n]
 }
 
 #[cfg(test)]
