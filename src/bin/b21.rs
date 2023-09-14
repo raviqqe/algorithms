@@ -37,6 +37,8 @@ mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
 
+    // spell-checker: disable
+
     #[test]
     fn simple() {
         assert_eq!(solve(b""), 0);
