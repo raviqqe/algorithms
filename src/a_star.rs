@@ -23,6 +23,7 @@ pub fn search(
 
             if gg < g.get(&j).copied().unwrap_or(usize::MAX) {
                 from.insert(j, i);
+
                 g.insert(j, gg);
                 f.insert(j, gg + h(j));
 
