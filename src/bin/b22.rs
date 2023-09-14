@@ -19,11 +19,11 @@ fn solve(xs: &[usize], ys: &[usize]) -> usize {
         if i < n - 1 {
             dp[i + 1] = dp[i + 1].min(dp[i] + xs[i]);
         } else if i < n - 2 {
-            dp[i + 2] = dp[i + 2].min(dp[i] + ys[i - 2]);
+            dp[i + 2] = dp[i + 2].min(dp[i] + ys[i]);
         }
     }
 
-    dp[n]
+    *dp.last().unwrap()
 }
 
 #[cfg(test)]
@@ -32,6 +32,6 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!(solve(&[1, 2], &[0]), 0);
+        assert_eq!(solve(&[1, 2], &[0]), 3);
     }
 }
