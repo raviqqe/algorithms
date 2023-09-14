@@ -24,8 +24,6 @@ fn solve(xs: &[usize], ys: &[usize]) -> usize {
         }
     }
 
-    dbg!(&dp);
-
     dp.last().unwrap().unwrap()
 }
 
