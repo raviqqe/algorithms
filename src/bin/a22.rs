@@ -42,6 +42,6 @@ mod tests {
 
     #[test]
     fn unreachable() {
-        assert_eq!(solve(&[1, 2, 3, 4], &[4, 2, 3, 4]), 550);
+        assert_eq!(solve(&[4, 2, 3, 4], &[4, 2, 3, 4]), 150);
     }
 }
