@@ -16,8 +16,8 @@ fn main() {
 
     let mut y = 0;
 
-    for i in 0..d {
-        y += xs[i];
+    for x in &xs[..d] {
+        y += x;
 
         println!("{}", y);
     }
