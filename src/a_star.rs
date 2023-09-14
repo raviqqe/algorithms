@@ -8,7 +8,7 @@ pub fn search(
     h: impl Fn(usize) -> usize,
 ) -> Option<usize> {
     let mut q = BinaryHeap::from_iter([start]);
-    // let mut closed = HashMap::new();
+    let mut from = HashMap::new();
 
     let mut f = HashMap::<usize, _>::from_iter([(start, h(start))]);
     let mut g = HashMap::<usize, _>::from_iter([(start, 0)]);
@@ -22,7 +22,7 @@ pub fn search(
             let gg = g[&i] + w;
 
             if gg < g.get(&j).copied().unwrap_or(usize::MAX) {
-                //     cameFrom[neighbor] := current
+                from.insert(j, i);
                 g.insert(j, gg);
                 f.insert(j, gg + h(j));
 
