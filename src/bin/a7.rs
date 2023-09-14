@@ -7,22 +7,18 @@ fn main() {
         qs: [(Usize1, Usize1); n],
     }
 
-    let mut xs = vec![0; d];
-    let mut ys = vec![0; d];
+    let mut xs = vec![0isize; d + 1];
 
     for (i, j) in qs {
         xs[i] += 1;
-        ys[j] += 1;
+        xs[j + 1] -= 1;
     }
 
-    let mut zs = vec![0; d];
-    zs[0] = xs[0];
+    let mut y = 0;
 
-    for i in 1..d {
-        zs[i] = zs[i - 1] + xs[i] - ys[i - 1];
-    }
+    for i in 0..d {
+        y += xs[i];
 
-    for z in zs {
-        println!("{}", z);
+        println!("{}", y);
     }
 }
