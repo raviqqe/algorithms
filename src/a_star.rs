@@ -1,23 +1,21 @@
 use std::collections::HashMap;
 
-fn search(start: (usize, usize), goal:(usize, usize), h: impl Fn() -> usize) {
+fn search(start: usize, goal:usize, node_count: usize, cost: impl Fn() -> usize) -> Option<usize> {
     let open= vec![ start ];
     let closed = HashMap::new();
 
-    // For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
-    gScore := map with default value of Infinity
-    gScore[start] := 0
+    let mut g  = vec![  usize::MAX; node_count];
+    g[start] = 0;
 
-    // For node n, fScore[n] := gScore[n] + h(n). fScore[n] represents our current best guess as to
-    // how cheap a path could be from start to finish if it goes through n.
-    fScore := map with default value of Infinity
-    fScore[start] := h(start)
+    let f = vec![usize::MAX, node_count];
+    f[start] = h(start) + g(n);
 
     while openSet is not empty
         // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
         current := the node in openSet having the lowest fScore[] value
-        if current = goal
-            return reconstruct_path(cameFrom, current)
+        if current = goal {
+            return Some()
+        }
 
         openSet.Remove(current)
         for each neighbor of current
@@ -32,6 +30,5 @@ fn search(start: (usize, usize), goal:(usize, usize), h: impl Fn() -> usize) {
                 if neighbor not in openSet
                     openSet.add(neighbor)
 
-    // Open set is empty but goal was never reached
-    return failure
-    }
+    None
+}
