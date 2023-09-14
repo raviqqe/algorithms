@@ -12,9 +12,9 @@ fn main() {
 
     for i in 0..xs.len() {
         let x = xs[i];
-        let y = if i > 0 { ys[i - 1] } else { (0, 0) };
+        let (w, l) = if i > 0 { ys[i - 1] } else { (0, 0) };
 
-        ys[i] = (y.0 + x, y.1 + 1 - x);
+        ys[i] = (w + x, l + 1 - x);
     }
 
     for (i, j) in qs {
