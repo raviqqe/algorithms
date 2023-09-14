@@ -2,7 +2,7 @@ use proconio::{input, marker::Bytes};
 
 fn main() {
     input! {
-        n: usize,
+        _: usize,
         s: Bytes,
     }
 
