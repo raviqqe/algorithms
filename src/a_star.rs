@@ -16,7 +16,7 @@ fn search(
     f[start] = g[start] + h(start);
 
     while let Some(i) = open.pop() {}
-    // // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
+    // This operation can occur in O(Log(N)) time if openSet is a min-heap or a priority queue
     // current := the node in openSet having the lowest fScore[] value
     // if current = goal {
     //     return Some()
