@@ -6,13 +6,13 @@ fn search(
     nodes: &[HashSet<usize>],
     h: impl Fn(usize) -> usize,
 ) -> Option<usize> {
-    let mut open = BinaryHeap::from_iter([start]);
+    let mut q = BinaryHeap::from_iter([start]);
     let mut closed = HashMap::new();
 
     let mut f = HashMap::from_iter([(start, h(start))]);
     let mut g = HashMap::from_iter([(start, 0)]);
 
-    while let Some(i) = open.pop() {
+    while let Some(i) = q.pop() {
         if i == end {
             return Some(f[end]);
         }
