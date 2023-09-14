@@ -12,13 +12,14 @@ fn main() {
 
 fn solve(xs: &[usize], ys: &[usize]) -> usize {
     let n = xs.len() + 1;
-    let mut dp = vec![0; n];
+    let mut dp = vec![usize::MAX; n];
+    dp[0] = 0;
 
     for i in 0..n {
         if i < n - 1 {
-            dp[i] = 0;
+            dp[i + 1] = dp[i + 1].min(dp[i] + xs[i]);
         } else if i < n - 2 {
-            dp[i + 2] = foo;
+            dp[i + 2] = dp[i + 2].min(dp[i] + ys[i - 2]);
         }
     }
 
