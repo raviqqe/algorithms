@@ -39,4 +39,9 @@ mod tests {
         assert_eq!(solve(&[1, 2], &[1, 2]), 300);
         assert_eq!(solve(&[1, 3, 3, 6, 5, 6], &[2, 4, 5, 6, 6, 6]), 500)
     }
+
+    #[test]
+    fn unreachable() {
+        assert_eq!(solve(&[1, 2, 3, 4], &[4, 2, 3, 4]), 550);
+    }
 }
