@@ -2,7 +2,8 @@ use proconio::input;
 
 fn main() {
     input! {
-        s: String,
-        t: String,
+        n: usize
+        xs: [usize; n - 1],
+        ys: [usize; n - 1],
     }
 }
