@@ -36,6 +36,7 @@ mod tests {
     #[test]
     fn simple() {
         assert_eq!(solve(&[1], &[1]), 150);
+        assert_eq!(solve(&[1, 2], &[2, 2]), 250);
         assert_eq!(solve(&[1, 3, 3, 6, 5, 6], &[2, 4, 5, 6, 6, 6]), 500)
     }
 }
