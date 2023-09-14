@@ -7,13 +7,16 @@ pub fn search(
     nodes: &[HashSet<(usize, usize)>],
     h: impl Fn(usize) -> usize,
 ) -> Option<(usize, Vec<usize>)> {
-    let mut q = BinaryHeap::from_iter([start]);
+    let mut open = BinaryHeap::from_iter([start]);
+    let mut closed = HashSet::new();
     let mut from = HashMap::new();
 
     let mut f = HashMap::<usize, _>::from_iter([(start, h(start))]);
     let mut g = HashMap::<usize, _>::from_iter([(start, 0)]);
 
-    while let Some(i) = q.pop() {
+    while let Some(i) = open.pop() {
+        closed.insert(i);
+
         if i == end {
             return Some((g[&end], reconstruct(end, &from)));
         }
@@ -27,8 +30,8 @@ pub fn search(
                 g.insert(j, c);
                 f.insert(j, c + h(j));
 
-                if !q.iter().any(|&i| i == j) {
-                    q.push(j);
+                if !closed.contains(&j) {
+                    open.push(j);
                 }
             }
         }
@@ -37,11 +40,12 @@ pub fn search(
     None
 }
 
-fn reconstruct(i: usize, from: &HashMap<usize, usize>) -> Vec<usize> {
+fn reconstruct(mut i: usize, from: &HashMap<usize, usize>) -> Vec<usize> {
     let mut xs = vec![i];
 
     while let Some(&j) = from.get(&i) {
         xs.push(j);
+        i = j;
     }
 
     xs.reverse();
