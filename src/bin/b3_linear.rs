@@ -15,7 +15,7 @@ fn solve(xs: &[(usize, usize)], m: usize) -> usize {
 
     for i in 0..xs.len() {}
 
-    dp[0]
+    dp[xs.len()].iter().copied().max().unwrap_or_default()
 }
 
 #[cfg(test)]
