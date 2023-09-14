@@ -1,11 +1,11 @@
-use proconio::input;
+use proconio::{input, marker::Usize1};
 
 fn main() {
     input! {
         n: usize,
         m: usize,
         mut xs: [usize; n],
-        qs: [(usize, usize); m],
+        qs: [(Usize1, Usize1); m],
     }
 
     for i in 1..xs.len() {
@@ -13,6 +13,6 @@ fn main() {
     }
 
     for (i, j) in qs {
-        println!(xs[j] - xs[i]);
+        println!("{}", xs[j] - (if i == 0 { 0 } else { xs[i - 1] }));
     }
 }
