@@ -35,6 +35,17 @@ pub fn search(
     None
 }
 
+fn reconstruct(i: usize, from: &HashMap<usize, usize>) -> Vec<usize> {
+    let mut xs = vec![i];
+
+    while let Some(&j) = from.get(&i) {
+        xs.push(j);
+    }
+
+    xs.reverse();
+    xs
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
