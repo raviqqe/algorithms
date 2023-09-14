@@ -16,7 +16,12 @@ fn solve(xs: &[usize], m: usize) -> bool {
 
     for i in 1..=xs.len() {
         for j in 0..=m {
-            dp[i][j] = dp[i - 1][j] || j >= xs[i - 1] && dp[i - 1][j - xs[i - 1]];
+            let x = xs[i - 1];
+
+            dp[i][j] = (0..=m / x).any(|k| {
+                let w = k * x;
+                j >= w && dp[i - 1][j - w]
+            });
         }
     }
 
@@ -35,13 +40,13 @@ mod tests {
 
         assert_eq!(solve(&[1], 0), true);
         assert_eq!(solve(&[1], 1), true);
-        assert_eq!(solve(&[1], 2), false);
+        assert_eq!(solve(&[1], 2), true);
 
         assert_eq!(solve(&[1, 2], 0), true);
         assert_eq!(solve(&[1, 2], 1), true);
         assert_eq!(solve(&[1, 2], 2), true);
         assert_eq!(solve(&[1, 2], 3), true);
-        assert_eq!(solve(&[1, 2], 4), false);
+        assert_eq!(solve(&[1, 2], 4), true);
 
         assert_eq!(solve(&[2, 2], 0), true);
         assert_eq!(solve(&[2, 2], 1), false);
@@ -65,5 +70,14 @@ mod tests {
         assert_eq!(solve(&[2, 3], 5), true);
         assert_eq!(solve(&[2, 3], 6), true);
         assert_eq!(solve(&[2, 3], 7), true);
+
+        assert_eq!(solve(&[3, 5], 0), true);
+        assert_eq!(solve(&[3, 5], 1), false);
+        assert_eq!(solve(&[3, 5], 2), false);
+        assert_eq!(solve(&[3, 5], 3), true);
+        assert_eq!(solve(&[3, 5], 4), false);
+        assert_eq!(solve(&[3, 5], 5), true);
+        assert_eq!(solve(&[3, 5], 6), true);
+        assert_eq!(solve(&[3, 5], 7), false);
     }
 }
