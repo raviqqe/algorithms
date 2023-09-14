@@ -1,5 +1,5 @@
 use std::{
-    cmp::Ordering,
+    cmp::{Ordering, Reverse},
     collections::{BinaryHeap, HashMap, HashSet},
 };
 
@@ -10,17 +10,17 @@ pub fn search(
     nodes: &[HashSet<(usize, usize)>],
     h: impl Fn(usize) -> usize,
 ) -> Option<(usize, Vec<usize>)> {
-    let mut open = BinaryHeap::from_iter([Node {
+    let mut open = BinaryHeap::from_iter([Reverse(Node {
         index: start,
         cost: 0,
-    }]);
+    })]);
     let mut closed = HashSet::new();
     let mut from = HashMap::new();
 
     let mut f = HashMap::<_, _>::from_iter([(start, h(start))]);
     let mut g = HashMap::<_, _>::from_iter([(start, 0)]);
 
-    while let Some(Node { index: i, .. }) = open.pop() {
+    while let Some(Reverse(Node { index: i, .. })) = open.pop() {
         closed.insert(i);
 
         if i == end {
@@ -37,10 +37,10 @@ pub fn search(
                 f.insert(j, c + h(j));
 
                 if !closed.contains(&j) {
-                    open.push(Node {
+                    open.push(Reverse(Node {
                         index: j,
                         cost: f[&j],
-                    });
+                    }));
                 }
             }
         }
@@ -97,6 +97,40 @@ mod tests {
                 |_| 0
             ),
             Some((1, vec![0, 1]))
+        );
+    }
+
+    #[test]
+    fn one_hop() {
+        assert_eq!(
+            search(
+                0,
+                2,
+                &[
+                    [(1, 1), (2, 1)].into_iter().collect(),
+                    [(2, 1)].into_iter().collect(),
+                    [(0, 1)].into_iter().collect(),
+                ],
+                |_| 0
+            ),
+            Some((1, vec![0, 2]))
+        );
+    }
+
+    #[test]
+    fn two_hop() {
+        assert_eq!(
+            search(
+                0,
+                2,
+                &[
+                    [(1, 1), (2, 100)].into_iter().collect(),
+                    [(2, 1)].into_iter().collect(),
+                    [(0, 1)].into_iter().collect(),
+                ],
+                |_| 0
+            ),
+            Some((2, vec![0, 1, 2]))
         );
     }
 }
