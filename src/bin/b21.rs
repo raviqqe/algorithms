@@ -12,9 +12,9 @@ fn main() {
 fn solve(s: &[u8]) -> usize {
     let mut dp = vec![vec![false; s.len()]; s.len()];
 
-    for i in 0..s.len() {
+    for i in (0..s.len()).rev() {
         for j in i..s.len() {
-            dp[i][j] = i == j || false;
+            dp[i][j] = i == j || s[i] == s[j] && (i + 1 == j || dp[i + 1][j - 1]);
         }
     }
 
@@ -41,5 +41,14 @@ mod tests {
         assert_eq!(solve(b"a"), 1);
         assert_eq!(solve(b"aa"), 2);
         assert_eq!(solve(b"aaa"), 3);
+    }
+
+    #[test]
+    fn complex() {
+        assert_eq!(solve(b"ab"), 1);
+        assert_eq!(solve(b"aba"), 3);
+        assert_eq!(solve(b"abcde"), 1);
+        assert_eq!(solve(b"abcbe"), 3);
+        assert_eq!(solve(b"programming"), 4);
     }
 }
