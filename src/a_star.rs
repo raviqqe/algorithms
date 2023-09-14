@@ -1,4 +1,7 @@
-use std::collections::{BinaryHeap, HashMap, HashSet};
+use std::{
+    cmp::Ordering,
+    collections::{BinaryHeap, HashMap, HashSet},
+};
 
 // https://en.wikipedia.org/wiki/A*_search_algorithm
 pub fn search(
@@ -7,14 +10,17 @@ pub fn search(
     nodes: &[HashSet<(usize, usize)>],
     h: impl Fn(usize) -> usize,
 ) -> Option<(usize, Vec<usize>)> {
-    let mut open = BinaryHeap::from_iter([start]);
+    let mut open = BinaryHeap::from_iter([Node {
+        index: start,
+        cost: 0,
+    }]);
     let mut closed = HashSet::new();
     let mut from = HashMap::new();
 
-    let mut f = HashMap::<usize, _>::from_iter([(start, h(start))]);
-    let mut g = HashMap::<usize, _>::from_iter([(start, 0)]);
+    let mut f = HashMap::<_, _>::from_iter([(start, h(start))]);
+    let mut g = HashMap::<_, _>::from_iter([(start, 0)]);
 
-    while let Some(i) = open.pop() {
+    while let Some(Node { index: i, .. }) = open.pop() {
         closed.insert(i);
 
         if i == end {
@@ -31,7 +37,10 @@ pub fn search(
                 f.insert(j, c + h(j));
 
                 if !closed.contains(&j) {
-                    open.push(j);
+                    open.push(Node {
+                        index: j,
+                        cost: f[&j],
+                    });
                 }
             }
         }
@@ -50,6 +59,24 @@ fn reconstruct(mut i: usize, from: &HashMap<usize, usize>) -> Vec<usize> {
 
     xs.reverse();
     xs
+}
+
+#[derive(Eq, PartialEq)]
+struct Node {
+    index: usize,
+    cost: usize,
+}
+
+impl Ord for Node {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.cost.cmp(&other.cost)
+    }
+}
+
+impl PartialOrd for Node {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 #[cfg(test)]
