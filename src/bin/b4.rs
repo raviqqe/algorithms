@@ -5,7 +5,7 @@ fn main() {
 
     let mut x = 0;
 
-    for c in s.chars().rev() {
+    for c in s.chars() {
         x *= 2;
         x += if c == '0' { 0 } else { 1 };
     }
