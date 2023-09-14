@@ -9,11 +9,8 @@ fn search(
     let mut open = BinaryHeap::from_iter([start]);
     let mut closed = HashMap::new();
 
-    let mut g = vec![usize::MAX; nodes.len()];
-    g[start] = 0;
-
-    let mut f = vec![usize::MAX, nodes.len()];
-    f[start] = g[start] + h(start);
+    let mut f = HashMap::from_iter([(start, h(start))]);
+    let mut g = HashMap::from_iter([(start, 0)]);
 
     while let Some(i) = open.pop() {
         if i == end {
