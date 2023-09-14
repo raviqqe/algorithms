@@ -16,9 +16,10 @@ fn main() {
     }
 
     let mut zs = vec![0; d];
+    zs[0] = xs[0];
 
-    for i in 0..d {
-        zs[i] = (if i == 0 { 0 } else { zs[i - 1] }) + xs[i] - (if i == 0 { 0 } else { ys[i - 1] });
+    for i in 1..d {
+        zs[i] = zs[i - 1] + xs[i] - ys[i - 1];
     }
 
     for z in zs {
