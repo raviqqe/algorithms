@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use proconio::{input, marker::Usize1};
 
 fn main() {
@@ -25,12 +27,10 @@ fn main() {
 
         println!(
             "{}",
-            if w == l {
-                "draw"
-            } else if w < l {
-                "lose"
-            } else {
-                "win"
+            match w.cmp(&l) {
+                Ordering::Equal => "draw",
+                Ordering::Less => "lose",
+                Ordering::Greater => "win",
             }
         );
     }
