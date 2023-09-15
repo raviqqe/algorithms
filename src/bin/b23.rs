@@ -40,8 +40,7 @@ fn solve_start(start: usize, xs: &[(f64, f64)]) -> OrderedFloat<f64> {
         .into_iter()
         .flatten()
         .enumerate()
-        .map(|(i, x)| OrderedFloat(x + distance(start, i, xs)))
-        .min()
+        .find_map(|(i, x)| (i == start).then_some(x))
         .unwrap()
 }
 
