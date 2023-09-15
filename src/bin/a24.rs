@@ -13,7 +13,7 @@ fn solve(xs: &[usize]) -> usize {
     for i in 1..n {
         let (x, j) = dp[i - 1];
 
-        dp[i] = if xs[j] < xs[i] { (x + 1, i) } else { (x, j) };
+        dp[i] = if xs[j] < xs[i] { (x + 1, i) } else { (x, i) };
     }
 
     dp.last().unwrap().0
