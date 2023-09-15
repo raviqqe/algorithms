@@ -1,3 +1,4 @@
+use ordered_float::OrderedFloat;
 use proconio::input;
 
 fn main() {
@@ -6,17 +7,42 @@ fn main() {
         xs: [(f64, f64); n],
     }
 
-    let mut dp = vec![vec![None; n]; 1 << n];
+    println!("{}", solve(&xs));
+}
+
+fn solve(xs: &[(f64, f64)]) -> f64 {
+    let n = xs.len();
+    let mut dp = vec![vec![OrderedFloat(f64::INFINITY); n]; 1 << n];
 
     for j in 0..n {
-        dp[0][j] = Some(0);
+        dp[0][j] = OrderedFloat(0.0);
     }
 
-    for i in 1..1 << n {
+    for i in 0..1 << n {
         for j in 0..n {
-            dp[i][j] = dp[i][j];
+            for k in 0..n {
+                if 1 << k & i > 0 {
+                    continue;
+                }
+
+                let ii = i | 1 << k;
+
+                dp[ii][k] = dp[ii][j].min(
+                    dp[i][j] + ((xs[j].0 - xs[k].0).powi(2) + (xs[j].1 - xs[k].1).powi(2)).sqrt(),
+                );
+            }
         }
     }
 
-    println!("{}", 0);
+    dp.last().into_iter().flatten().min().unwrap().0
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn simple() {
+        assert_eq!(solve(&[(0.0, 0.0), (0.0, 1.0)]), 1.0);
+    }
 }
