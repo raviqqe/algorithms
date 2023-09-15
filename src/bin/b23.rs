@@ -11,13 +11,9 @@ fn main() {
 }
 
 fn solve(xs: &[(f64, f64)]) -> f64 {
-    (0..xs.len()).map(|i| solve_start(i, xs)).min().unwrap().0
-}
-
-fn solve_start(start: usize, xs: &[(f64, f64)]) -> OrderedFloat<f64> {
     let n = xs.len();
     let mut dp = vec![vec![OrderedFloat(f64::INFINITY); n + 1]; 1 << n];
-    dp[0][start] = OrderedFloat(0.0);
+    dp[0][0] = OrderedFloat(0.0);
 
     for i in 0..1 << n {
         for j in 0..n {
@@ -33,12 +29,7 @@ fn solve_start(start: usize, xs: &[(f64, f64)]) -> OrderedFloat<f64> {
         }
     }
 
-    *dp.last()
-        .into_iter()
-        .flatten()
-        .enumerate()
-        .find_map(|(i, x)| (i == start).then_some(x))
-        .unwrap()
+    dp.last().unwrap()[0].0
 }
 
 fn distance(j: usize, k: usize, xs: &[(f64, f64)]) -> f64 {
