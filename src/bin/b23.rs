@@ -17,6 +17,10 @@ fn solve(xs: &[(f64, f64)]) -> f64 {
 
     for i in 0..1 << n {
         for j in 0..n {
+            if dp[i][j].is_infinite() {
+                continue;
+            }
+
             for k in 0..n {
                 if 1 << k & i > 0 {
                     continue;
