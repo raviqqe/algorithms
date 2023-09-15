@@ -5,4 +5,6 @@ fn main() {
         n: usize,
         xs: [(f64, f64); n],
     }
+
+    println!("{}", 0);
 }
