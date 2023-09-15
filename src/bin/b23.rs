@@ -43,6 +43,7 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!(solve(&[(0.0, 0.0), (0.0, 1.0)]), 1.0);
+        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0)]), 1.0);
+        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 2.0);
     }
 }
