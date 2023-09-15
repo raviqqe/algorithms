@@ -25,7 +25,7 @@ fn solve_start(start: usize, xs: &[(f64, f64)]) -> OrderedFloat<f64> {
     for i in 0..1 << n {
         for j in 0..n {
             for k in 0..n {
-                if j == k || 1 << k & i > 0 {
+                if 1 << k & i > 0 {
                     continue;
                 }
 
