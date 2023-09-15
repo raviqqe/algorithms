@@ -35,8 +35,8 @@ fn solve(xs: &[(f64, f64)]) -> f64 {
     dp.last().unwrap()[0]
 }
 
-fn distance(j: usize, k: usize, xs: &[(f64, f64)]) -> f64 {
-    ((xs[j].0 - xs[k].0).powi(2) + (xs[j].1 - xs[k].1).powi(2)).sqrt()
+fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
+    ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
 #[cfg(test)]
