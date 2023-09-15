@@ -12,5 +12,11 @@ fn main() {
         dp[0][j] = Some(0);
     }
 
+    for i in 0..1 << n {
+        for j in 0..n {
+            dp[0][j] = Some(0);
+        }
+    }
+
     println!("{}", 0);
 }
