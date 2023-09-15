@@ -9,11 +9,12 @@ fn main() {
 fn solve(xs: &[usize]) -> usize {
     let n = xs.len();
     let mut dp = vec![(1, 0); n];
+    let mut ys = vec![0; n];
 
     for i in 1..n {
-        let (x, j) = dp[i - 1];
+        let (y, j) = dp[i - 1];
 
-        dp[i] = if xs[j] < xs[i] { (x + 1, i) } else { (x, i) };
+        dp[i] = if xs[j] < xs[i] { (y + 1, i) } else { (y, j) };
     }
 
     dp.last().unwrap().0
@@ -34,6 +35,12 @@ mod tests {
         assert_eq!(solve(&[1, 2, 3, 0]), 3);
         assert_eq!(solve(&[3, 2, 1]), 1);
         assert_eq!(solve(&[1, 2, 1, 3, 4]), 4);
+    }
+
+    #[test]
+    fn complex() {
+        assert_eq!(solve(&[1, 2, 1, 2, 3, 4]), 4);
         assert_eq!(solve(&[2, 1, 2, 1, 3, 4]), 4);
+        assert_eq!(solve(&[1, 2, 1, 2, 3, 4]), 4);
     }
 }
