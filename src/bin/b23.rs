@@ -27,7 +27,7 @@ fn solve(xs: &[(f64, f64)]) -> f64 {
 
                 let ii = i | 1 << k;
 
-                dp[ii][k] = dp[ii][j].min(
+                dp[ii][k] = dp[ii][k].min(
                     dp[i][j] + ((xs[j].0 - xs[k].0).powi(2) + (xs[j].1 - xs[k].1).powi(2)).sqrt(),
                 );
             }
