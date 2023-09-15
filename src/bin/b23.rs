@@ -16,11 +16,8 @@ fn solve(xs: &[(f64, f64)]) -> f64 {
 
 fn solve_start(start: usize, xs: &[(f64, f64)]) -> OrderedFloat<f64> {
     let n = xs.len();
-    let mut dp = vec![vec![OrderedFloat(f64::INFINITY); n]; 1 << n];
-
-    for i in 0..n {
-        dp[1 << i][i] = OrderedFloat(distance(start, i, xs));
-    }
+    let mut dp = vec![vec![OrderedFloat(f64::INFINITY); n + 1]; 1 << n];
+    dp[0][start] = OrderedFloat(0.0);
 
     for i in 0..1 << n {
         for j in 0..n {
