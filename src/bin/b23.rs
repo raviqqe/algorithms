@@ -1,4 +1,3 @@
-use ordered_float::OrderedFloat;
 use proconio::input;
 
 fn main() {
@@ -12,8 +11,8 @@ fn main() {
 
 fn solve(xs: &[(f64, f64)]) -> f64 {
     let n = xs.len();
-    let mut dp = vec![vec![OrderedFloat(f64::INFINITY); n + 1]; 1 << n];
-    dp[0][0] = OrderedFloat(0.0);
+    let mut dp = vec![vec![f64::INFINITY; n + 1]; 1 << n];
+    dp[0][0] = 0.0;
 
     for i in 0..1 << n {
         for j in 0..n {
@@ -33,7 +32,7 @@ fn solve(xs: &[(f64, f64)]) -> f64 {
         }
     }
 
-    dp.last().unwrap()[0].0
+    dp.last().unwrap()[0]
 }
 
 fn distance(j: usize, k: usize, xs: &[(f64, f64)]) -> f64 {
