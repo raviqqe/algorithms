@@ -1,5 +1,5 @@
 pub struct LruCache<K, V> {
-    queue: BinaryHeap<(Instant, K)>,
+    queue: VecDeque<K>,
     map: HashMap<K, V>,
 }
 
