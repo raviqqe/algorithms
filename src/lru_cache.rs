@@ -107,7 +107,8 @@ mod tests {
         let mut cache = LruCache::new(1);
 
         cache.insert(0, 42);
-        cache.insert(1, 2045);
+        cache.insert(1, 2023);
+        cache.insert(2, 2045);
 
         assert_eq!(cache.get(&0), None);
         assert_eq!(cache.get(&1), Some(&2045));
