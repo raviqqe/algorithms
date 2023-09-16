@@ -62,55 +62,76 @@ impl<K: Clone + Eq + Hash, V> LruCache<K, V> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::assert_eq;
 
-    #[test]
-    fn empty() {
-        let mut cache = LruCache::<_, ()>::new(0);
+    mod get {
+        use super::*;
+        use pretty_assertions::assert_eq;
 
-        assert_eq!(cache.get(&0), None);
+        #[test]
+        fn empty() {
+            let mut cache = LruCache::<_, ()>::new(0);
+
+            assert_eq!(cache.get(&0), None);
+        }
+
+        #[test]
+        fn update_key_timestamp_on_get() {
+            let mut cache = LruCache::new(1);
+
+            cache.insert(0, 42);
+            cache.insert(1, 2045);
+
+            assert_eq!(cache.get(&0), None);
+            assert_eq!(cache.get(&1), Some(&2045));
+        }
     }
 
-    #[test]
-    fn insert_key() {
-        let mut cache = LruCache::new(1);
+    mod insert {
+        use super::*;
+        use pretty_assertions::assert_eq;
 
-        cache.insert(0, 42);
+        #[test]
+        fn insert_key() {
+            let mut cache = LruCache::new(1);
 
-        assert_eq!(cache.get(&0), Some(&42));
-    }
+            cache.insert(0, 42);
 
-    #[test]
-    fn insert_keys() {
-        let mut cache = LruCache::new(2);
+            assert_eq!(cache.get(&0), Some(&42));
+        }
 
-        cache.insert(0, 42);
-        cache.insert(1, 2045);
+        #[test]
+        fn insert_keys() {
+            let mut cache = LruCache::new(2);
 
-        assert_eq!(cache.get(&0), Some(&42));
-        assert_eq!(cache.get(&1), Some(&2045));
-    }
+            cache.insert(0, 42);
+            cache.insert(1, 2045);
 
-    #[test]
-    fn push_away_key_out_of_one() {
-        let mut cache = LruCache::new(1);
+            assert_eq!(cache.get(&0), Some(&42));
+            assert_eq!(cache.get(&1), Some(&2045));
+        }
 
-        cache.insert(0, 42);
-        cache.insert(1, 2045);
+        #[test]
+        fn push_away_key_out_of_one_by_insert() {
+            let mut cache = LruCache::new(1);
 
-        assert_eq!(cache.get(&0), None);
-        assert_eq!(cache.get(&1), Some(&2045));
-    }
+            cache.insert(0, 42);
+            cache.insert(1, 2045);
 
-    #[test]
-    fn push_away_key_out_of_two() {
-        let mut cache = LruCache::new(1);
+            assert_eq!(cache.get(&0), None);
+            assert_eq!(cache.get(&1), Some(&2045));
+        }
 
-        cache.insert(0, 42);
-        cache.insert(1, 2023);
-        cache.insert(2, 2045);
+        #[test]
+        fn push_away_key_out_of_two_by_insert() {
+            let mut cache = LruCache::new(2);
 
-        assert_eq!(cache.get(&0), None);
-        assert_eq!(cache.get(&1), Some(&2045));
+            cache.insert(0, 42);
+            cache.insert(1, 2023);
+            cache.insert(2, 2045);
+
+            assert_eq!(cache.get(&0), None);
+            assert_eq!(cache.get(&1), Some(&2023));
+            assert_eq!(cache.get(&2), Some(&2045));
+        }
     }
 }
