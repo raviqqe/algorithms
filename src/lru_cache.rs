@@ -1,3 +1,3 @@
-pub struct LruCache {
-    queue: BinaryHeap,
+pub struct LruCache<K, V> {
+    queue: BinaryHeap<(Instant, K)>,
 }
