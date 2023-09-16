@@ -76,13 +76,18 @@ mod tests {
 
         #[test]
         fn update_key_timestamp_on_get() {
-            let mut cache = LruCache::new(1);
+            let mut cache = LruCache::new(2);
 
             cache.insert(0, 42);
             cache.insert(1, 2045);
 
-            assert_eq!(cache.get(&0), None);
-            assert_eq!(cache.get(&1), Some(&2045));
+            assert_eq!(cache.get(&0), Some(&42));
+
+            cache.insert(2, 2023);
+
+            assert_eq!(cache.get(&0), Some(&42));
+            assert_eq!(cache.get(&1), None);
+            assert_eq!(cache.get(&2), Some(&2023));
         }
     }
 
