@@ -11,8 +11,8 @@ impl<K, V> LruCache<K, V> {
         }
     }
 
-    pub fn get(&mut self, key: K) -> Self {
-        self.get()
+    pub fn get(&mut self, key: K) -> Option<K> {
+        self.map.get(key)
     }
 
     fn update_queue(&mut self, key: K) {}
