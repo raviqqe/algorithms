@@ -75,7 +75,7 @@ mod tests {
 
         cache.insert(0, 42);
 
-        assert_eq!(cache.get(&0), Some(42));
+        assert_eq!(cache.get(&0), Some(&42));
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod tests {
         cache.insert(0, 42);
         cache.insert(1, 2045);
 
-        assert_eq!(cache.get(&0), Some(42));
-        assert_eq!(cache.get(&1), Some(2045));
+        assert_eq!(cache.get(&0), Some(&42));
+        assert_eq!(cache.get(&1), Some(&2045));
     }
 }
