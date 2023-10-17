@@ -20,7 +20,9 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
                     dp[ii][j][k] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
 
                     if j + 1 < m {
-                        dp[ii][j + 1][k] = dp[ii][l].min(dp[i][j] + distance(j, l, xs));
+                        assert!(dp[ii][j + 1][l].is_infinite());
+
+                        dp[ii][j + 1][l] = dp[ii][j][k];
                     }
                 }
             }
