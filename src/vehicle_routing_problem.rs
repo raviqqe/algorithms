@@ -1,7 +1,12 @@
+use ordered_float::OrderedFloat;
+
 pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
     let n = xs.len();
-    let mut dp = vec![vec![vec![f64::INFINITY; n + 1]; m]; 1 << n];
-    dp[0][0][0] = 0.0;
+    let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
+
+    for i in 0..n {
+        dp[1 << i][0][i] = 0.0;
+    }
 
     for i in 0..1 << n {
         for j in 0..m {
@@ -17,19 +22,23 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
 
                     let ii = i | 1 << l;
 
-                    dp[ii][j][k] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
+                    dp[ii][j][l] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
 
                     if j + 1 < m {
-                        assert!(dp[ii][j + 1][l].is_infinite());
-
-                        dp[ii][j + 1][l] = dp[ii][j][k];
+                        dp[ii][j + 1][l] = dp[ii][j + 1][l].min(dp[ii][j][k]);
                     }
                 }
             }
         }
     }
 
-    dp.last().unwrap().last().unwrap()[0]
+    *dp.last()
+        .unwrap()
+        .last()
+        .unwrap()
+        .iter()
+        .min_by_key(|&&x| OrderedFloat(x))
+        .unwrap()
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
@@ -42,12 +51,20 @@ mod tests {
     use pretty_assertions::assert_eq;
 
     #[test]
-    fn simple() {
-        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 2.0);
+    fn vehicle() {
+        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 1.0);
         assert_eq!(
             solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
-            4.0
+            3.0
         );
-        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 4.0);
+        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 2.0);
+        assert_eq!(solve(1, &[(0.0, 0.0), (2.0, 0.0), (1.0, 0.0)]), 2.0);
+        assert_eq!(solve(1, &[(1.0, 0.0), (2.0, 0.0), (0.0, 0.0)]), 2.0);
+        assert_eq!(solve(1, &[(2.0, 0.0), (1.0, 0.0), (0.0, 0.0)]), 2.0);
+    }
+
+    #[test]
+    fn two_vehicles() {
+        assert_eq!(solve(2, &[(0.0, 0.0), (1.0, 0.0)]), 0.0);
     }
 }
