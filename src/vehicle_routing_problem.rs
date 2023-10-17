@@ -10,14 +10,14 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
                     continue;
                 }
 
-                for k in 0..n {
-                    if 1 << k & i > 0 {
+                for l in 0..n {
+                    if 1 << l & i > 0 {
                         continue;
                     }
 
-                    let ii = i | 1 << k;
+                    let ii = i | 1 << l;
 
-                    dp[ii][k] = dp[ii][k].min(dp[i][j] + distance(j, k, xs));
+                    dp[ii][h] = dp[ii][l].min(dp[i][j] + distance(j, l, xs));
                 }
             }
         }
