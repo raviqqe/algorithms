@@ -1,4 +1,4 @@
-pub fn solve(xs: &[(f64, f64)]) -> f64 {
+pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
     let n = xs.len();
     let mut dp = vec![vec![f64::INFINITY; n + 1]; 1 << n];
     dp[0][0] = 0.0;
@@ -35,11 +35,11 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0)]), 2.0);
+        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 2.0);
         assert_eq!(
-            solve(&[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
+            solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
             4.0
         );
-        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 4.0);
+        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 4.0);
     }
 }
