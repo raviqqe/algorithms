@@ -29,8 +29,7 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
         }
     }
 
-    // dp.last().unwrap()[0]
-    todo!()
+    dp.last().unwrap().last().unwrap()[0]
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
