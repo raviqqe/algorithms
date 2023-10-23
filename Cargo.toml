@@ -1,6 +1,3 @@
 [workspace]
-members = ["algorithm", "tessoku"]
+members = ["algorithm", "leet_code", "tessoku"]
 resolver = "2"
-
-[profile.release]
-lto = true
