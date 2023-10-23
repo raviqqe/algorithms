@@ -1,5 +1,5 @@
 [workspace]
-members = ["algorithm"]
+members = ["algorithm", "tessoku"]
 resolver = "2"
 
 [profile.release]
