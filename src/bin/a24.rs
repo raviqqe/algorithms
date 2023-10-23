@@ -19,7 +19,7 @@ fn solve(xs: &[usize]) -> usize {
             continue;
         };
         dp[i] = l;
-        ys[l] = ys[l].min(x);
+        ys[l] = x;
     }
 
     dp.into_iter().max().unwrap() + 1
