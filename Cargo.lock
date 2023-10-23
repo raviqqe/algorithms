@@ -119,6 +119,9 @@ dependencies = [
 [[package]]
 name = "tessoku"
 version = "0.1.0"
+dependencies = [
+ "proconio",
+]
 
 [[package]]
 name = "unicode-ident"
