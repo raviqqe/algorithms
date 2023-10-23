@@ -8,7 +8,6 @@ fn main() {
 
 fn solve(xs: &[usize]) -> usize {
     let n = xs.len();
-    let mut dp = vec![0; n];
     let mut ys = vec![usize::MAX; n];
 
     for i in 0..n {
@@ -18,11 +17,17 @@ fn solve(xs: &[usize]) -> usize {
         } else {
             continue;
         };
-        dp[i] = l;
+
         ys[l] = x;
     }
 
-    dp.into_iter().max().unwrap() + 1
+    ys.iter()
+        .enumerate()
+        .filter(|(_, l)| **l != usize::MAX)
+        .map(|(i, _)| i)
+        .max()
+        .unwrap()
+        + 1
 }
 
 #[cfg(test)]
