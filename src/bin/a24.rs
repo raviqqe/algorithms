@@ -8,16 +8,17 @@ fn main() {
 
 fn solve(xs: &[usize]) -> usize {
     let n = xs.len();
-    let mut dp = vec![(1, 0); n];
-    let mut ys = vec![0; n];
+    let mut dp = vec![0; n];
 
-    for i in 1..n {
-        let (y, j) = dp[i - 1];
-
-        dp[i] = if xs[j] < xs[i] { (y + 1, i) } else { (y, j) };
+    for i in 0..n {
+        for j in i + 1..n {
+            if xs[j] > xs[i] {
+                dp[j] = dp[j].max(dp[i] + 1);
+            }
+        }
     }
 
-    dp.last().unwrap().0
+    dp.into_iter().max().unwrap() + 1
 }
 
 #[cfg(test)]
