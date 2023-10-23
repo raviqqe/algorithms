@@ -29,6 +29,9 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
                     dp[ii][j][l] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
 
                     if j + 1 < m {
+                        // We change a vehicle and either:
+                        // - Stay at the same stop.
+                        // - "Warp" to a new stop.
                         for (ii, kk) in [(i, k), (ii, l)] {
                             dp[ii][j + 1][kk] = dp[ii][j + 1][kk].min(dp[i][j][k]);
                         }
