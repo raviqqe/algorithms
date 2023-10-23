@@ -1,11 +1,15 @@
 use ordered_float::OrderedFloat;
 
+// The giant-tour TSP for VRP
+//
+// Local Search for Vehicle Routing and Scheduling Problems: Review and Conceptual Integration,
+// Funke et al. (2005)
 pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
 
     for i in 0..n {
-        dp[1 << i][0][i] = 0.0;
+        dp[0][0][i] = 0.0;
     }
 
     for i in 0..1 << n {
@@ -25,7 +29,9 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
                     dp[ii][j][l] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
 
                     if j + 1 < m {
-                        dp[ii][j + 1][l] = dp[ii][j + 1][l].min(dp[i][j][k]);
+                        for (ii, kk) in [(i, k), (ii, l)] {
+                            dp[ii][j + 1][kk] = dp[ii][j + 1][kk].min(dp[i][j][k]);
+                        }
                     }
                 }
             }
@@ -53,6 +59,11 @@ mod tests {
     mod single_vehicle {
         use super::*;
         use pretty_assertions::assert_eq;
+
+        #[test]
+        fn one_stop() {
+            assert_eq!(solve(1, &[(0.0, 0.0)]), 0.0);
+        }
 
         #[test]
         fn two_stops() {
@@ -96,6 +107,11 @@ mod tests {
         use pretty_assertions::assert_eq;
 
         #[test]
+        fn one_stop() {
+            assert_eq!(solve(2, &[(0.0, 0.0)]), 0.0);
+        }
+
+        #[test]
         fn two_stops() {
             let stops = [(0.0, 0.0), (1.0, 0.0)];
 
@@ -135,6 +151,20 @@ mod tests {
     mod three_vehicles {
         use super::*;
         use pretty_assertions::assert_eq;
+
+        #[test]
+        fn one_stop() {
+            assert_eq!(solve(3, &[(0.0, 0.0)]), 0.0);
+        }
+
+        #[test]
+        fn two_stops() {
+            let stops = [(0.0, 0.0), (1.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(3, &stops), 0.0);
+            }
+        }
 
         #[test]
         fn three_stops() {
