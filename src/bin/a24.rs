@@ -11,9 +11,7 @@ fn solve(xs: &[usize]) -> usize {
     let mut dp = vec![0; n];
     let mut ys = vec![usize::MAX; n];
 
-    ys[0] = xs[0];
-
-    for i in 1..n {
+    for i in 0..n {
         let x = xs[i];
         let l = match ys[..i].binary_search(&x) {
             Err(l) => l,
@@ -37,9 +35,9 @@ mod tests {
         assert_eq!(solve(&[1, 2]), 2);
         assert_eq!(solve(&[1, 2, 3]), 3);
         assert_eq!(solve(&[1, 2, 0, 3]), 3);
-        // assert_eq!(solve(&[1, 0, 2, 3]), 3);
-        // assert_eq!(solve(&[1, 2, 3, 0]), 3);
-        // assert_eq!(solve(&[3, 2, 1]), 1);
+        assert_eq!(solve(&[1, 0, 2, 3]), 3);
+        assert_eq!(solve(&[1, 2, 3, 0]), 3);
+        assert_eq!(solve(&[3, 2, 1]), 1);
         // assert_eq!(solve(&[1, 2, 1, 3, 4]), 4);
     }
 
