@@ -23,10 +23,10 @@ fn solve(xs: &[usize]) -> usize {
 
     ys.into_iter()
         .enumerate()
-        .filter(|(_, l)| *l < usize::MAX)
-        .map(|(i, _)| i)
-        .max()
+        .rev()
+        .find(|(_, l)| *l < usize::MAX)
         .unwrap()
+        .0
         + 1
 }
 
