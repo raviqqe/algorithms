@@ -70,10 +70,11 @@ mod tests {
 
         #[test]
         fn four_stops() {
-            assert_eq!(
-                solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
-                3.0
-            );
+            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(1, &stops), 3.0);
+            }
         }
     }
 
