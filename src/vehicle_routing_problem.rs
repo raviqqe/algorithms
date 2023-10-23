@@ -70,6 +70,15 @@ mod tests {
 
         #[test]
         fn four_stops() {
+            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(1, &stops), 4.0);
+            }
+        }
+
+        #[test]
+        fn five_stops() {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
