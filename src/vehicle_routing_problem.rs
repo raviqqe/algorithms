@@ -25,7 +25,7 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
                     dp[ii][j][l] = dp[ii][j][l].min(dp[i][j][k] + distance(k, l, xs));
 
                     if j + 1 < m {
-                        dp[ii][j + 1][l] = dp[ii][j + 1][l].min(dp[ii][j][k]);
+                        dp[ii][j + 1][l] = dp[ii][j + 1][l].min(dp[i][j][k]);
                     }
                 }
             }
