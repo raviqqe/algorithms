@@ -15,7 +15,7 @@ fn solve(xs: &[usize]) -> usize {
         let x = xs[i];
         let l = match ys[..i].binary_search(&x) {
             Err(l) => l,
-            Ok(j) => todo!(),
+            Ok(l) => l + 1,
         };
         dp[i] = l;
         ys[l] = ys[l].min(x);
@@ -38,12 +38,12 @@ mod tests {
         assert_eq!(solve(&[1, 0, 2, 3]), 3);
         assert_eq!(solve(&[1, 2, 3, 0]), 3);
         assert_eq!(solve(&[3, 2, 1]), 1);
-        // assert_eq!(solve(&[1, 2, 1, 3, 4]), 4);
+        assert_eq!(solve(&[1, 2, 1, 3, 4]), 4);
     }
 
     #[test]
     fn complex() {
-        // assert_eq!(solve(&[1, 2, 1, 2, 3, 4]), 4);
+        assert_eq!(solve(&[1, 2, 1, 2, 3, 4]), 4);
         // assert_eq!(solve(&[2, 1, 2, 1, 3, 4]), 4);
         // assert_eq!(solve(&[1, 2, 1, 2, 3, 4]), 4);
     }
