@@ -1,4 +1,5 @@
 use proconio::input;
+use std::convert::identity;
 
 fn main() {
     input! { n: usize, xs: [usize; n] }
@@ -12,11 +13,7 @@ fn solve(xs: &[usize]) -> usize {
 
     for i in 0..n {
         let x = xs[i];
-        let l = if let Err(l) = ys[..i].binary_search(&x) {
-            l
-        } else {
-            continue;
-        };
+        let l = ys[..i].binary_search(&x).map_or_else(identity, identity);
 
         ys[l] = x;
     }
