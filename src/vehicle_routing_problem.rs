@@ -56,7 +56,11 @@ mod tests {
 
         #[test]
         fn two_stops() {
-            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 1.0);
+            let stops = [(0.0, 0.0), (1.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(1, &stops), 1.0);
+            }
         }
 
         #[test]
@@ -70,30 +74,61 @@ mod tests {
 
         #[test]
         fn four_stops() {
-            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
-
-            for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(1, &stops), 4.0);
-            }
-        }
-
-        #[test]
-        fn five_stops() {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
                 assert_eq!(solve(1, &stops), 3.0);
             }
         }
+
+        #[test]
+        fn five_stops() {
+            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(1, &stops), 4.0);
+            }
+        }
     }
 
-    mod multiple_vehicles {
+    mod two_vehicles {
         use super::*;
         use pretty_assertions::assert_eq;
 
         #[test]
-        fn two_vehicles() {
-            assert_eq!(solve(2, &[(0.0, 0.0), (1.0, 0.0)]), 0.0);
+        fn two_stops() {
+            let stops = [(0.0, 0.0), (1.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(2, &stops), 0.0);
+            }
+        }
+
+        #[test]
+        fn three_stops() {
+            let stops = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(2, &stops), 1.0);
+            }
+        }
+
+        #[test]
+        fn four_stops() {
+            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(2, &stops), 2.0);
+            }
+        }
+
+        #[test]
+        fn five_stops() {
+            let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(2, &stops), 3.0);
+            }
         }
     }
 }
