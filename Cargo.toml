@@ -1,12 +1,6 @@
-[package]
-name = "algorithms"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["algorithm", "tessoku"]
+resolver = "2"
 
-[dependencies]
-ordered-float = "4.1.1"
-proconio = { version = "0.4.5", features = ["derive"] }
-
-[dev-dependencies]
-itertools = "0.11.0"
-pretty_assertions = "1.4.0"
+[profile.release]
+lto = true

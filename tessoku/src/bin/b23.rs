@@ -1,4 +1,4 @@
-use algorithms::traveling_salesman_problem;
+use algorithm::traveling_salesman_problem;
 use proconio::input;
 
 fn main() {
