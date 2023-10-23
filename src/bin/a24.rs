@@ -21,9 +21,9 @@ fn solve(xs: &[usize]) -> usize {
         ys[l] = x;
     }
 
-    ys.iter()
+    ys.into_iter()
         .enumerate()
-        .filter(|(_, l)| **l != usize::MAX)
+        .filter(|(_, l)| *l < usize::MAX)
         .map(|(i, _)| i)
         .max()
         .unwrap()
