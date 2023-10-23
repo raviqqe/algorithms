@@ -48,23 +48,42 @@ fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::assert_eq;
+    use itertools::Itertools;
 
-    #[test]
-    fn vehicle() {
-        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 1.0);
-        assert_eq!(
-            solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
-            3.0
-        );
-        assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 2.0);
-        assert_eq!(solve(1, &[(0.0, 0.0), (2.0, 0.0), (1.0, 0.0)]), 2.0);
-        assert_eq!(solve(1, &[(1.0, 0.0), (2.0, 0.0), (0.0, 0.0)]), 2.0);
-        assert_eq!(solve(1, &[(2.0, 0.0), (1.0, 0.0), (0.0, 0.0)]), 2.0);
+    mod single_vehicle {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        #[test]
+        fn two_stops() {
+            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), 1.0);
+        }
+
+        #[test]
+        fn three_stops() {
+            let stops = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)];
+
+            for stops in stops.into_iter().permutations(stops.len()) {
+                assert_eq!(solve(1, &stops), 2.0);
+            }
+        }
+
+        #[test]
+        fn four_stops() {
+            assert_eq!(
+                solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
+                3.0
+            );
+        }
     }
 
-    #[test]
-    fn two_vehicles() {
-        assert_eq!(solve(2, &[(0.0, 0.0), (1.0, 0.0)]), 0.0);
+    mod multiple_vehicles {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        #[test]
+        fn two_vehicles() {
+            assert_eq!(solve(2, &[(0.0, 0.0), (1.0, 0.0)]), 0.0);
+        }
     }
 }

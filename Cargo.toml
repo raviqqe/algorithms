@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+itertools = "0.11.0"
 ordered-float = "4.1.1"
 proconio = { version = "0.4.5", features = ["derive"] }
 
