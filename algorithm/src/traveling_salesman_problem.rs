@@ -30,7 +30,7 @@ fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
-fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> () {
+fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> Vec<usize> {
     let mut js = vec![];
     let mut i = dp[0].len() - 1;
 
@@ -49,7 +49,9 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> () {
         y -= distance(j, k, xs)
     }
 
-    ()
+    js.reverse();
+
+    js
 }
 
 #[cfg(test)]
