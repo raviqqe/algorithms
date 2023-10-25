@@ -1,6 +1,6 @@
 use ordered_float::OrderedFloat;
 
-pub fn solve(xs: &[(f64, f64)]) -> f64 {
+pub fn solve(xs: &[(f64, f64)]) -> (Vec<usize>, f64) {
     let n = xs.len();
     let mut dp = vec![vec![f64::INFINITY; n + 1]; 1 << n];
     dp[0][0] = 0.0;
@@ -23,7 +23,9 @@ pub fn solve(xs: &[(f64, f64)]) -> f64 {
         }
     }
 
-    dp.last().unwrap()[0]
+    let y = dp.last().unwrap()[0];
+
+    (vec![], y)
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
@@ -59,11 +61,16 @@ mod tests {
 
     #[test]
     fn simple() {
-        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0)]), 2.0);
+        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0)]).1, 2.0);
         assert_eq!(
-            solve(&[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
+            solve(&[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]).1,
             4.0
         );
-        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]), 4.0);
+        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]).1, 4.0);
     }
+
+    // #[test]
+    // fn reconstruct() {
+    //     assert_eq!(reconstruct(solve(&[(0.0, 0.0), (1.0, 0.0)])), 2.0);
+    // }
 }
