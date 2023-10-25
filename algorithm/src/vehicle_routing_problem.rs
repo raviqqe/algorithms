@@ -94,7 +94,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(1, &stops), 3.0);
+                assert_eq!(solve(1, &stops).0, 3.0);
             }
         }
 
@@ -103,7 +103,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(1, &stops), 4.0);
+                assert_eq!(solve(1, &stops).0, 4.0);
             }
         }
     }
@@ -114,7 +114,7 @@ mod tests {
 
         #[test]
         fn one_stop() {
-            assert_eq!(solve(2, &[(0.0, 0.0)]), 0.0);
+            assert_eq!(solve(2, &[(0.0, 0.0)]).0, 0.0);
         }
 
         #[test]
@@ -122,7 +122,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(2, &stops), 0.0);
+                assert_eq!(solve(2, &stops).0, 0.0);
             }
         }
 
@@ -131,7 +131,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(2, &stops), 1.0);
+                assert_eq!(solve(2, &stops).0, 1.0);
             }
         }
 
@@ -140,7 +140,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(2, &stops), 2.0);
+                assert_eq!(solve(2, &stops).0, 2.0);
             }
         }
 
@@ -149,7 +149,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(2, &stops), 3.0);
+                assert_eq!(solve(2, &stops).0, 3.0);
             }
         }
     }
@@ -160,7 +160,7 @@ mod tests {
 
         #[test]
         fn one_stop() {
-            assert_eq!(solve(3, &[(0.0, 0.0)]), 0.0);
+            assert_eq!(solve(3, &[(0.0, 0.0)]).0, 0.0);
         }
 
         #[test]
@@ -168,7 +168,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(3, &stops), 0.0);
+                assert_eq!(solve(3, &stops).0, 0.0);
             }
         }
 
@@ -177,7 +177,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(3, &stops), 0.0);
+                assert_eq!(solve(3, &stops).0, 0.0);
             }
         }
 
