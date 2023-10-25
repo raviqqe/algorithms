@@ -36,13 +36,12 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> Vec<usize> {
     let mut j = dp[0].len() - 2;
 
     while i > 0 {
-        let y = dp[i]
+        (j, y) = dp[i]
             .iter()
+            .copied()
             .enumerate()
             .min_by_key(|&(k, x)| OrderedFloat((y - x - distance(k, j, xs)).abs()))
-            .unwrap()
-            .0;
-        let j = dp[i].iter().position(|x| x == y).unwrap();
+            .unwrap();
 
         js.push(j);
         i = i & !(1 << j);
