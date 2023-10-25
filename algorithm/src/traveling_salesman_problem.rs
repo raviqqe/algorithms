@@ -31,9 +31,9 @@ fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
 fn reconstruct(dp: &[Vec<f64>], mut y: f64) -> () {
     let mut js = vec![];
     let mut i = dp[0].len() - 1;
-    let j = dp[i].iter().position(|&x| x == y).unwrap();
 
     while i > 0 {
+        let j = dp[i].iter().position(|&x| x == y).unwrap();
         js.push(j);
         i = i & !(1 << j);
     }
