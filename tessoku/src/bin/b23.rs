@@ -7,5 +7,5 @@ fn main() {
         xs: [(f64, f64); n],
     }
 
-    println!("{}", traveling_salesman_problem::solve(&xs));
+    println!("{}", traveling_salesman_problem::solve(&xs).0);
 }
