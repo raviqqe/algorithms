@@ -45,7 +45,7 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> () {
         y -= distance(j, k, xs)
     }
 
-    return;
+    ()
 }
 
 #[cfg(test)]
