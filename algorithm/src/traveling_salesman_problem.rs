@@ -28,6 +28,16 @@ fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
+fn reconstruct(dp: &[Vec<f64>], mut y: f64) -> () {
+    let i = dp[0].len() - 1;
+
+    while i > 0 {
+        dp[i].iter().find(|&&x| x == y);
+    }
+
+    return;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
