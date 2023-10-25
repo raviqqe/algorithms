@@ -43,6 +43,7 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> () {
 
             dp[i].iter().position(|x| x == y).unwrap()
         };
+
         js.push(j);
         i = i & !(1 << j);
         y -= distance(j, k, xs)
