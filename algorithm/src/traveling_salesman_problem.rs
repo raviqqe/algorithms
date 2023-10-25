@@ -37,7 +37,7 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>]) -> Vec<usize> {
     let mut y = dp[i][j];
 
     while i > 0 {
-        i = i & !(1 << j);
+        i &= !(1 << j);
 
         (j, y) = dp[i]
             .iter()
