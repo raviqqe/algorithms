@@ -35,11 +35,13 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> () {
     let mut i = dp[0].len() - 1;
 
     while i > 0 {
-        let z = dp[i]
-            .iter()
-            .min_by_key(|&x| OrderedFloat((x - y).abs()))
-            .unwrap();
-        let j = dp[i].iter().position(|x| x == z).unwrap();
+        let j = {
+            let z = dp[i]
+                .iter()
+                .min_by_key(|&x| OrderedFloat((x - y).abs()))
+                .unwrap();
+            dp[i].iter().position(|x| x == z).unwrap()
+        };
         js.push(j);
         i = i & !(1 << j);
         y -= distance(j, k, xs)
