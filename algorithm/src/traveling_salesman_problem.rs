@@ -2,7 +2,7 @@ use ordered_float::OrderedFloat;
 
 pub fn solve(xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
     let n = xs.len();
-    let mut dp = vec![vec![f64::INFINITY; n + 1]; 1 << n];
+    let mut dp = vec![vec![f64::INFINITY; n]; 1 << n];
     dp[0][0] = 0.0;
 
     for i in 0..1 << n {
@@ -23,21 +23,22 @@ pub fn solve(xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
         }
     }
 
-    let y = dp.last().unwrap()[0];
-
-    (y, reconstruct(xs, &dp, y))
+    (dp.last().unwrap()[0], reconstruct(xs, &dp))
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
-fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> Vec<usize> {
+fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>]) -> Vec<usize> {
     let mut js = vec![];
     let mut i = dp.len() - 1;
-    let mut j = dp[0].len() - 2;
+    let mut j = 0;
+    let mut y = dp[i][j];
 
     while i > 0 {
+        i = i & !(1 << j);
+
         (j, y) = dp[i]
             .iter()
             .copied()
@@ -46,7 +47,6 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<f64>], mut y: f64) -> Vec<usize> {
             .unwrap();
 
         js.push(j);
-        i = i & !(1 << j);
     }
 
     js.reverse();
@@ -69,8 +69,12 @@ mod tests {
         assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]).0, 4.0);
     }
 
-    // #[test]
-    // fn reconstruct() {
-    //     assert_eq!(reconstruct(solve(&[(0.0, 0.0), (1.0, 0.0)])), 2.0);
-    // }
+    #[test]
+    fn reconstruct() {
+        assert_eq!(solve(&[(0.0, 0.0), (1.0, 0.0)]).1, vec![0, 1]);
+        assert_eq!(
+            solve(&[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]).1,
+            vec![0, 2, 3, 1],
+        );
+    }
 }
