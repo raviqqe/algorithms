@@ -4,7 +4,7 @@ use ordered_float::OrderedFloat;
 //
 // Local Search for Vehicle Routing and Scheduling Problems: Review and
 // Conceptual Integration, Funke et al. (2005)
-pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
+pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
 
@@ -41,13 +41,16 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> f64 {
         }
     }
 
-    *dp.last()
-        .unwrap()
-        .last()
-        .unwrap()
-        .iter()
-        .min_by_key(|&&x| OrderedFloat(x))
-        .unwrap()
+    (
+        *dp.last()
+            .unwrap()
+            .last()
+            .unwrap()
+            .iter()
+            .min_by_key(|&&x| OrderedFloat(x))
+            .unwrap(),
+        vec![],
+    )
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
@@ -65,7 +68,7 @@ mod tests {
 
         #[test]
         fn one_stop() {
-            assert_eq!(solve(1, &[(0.0, 0.0)]), 0.0);
+            assert_eq!(solve(1, &[(0.0, 0.0)]).0, 0.0);
         }
 
         #[test]
@@ -73,7 +76,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(1, &stops), 1.0);
+                assert_eq!(solve(1, &stops).0, 1.0);
             }
         }
 
@@ -82,7 +85,7 @@ mod tests {
             let stops = [(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(1, &stops), 2.0);
+                assert_eq!(solve(1, &stops).0, 2.0);
             }
         }
 
@@ -183,7 +186,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(3, &stops), 1.0);
+                assert_eq!(solve(3, &stops).0, 1.0);
             }
         }
 
@@ -192,7 +195,7 @@ mod tests {
             let stops = [(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)];
 
             for stops in stops.into_iter().permutations(stops.len()) {
-                assert_eq!(solve(3, &stops), 2.0);
+                assert_eq!(solve(3, &stops).0, 2.0);
             }
         }
     }
