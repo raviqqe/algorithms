@@ -4,7 +4,7 @@ use ordered_float::OrderedFloat;
 //
 // Local Search for Vehicle Routing and Scheduling Problems: Review and
 // Conceptual Integration, Funke et al. (2005)
-pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
+pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
 
@@ -49,12 +49,36 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
             .iter()
             .min_by_key(|&&x| OrderedFloat(x))
             .unwrap(),
-        vec![],
+        reconstruct(xs, &dp),
     )
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
+}
+
+fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>]) -> Vec<Vec<usize>> {
+    let mut js = vec![];
+    let mut i = dp.len() - 1;
+    let mut j = 0;
+    let mut y = dp[i][j];
+
+    while i > 0 {
+        i &= !(1 << j);
+
+        (j, y) = dp[i]
+            .iter()
+            .copied()
+            .enumerate()
+            .min_by_key(|&(k, x)| OrderedFloat((y - x - distance(k, j, xs)).abs()))
+            .unwrap();
+
+        js.push(j);
+    }
+
+    js.reverse();
+
+    js
 }
 
 #[cfg(test)]
