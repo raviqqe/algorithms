@@ -62,15 +62,14 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>], mut y: f64) -> Vec<Vec<u
         return Default::default();
     }
 
-    let mut zs = vec![vec![]];
+    let mut js = vec![];
+    let mut ks = vec![];
     let mut i = dp.len() - 1;
     let mut j = dp[0].len() - 1;
     let mut k = 0;
 
     while i > 0 {
         i &= !(1 << k);
-
-        let mut ks = vec![];
 
         let (jj, kk, yy) = dp[i]
             .iter()
@@ -84,14 +83,17 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>], mut y: f64) -> Vec<Vec<u
             .unwrap();
 
         ks.push(j);
+
         j = jj;
         k = kk;
         y = *yy;
     }
 
-    zs.reverse();
+    js.push(ks);
 
-    zs
+    js.reverse();
+
+    js
 }
 
 #[cfg(test)]
@@ -105,7 +107,7 @@ mod tests {
 
         #[test]
         fn one_stop() {
-            assert_eq!(solve(1, &[(0.0, 0.0)]).0, 0.0);
+            assert_eq!(solve(1, &[(0.0, 0.0)]), (0.0, vec![vec![0]]));
         }
 
         #[test]
