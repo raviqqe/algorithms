@@ -41,44 +41,57 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
         }
     }
 
-    (
-        *dp.last()
-            .unwrap()
-            .last()
-            .unwrap()
-            .iter()
-            .min_by_key(|&&x| OrderedFloat(x))
-            .unwrap(),
-        reconstruct(xs, &dp),
-    )
+    let y = *dp
+        .last()
+        .unwrap()
+        .last()
+        .unwrap()
+        .iter()
+        .min_by_key(|&&x| OrderedFloat(x))
+        .unwrap();
+
+    (y, reconstruct(xs, &dp, y))
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
-fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>]) -> Vec<Vec<usize>> {
-    let mut js = vec![];
-    let mut i = dp.len() - 1;
-    let mut j = 0;
-    let mut y = dp[i][j];
-
-    while i > 0 {
-        i &= !(1 << j);
-
-        (j, y) = dp[i]
-            .iter()
-            .copied()
-            .enumerate()
-            .min_by_key(|&(k, x)| OrderedFloat((y - x - distance(k, j, xs)).abs()))
-            .unwrap();
-
-        js.push(j);
+fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>], mut y: f64) -> Vec<Vec<usize>> {
+    if xs.is_empty() || dp[0].is_empty() {
+        return Default::default();
     }
 
-    js.reverse();
+    let mut zs = vec![vec![]];
+    let mut i = dp.len() - 1;
+    let mut j = dp[0].len() - 1;
+    let mut k = 0;
 
-    js
+    while i > 0 {
+        i &= !(1 << k);
+
+        let mut ks = vec![];
+
+        let (jj, kk, yy) = dp[i]
+            .iter()
+            .enumerate()
+            .flat_map(|(jj, ys)| {
+                ys.iter()
+                    .enumerate()
+                    .map(move |(kk, x)| (jj, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
+            })
+            .min_by_key(|&(_, _, x)| x)
+            .unwrap();
+
+        ks.push(j);
+        j = jj;
+        k = kk;
+        y = *yy;
+    }
+
+    zs.reverse();
+
+    zs
 }
 
 #[cfg(test)]
