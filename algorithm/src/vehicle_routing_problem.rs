@@ -1,4 +1,5 @@
 use ordered_float::OrderedFloat;
+use std::mem::take;
 
 // The giant-tour TSP for VRP
 //
@@ -83,6 +84,10 @@ fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>], mut y: f64) -> Vec<Vec<u
             .unwrap();
 
         ks.push(j);
+
+        if j != jj {
+            js.push(take(&mut ks));
+        }
 
         j = jj;
         k = kk;
