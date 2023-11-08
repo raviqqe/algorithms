@@ -73,19 +73,21 @@ fn reconstruct(
     let mut j = dp[0].len() - 1;
 
     while i > 0 {
+        zs.push((j, k));
+
         i &= !(1 << k);
 
         (j, k, y) = dp[i][j]
             .iter()
             .enumerate()
-            .map(move |(kk, x)| (j, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
+            .map(move |(kk, &x)| (j, kk, x, y - x - distance(kk, k, xs)))
             .chain(
                 if j > 0 {
                     Some(
                         dp[i][j - 1]
                             .iter()
                             .enumerate()
-                            .map(move |(kk, x)| (j - 1, kk, OrderedFloat((y - x).abs()))),
+                            .map(move |(kk, &x)| (j - 1, kk, x, y - x)),
                     )
                 } else {
                     None
@@ -93,11 +95,9 @@ fn reconstruct(
                 .into_iter()
                 .flatten(),
             )
-            .min_by_key(|&(_, _, x)| x)
-            .map(|(j, k, y)| (j, k, y.0))
+            .min_by_key(|&(_, _, _, y)| OrderedFloat(y.abs()))
+            .map(|(j, k, y, _)| (j, k, y))
             .unwrap();
-
-        zs.push((j, k));
     }
 
     zs.reverse();
