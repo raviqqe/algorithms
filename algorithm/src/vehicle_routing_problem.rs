@@ -77,7 +77,7 @@ fn reconstruct(
 
         i &= !(1 << k);
 
-        (j, k, y) = dp[i][j]
+        (j, k, y, _) = dp[i][j]
             .iter()
             .enumerate()
             .map(move |(kk, &x)| (j, kk, x, y - x - distance(kk, k, xs)))
@@ -96,7 +96,6 @@ fn reconstruct(
                 .flatten(),
             )
             .min_by_key(|&(_, _, _, y)| OrderedFloat(y.abs()))
-            .map(|(j, k, y, _)| (j, k, y))
             .unwrap();
     }
 
