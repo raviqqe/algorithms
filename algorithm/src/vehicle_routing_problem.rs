@@ -82,7 +82,7 @@ fn reconstruct(
             .flat_map(|(jj, ys)| {
                 ys.iter()
                     .enumerate()
-                    .filter(|(kk, _)| i & 1 << kk == 0)
+                    .filter(|(kk, _)| i & 1 << kk > 0)
                     .map(move |(kk, x)| (jj, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
             })
             .min_by_key(|&(_, _, x)| x)
