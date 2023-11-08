@@ -79,11 +79,11 @@ fn reconstruct(
             .iter()
             .enumerate()
             .filter(|(jj, _)| *jj == j.saturating_sub(1) || *jj == j)
-            .flat_map(|(jj, ys)| {
+            .flat_map(|(j, ys)| {
                 ys.iter()
                     .enumerate()
                     .filter(|(kk, _)| i & 1 << kk > 0)
-                    .map(move |(kk, x)| (jj, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
+                    .map(move |(kk, x)| (j, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
             })
             .min_by_key(|&(_, _, x)| x)
             .map(|(j, k, y)| (j, k, y.0))
