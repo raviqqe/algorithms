@@ -1,5 +1,4 @@
 use ordered_float::OrderedFloat;
-use std::mem::take;
 
 // The giant-tour TSP for VRP
 //
@@ -42,63 +41,72 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
         }
     }
 
-    let y = *dp
+    let (k, &y) = dp
         .last()
         .unwrap()
         .last()
         .unwrap()
         .iter()
-        .min_by_key(|&&x| OrderedFloat(x))
+        .enumerate()
+        .min_by_key(|(_, &x)| OrderedFloat(x))
         .unwrap();
 
-    (y, reconstruct(xs, &dp, y))
+    (y, reconstruct(xs, &dp, k, y))
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
     ((xs[i].0 - xs[j].0).powi(2) + (xs[i].1 - xs[j].1).powi(2)).sqrt()
 }
 
-fn reconstruct(xs: &[(f64, f64)], dp: &[Vec<Vec<f64>>], mut y: f64) -> Vec<Vec<usize>> {
+fn reconstruct(
+    xs: &[(f64, f64)],
+    dp: &[Vec<Vec<f64>>],
+    mut k: usize,
+    mut y: f64,
+) -> Vec<Vec<usize>> {
     if xs.is_empty() || dp[0].is_empty() {
         return Default::default();
     }
 
-    let mut js = vec![];
-    let mut ks = vec![];
+    let mut zs = vec![];
     let mut i = dp.len() - 1;
     let mut j = dp[0].len() - 1;
-    let mut k = 0;
 
     while i > 0 {
         i &= !(1 << k);
 
-        let (jj, kk, yy) = dp[i]
+        (j, k, y) = dp[i]
             .iter()
             .enumerate()
+            .filter(|(jj, _)| *jj == j.saturating_sub(1) || *jj == j)
             .flat_map(|(jj, ys)| {
                 ys.iter()
                     .enumerate()
+                    .filter(|(kk, _)| i & 1 << kk == 0)
                     .map(move |(kk, x)| (jj, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
             })
             .min_by_key(|&(_, _, x)| x)
+            .map(|(j, k, y)| (j, k, y.0))
             .unwrap();
 
-        ks.push(j);
-
-        if j != jj {
-            js.push(take(&mut ks));
-        }
-
-        j = jj;
-        k = kk;
-        y = *yy;
+        zs.push((j, k));
     }
 
-    js.push(ks);
+    zs.reverse();
 
-    js.reverse();
+    let mut vs = vec![];
+    let mut jj = usize::MAX;
 
-    js
+    for (j, k) in zs {
+        if j != jj {
+            vs.push(vec![]);
+            jj = j;
+        }
+
+        vs.last_mut().unwrap().push(k);
+    }
+
+    vs
 }
 
 #[cfg(test)]
@@ -112,7 +120,7 @@ mod tests {
 
         #[test]
         fn one_stop() {
-            assert_eq!(solve(1, &[(0.0, 0.0)]), (0.0, vec![vec![0]]));
+            assert_eq!(solve(1, &[(0.0, 0.0)]).0, 0.0);
         }
 
         #[test]
@@ -241,6 +249,21 @@ mod tests {
             for stops in stops.into_iter().permutations(stops.len()) {
                 assert_eq!(solve(3, &stops).0, 2.0);
             }
+        }
+    }
+
+    mod reconstruct {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        #[test]
+        fn one_stop() {
+            assert_eq!(solve(1, &[(0.0, 0.0)]), (0.0, vec![vec![0]]));
+        }
+
+        #[test]
+        fn two_stops() {
+            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), (1.0, vec![vec![0, 1]]));
         }
     }
 }
