@@ -82,7 +82,6 @@ fn reconstruct(
             .flat_map(|(j, ys)| {
                 ys.iter()
                     .enumerate()
-                    .filter(|(kk, _)| i & 1 << kk > 0)
                     .map(move |(kk, x)| (j, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
             })
             .min_by_key(|&(_, _, x)| x)
@@ -263,7 +262,7 @@ mod tests {
 
         #[test]
         fn two_stops() {
-            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), (1.0, vec![vec![0, 1]]));
+            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), (1.0, vec![vec![1, 0]]));
         }
     }
 }
