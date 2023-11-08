@@ -75,15 +75,24 @@ fn reconstruct(
     while i > 0 {
         i &= !(1 << k);
 
-        (j, k, y) = dp[i]
+        (j, k, y) = dp[i][j]
             .iter()
             .enumerate()
-            .filter(|(jj, _)| *jj == j.saturating_sub(1) || *jj == j)
-            .flat_map(|(j, ys)| {
-                ys.iter()
-                    .enumerate()
-                    .map(move |(kk, x)| (j, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
-            })
+            .map(move |(kk, x)| (j, kk, OrderedFloat((y - x - distance(kk, k, xs)).abs())))
+            .chain(
+                if j > 0 {
+                    Some(
+                        dp[i][j - 1]
+                            .iter()
+                            .enumerate()
+                            .map(move |(kk, x)| (j - 1, kk, OrderedFloat((y - x).abs()))),
+                    )
+                } else {
+                    None
+                }
+                .into_iter()
+                .flatten(),
+            )
             .min_by_key(|&(_, _, x)| x)
             .map(|(j, k, y)| (j, k, y.0))
             .unwrap();
