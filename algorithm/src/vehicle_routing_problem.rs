@@ -257,16 +257,76 @@ mod tests {
 
     mod reconstruct {
         use super::*;
-        use pretty_assertions::assert_eq;
 
-        #[test]
-        fn one_stop() {
-            assert_eq!(solve(1, &[(0.0, 0.0)]), (0.0, vec![vec![0]]));
+        mod one_vehicle {
+            use super::*;
+            use pretty_assertions::assert_eq;
+
+            #[test]
+            fn one_stop() {
+                assert_eq!(solve(1, &[(0.0, 0.0)]), (0.0, vec![vec![0]]));
+            }
+
+            #[test]
+            fn two_stops() {
+                assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), (1.0, vec![vec![1, 0]]));
+            }
+
+            #[test]
+            fn three_stops() {
+                assert_eq!(
+                    solve(1, &[(0.0, 0.0), (1.0, 0.0), (2.0, 0.0)]),
+                    (2.0, vec![vec![2, 1, 0]])
+                );
+            }
+
+            #[test]
+            fn four_stops() {
+                assert_eq!(
+                    solve(1, &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0)]),
+                    (3.0, vec![vec![2, 3, 1, 0]])
+                );
+            }
+
+            #[test]
+            fn five_stops() {
+                assert_eq!(
+                    solve(
+                        1,
+                        &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)]
+                    ),
+                    (4.0, vec![vec![4, 2, 3, 1, 0]])
+                );
+            }
         }
 
-        #[test]
-        fn two_stops() {
-            assert_eq!(solve(1, &[(0.0, 0.0), (1.0, 0.0)]), (1.0, vec![vec![1, 0]]));
+        mod two_vehicles {
+            use super::*;
+            use pretty_assertions::assert_eq;
+
+            #[test]
+            fn one_stop() {
+                assert_eq!(solve(2, &[(0.0, 0.0)]), (0.0, vec![vec![], vec![0]]));
+            }
+
+            #[test]
+            fn two_stops() {
+                assert_eq!(
+                    solve(2, &[(0.0, 0.0), (1.0, 0.0)]),
+                    (0.0, vec![vec![1], vec![0]])
+                );
+            }
+
+            #[test]
+            fn five_stops() {
+                assert_eq!(
+                    solve(
+                        2,
+                        &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)]
+                    ),
+                    (3.0, vec![vec![4], vec![2, 3, 1, 0]])
+                );
+            }
         }
     }
 }
