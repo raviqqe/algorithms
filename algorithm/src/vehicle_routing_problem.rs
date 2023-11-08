@@ -51,7 +51,7 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
         .min_by_key(|(_, &x)| OrderedFloat(x))
         .unwrap();
 
-    (y, reconstruct(xs, &dp, k, y))
+    (y, reconstruct(m, xs, &dp, k, y))
 }
 
 fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
@@ -59,17 +59,18 @@ fn distance(i: usize, j: usize, xs: &[(f64, f64)]) -> f64 {
 }
 
 fn reconstruct(
+    m: usize,
     xs: &[(f64, f64)],
     dp: &[Vec<Vec<f64>>],
     mut k: usize,
     mut y: f64,
 ) -> Vec<Vec<usize>> {
-    let mut zs = vec![];
+    let mut zs = vec![vec![]; m];
     let mut i = dp.len() - 1;
-    let mut j = dp[0].len() - 1;
+    let mut j = m - 1;
 
     while i > 0 {
-        zs.push((j, k));
+        zs[j].push(k);
 
         i &= !(1 << k);
 
@@ -95,21 +96,9 @@ fn reconstruct(
             .unwrap();
     }
 
-    zs.reverse();
+    zs.last_mut().unwrap().reverse();
 
-    let mut vs = vec![];
-    let mut jj = usize::MAX;
-
-    for (j, k) in zs {
-        if j != jj {
-            vs.push(vec![]);
-            jj = j;
-        }
-
-        vs.last_mut().unwrap().push(k);
-    }
-
-    vs
+    zs
 }
 
 #[cfg(test)]
