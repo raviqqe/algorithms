@@ -64,10 +64,6 @@ fn reconstruct(
     mut k: usize,
     mut y: f64,
 ) -> Vec<Vec<usize>> {
-    if xs.is_empty() || dp[0].is_empty() {
-        return Default::default();
-    }
-
     let mut zs = vec![];
     let mut i = dp.len() - 1;
     let mut j = dp[0].len() - 1;
