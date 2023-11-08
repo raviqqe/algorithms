@@ -96,7 +96,9 @@ fn reconstruct(
             .unwrap();
     }
 
-    zs.last_mut().unwrap().reverse();
+    for z in &mut zs {
+        z.reverse();
+    }
 
     zs
 }
