@@ -319,5 +319,21 @@ mod tests {
                 );
             }
         }
+
+        mod three_vehicles {
+            use super::*;
+            use pretty_assertions::assert_eq;
+
+            #[test]
+            fn five_stops() {
+                assert_eq!(
+                    solve(
+                        3,
+                        &[(0.0, 0.0), (0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (2.0, 0.0)]
+                    ),
+                    (2.0, vec![vec![4], vec![2], vec![3, 1, 0]])
+                );
+            }
+        }
     }
 }
