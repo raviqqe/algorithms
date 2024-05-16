@@ -7,5 +7,5 @@ edition = "2021"
 ordered-float = "4.2.0"
 
 [dev-dependencies]
-itertools = "0.12.1"
+itertools = "0.13.0"
 pretty_assertions = "1.4.0"
