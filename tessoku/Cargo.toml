@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 algorithm = { path = "../algorithm" }
-proconio = "0.4.5"
+proconio = "0.5.0"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
