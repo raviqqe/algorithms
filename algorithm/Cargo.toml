@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-ordered-float = "4.2.2"
+ordered-float = "4.3.0"
 
 [dev-dependencies]
 itertools = "0.13.0"
