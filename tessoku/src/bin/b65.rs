@@ -37,7 +37,7 @@ fn main() {
     visit(*t - 1, &ys, &mut zs);
 
     for z in zs {
-        print!("{} ", z);
+        print!("{z} ");
     }
 }
 

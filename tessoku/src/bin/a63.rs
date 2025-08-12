@@ -37,7 +37,7 @@ fn main() {
     distance(&ys, &mut zs);
 
     for z in zs {
-        println!("{}", z);
+        println!("{z}");
     }
 }
 
