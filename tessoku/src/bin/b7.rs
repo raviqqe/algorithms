@@ -15,6 +15,6 @@ fn main() {
     for y in &ys[..t] {
         z += y;
 
-        println!("{}", z);
+        println!("{z}");
     }
 }

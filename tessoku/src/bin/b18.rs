@@ -35,6 +35,6 @@ fn main() {
     println!("{}", ys.len());
 
     for y in ys.iter().rev() {
-        print!("{} ", y);
+        print!("{y} ");
     }
 }
