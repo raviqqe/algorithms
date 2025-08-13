@@ -10,5 +10,5 @@ fn main() {
         x += if c == '0' { 0 } else { 1 };
     }
 
-    println!("{}", x);
+    println!("{x}");
 }

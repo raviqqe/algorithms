@@ -19,6 +19,6 @@ fn main() {
     for x in &xs[..d] {
         y += x;
 
-        println!("{}", y);
+        println!("{y}");
     }
 }
