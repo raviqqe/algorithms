@@ -19,6 +19,6 @@ fn main() {
     }
 
     for x in xs.into_iter().rev() {
-        print!("{}", x);
+        print!("{x}");
     }
 }

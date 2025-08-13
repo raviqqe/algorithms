@@ -26,6 +26,6 @@ fn main() {
     }
 
     for y in ys {
-        print!("{} ", y);
+        print!("{y} ");
     }
 }
