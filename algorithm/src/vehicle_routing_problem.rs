@@ -4,7 +4,7 @@
 
 use ordered_float::OrderedFloat;
 
-/// Finds the shortest path from an arbitrary node to another node for each vehicle.
+/// Finds the shortest paths for each vehicle.
 pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
