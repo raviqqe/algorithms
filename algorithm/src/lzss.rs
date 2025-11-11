@@ -51,11 +51,9 @@ pub fn decompress(input: &[u8]) -> Vec<u8> {
         pos += 1;
 
         if flag == 0 {
-            // Literal
             output.push(input[pos]);
             pos += 1;
         } else {
-            // Reference
             let offset = ((input[pos] as usize) << 8) | (input[pos + 1] as usize);
             let length = input[pos + 2] as usize;
             pos += 3;
