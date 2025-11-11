@@ -1,9 +1,8 @@
 //! LRU cache.
 
-use std::{
-    collections::{HashMap, VecDeque},
-    hash::Hash,
-};
+use alloc::collections::VecDeque;
+use core::hash::Hash;
+use std::collections::HashMap;
 
 /// An LRU cache.
 pub struct LruCache<K, V> {
