@@ -1,7 +1,6 @@
-const LOOKAHEAD_SIZE: usize = 18;
 const MIN_MATCH: usize = 3;
 
-pub fn compress<const N: usize>(input: &[u8]) -> Vec<u8> {
+pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut pos = 0;
 
@@ -12,7 +11,7 @@ pub fn compress<const N: usize>(input: &[u8]) -> Vec<u8> {
         let window_start = pos.saturating_sub(N);
         for i in window_start..pos {
             let mut length = 0;
-            while length < LOOKAHEAD_SIZE
+            while length < M
                 && pos + length < input.len()
                 && input[i + length] == input[pos + length]
             {
