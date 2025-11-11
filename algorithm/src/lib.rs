@@ -1,3 +1,5 @@
+//! Algorithms.
+
 pub mod a_star;
 pub mod binary_search;
 pub mod lru_cache;

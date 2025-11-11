@@ -1,3 +1,5 @@
+//! LZSS compression.
+
 const MIN_MATCH: usize = 3;
 
 /// Compresses a byte array.
