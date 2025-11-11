@@ -1,5 +1,3 @@
-use std::io::{self, Read, Write};
-
 const WINDOW_SIZE: usize = 4096;
 const LOOKAHEAD_SIZE: usize = 18;
 const MIN_MATCH: usize = 3;
