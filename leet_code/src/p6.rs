@@ -1,5 +1,5 @@
-pub fn convert(s: String, row_count: i32) -> String {
-    let row_count = row_count as usize;
+#[expect(clippy::missing_panics_doc)]
+pub fn convert(s: String, row_count: usize) -> String {
     let a = if row_count > 1 {
         2 * (row_count - 1)
     } else {

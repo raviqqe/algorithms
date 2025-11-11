@@ -1,3 +1,4 @@
+#[expect(clippy::missing_panics_doc)]
 pub fn longest_palindrome(s: String) -> String {
     let xs = s.as_bytes();
     let mut ys = b"" as &[u8];
