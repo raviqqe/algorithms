@@ -1,6 +1,6 @@
 use std::{
     collections::HashSet,
-    io::{stdin, Read},
+    io::{Read, stdin},
 };
 
 fn main() {

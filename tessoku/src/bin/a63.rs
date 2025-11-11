@@ -1,6 +1,6 @@
 use std::{
     collections::{HashSet, VecDeque},
-    io::{stdin, Read},
+    io::{Read, stdin},
 };
 
 fn main() {

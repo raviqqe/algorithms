@@ -46,11 +46,7 @@ fn solve(xs: &[(usize, usize)]) -> usize {
 }
 
 fn take(i: usize, j: usize, k: usize, v: usize, n: usize) -> usize {
-    if i < k + 1 && k < n - j {
-        v
-    } else {
-        0
-    }
+    if i < k + 1 && k < n - j { v } else { 0 }
 }
 
 #[cfg(test)]
