@@ -53,18 +53,14 @@ pub fn decompress(input: &[u8]) -> Vec<u8> {
         index += 1;
 
         if x.is_multiple_of(2) {
-            output.push(input[index]);
-            index += 1;
+            output.push(x);
         } else {
-            let offset = ((input[index] as usize) << 8) | (input[index + 1] as usize);
-            let length = input[index + 2] as usize;
-            index += 3;
-
-            let start = output.len() - offset;
-            for i in 0..length {
-                let b = output[start + i];
+            for index in 0..input[index] {
+                let b = output[output.len() - (x as usize >> 1) + index as usize];
                 output.push(b);
             }
+
+            index += 1;
         }
     }
 
