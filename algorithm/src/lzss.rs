@@ -50,16 +50,16 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 
     while index < xs.len() {
         let x = xs[index];
-        index += 1;
 
         if x.is_multiple_of(2) {
             ys.push(x);
+            index += 1;
         } else {
             for index in 0..xs[index] {
                 ys.push(ys[ys.len() - (x as usize >> 1) + index as usize]);
             }
 
-            index += 1;
+            index += 2;
         }
     }
 
