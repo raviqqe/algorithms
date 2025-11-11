@@ -1,8 +1,7 @@
-const WINDOW_SIZE: usize = 4096;
 const LOOKAHEAD_SIZE: usize = 18;
 const MIN_MATCH: usize = 3;
 
-pub fn compress(input: &[u8]) -> Vec<u8> {
+pub fn compress<const N: usize>(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut pos = 0;
 
@@ -10,8 +9,7 @@ pub fn compress(input: &[u8]) -> Vec<u8> {
         let mut best_len = 0;
         let mut best_offset = 0;
 
-        // Search for longest match in the window
-        let window_start = pos.saturating_sub(WINDOW_SIZE);
+        let window_start = pos.saturating_sub(N);
         for i in window_start..pos {
             let mut length = 0;
             while length < LOOKAHEAD_SIZE
