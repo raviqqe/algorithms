@@ -26,9 +26,10 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
                 m = k;
             }
         }
+        dbg!(((n as u8) << 1 & 1, m));
 
         if m > MIN_MATCH {
-            ys.extend([(n as u8) << 1 & 1, m as u8]);
+            ys.extend([(n as u8) << 1 | 1, m as u8]);
 
             i += m;
         } else {
