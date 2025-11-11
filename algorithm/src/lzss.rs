@@ -4,26 +4,26 @@ const MIN_MATCH: usize = 3;
 
 /// Compresses a byte array.
 pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
-    let mut output = Vec::new();
-    let mut pos = 0;
+    let mut output = vec![];
+    let mut index = 0;
 
-    while pos < input.len() {
+    while index < input.len() {
         let mut best_len = 0;
         let mut best_offset = 0;
 
-        let window_start = pos.saturating_sub(N);
-        for i in window_start..pos {
+        let window_start = index.saturating_sub(N);
+        for i in window_start..index {
             let mut length = 0;
             while length < M
-                && pos + length < input.len()
-                && input[i + length] == input[pos + length]
+                && index + length < input.len()
+                && input[i + length] == input[index + length]
             {
                 length += 1;
             }
 
             if length >= MIN_MATCH && length > best_len {
                 best_len = length;
-                best_offset = pos - i;
+                best_offset = index - i;
             }
         }
 
@@ -33,12 +33,12 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
             output.push((best_offset >> 8) as u8);
             output.push(best_offset as u8);
             output.push(best_len as u8);
-            pos += best_len;
+            index += best_len;
         } else {
             // Output as literal
             output.push(0);
-            output.push(input[pos]);
-            pos += 1;
+            output.push(input[index]);
+            index += 1;
         }
     }
 
@@ -47,20 +47,20 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
 
 /// Decompresses a byte array.
 pub fn decompress(input: &[u8]) -> Vec<u8> {
-    let mut output = Vec::new();
-    let mut pos = 0;
+    let mut output = vec![];
+    let mut index = 0;
 
-    while pos < input.len() {
-        let flag = input[pos];
-        pos += 1;
+    while index < input.len() {
+        let flag = input[index];
+        index += 1;
 
         if flag == 0 {
-            output.push(input[pos]);
-            pos += 1;
+            output.push(input[index]);
+            index += 1;
         } else {
-            let offset = ((input[pos] as usize) << 8) | (input[pos + 1] as usize);
-            let length = input[pos + 2] as usize;
-            pos += 3;
+            let offset = ((input[index] as usize) << 8) | (input[index + 1] as usize);
+            let length = input[index + 2] as usize;
+            index += 3;
 
             let start = output.len() - offset;
             for i in 0..length {
