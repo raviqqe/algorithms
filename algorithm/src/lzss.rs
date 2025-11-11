@@ -3,21 +3,18 @@
 const MIN_MATCH: usize = 3;
 
 /// Compresses a byte array.
-pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
-    let mut output = vec![];
+pub fn compress<const N: usize, const M: usize>(xs: &[u8]) -> Vec<u8> {
+    let mut ys = vec![];
     let mut index = 0;
 
-    while index < input.len() {
+    while index < xs.len() {
         let mut best_len = 0;
         let mut best_offset = 0;
 
         for i in index.saturating_sub(N)..index {
             let mut length = 0;
 
-            while length < M
-                && index + length < input.len()
-                && input[i + length] == input[index + length]
-            {
+            while length < M && index + length < xs.len() && xs[i + length] == xs[index + length] {
                 length += 1;
             }
 
@@ -28,19 +25,19 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
         }
 
         if best_len >= MIN_MATCH {
-            output.push(1);
-            output.push((best_offset >> 8) as u8);
-            output.push(best_offset as u8);
-            output.push(best_len as u8);
+            ys.push(1);
+            ys.push((best_offset >> 8) as u8);
+            ys.push(best_offset as u8);
+            ys.push(best_len as u8);
             index += best_len;
         } else {
-            output.push(0);
-            output.push(input[index]);
+            ys.push(0);
+            ys.push(xs[index]);
             index += 1;
         }
     }
 
-    output
+    ys
 }
 
 /// Decompresses a byte array.
