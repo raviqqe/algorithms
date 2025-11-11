@@ -79,7 +79,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test() -> io::Result<()> {
+    fn test() {
         let data = b"ABABABABABABABABABABA123123123123";
         println!("Original: {:?}", String::from_utf8_lossy(data));
 
@@ -88,7 +88,5 @@ mod tests {
 
         let decompressed = decompress(&compressed);
         println!("Decompressed: {:?}", String::from_utf8_lossy(&decompressed));
-
-        Ok(())
     }
 }
