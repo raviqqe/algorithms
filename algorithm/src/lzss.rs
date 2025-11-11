@@ -44,27 +44,26 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
 }
 
 /// Decompresses a byte array.
-pub fn decompress(input: &[u8]) -> Vec<u8> {
-    let mut output = vec![];
+pub fn decompress(xs: &[u8]) -> Vec<u8> {
+    let mut ys = vec![];
     let mut index = 0;
 
-    while index < input.len() {
-        let x = input[index];
+    while index < xs.len() {
+        let x = xs[index];
         index += 1;
 
         if x.is_multiple_of(2) {
-            output.push(x);
+            ys.push(x);
         } else {
-            for index in 0..input[index] {
-                let b = output[output.len() - (x as usize >> 1) + index as usize];
-                output.push(b);
+            for index in 0..xs[index] {
+                ys.push(ys[ys.len() - (x as usize >> 1) + index as usize]);
             }
 
             index += 1;
         }
     }
 
-    output
+    ys
 }
 
 #[cfg(test)]
