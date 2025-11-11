@@ -81,7 +81,7 @@ mod tests {
         let data = b"ABABABABABABABABABABA123123123123";
         println!("Original: {:?}", String::from_utf8_lossy(data));
 
-        let compressed = compress(data);
+        let compressed = compress::<64>(data);
         println!("Compressed: {:?}", compressed);
 
         let decompressed = decompress(&compressed);
