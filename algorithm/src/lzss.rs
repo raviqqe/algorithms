@@ -1,5 +1,6 @@
 const MIN_MATCH: usize = 3;
 
+/// Compresses a byte array.
 pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut pos = 0;
@@ -42,6 +43,7 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
     output
 }
 
+/// Decompresses a byte array.
 pub fn decompress(input: &[u8]) -> Vec<u8> {
     let mut output = Vec::new();
     let mut pos = 0;
