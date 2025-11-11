@@ -28,14 +28,12 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
         }
 
         if best_len >= MIN_MATCH {
-            // Output as (offset, length)
             output.push(1);
             output.push((best_offset >> 8) as u8);
             output.push(best_offset as u8);
             output.push(best_len as u8);
             index += best_len;
         } else {
-            // Output as literal
             output.push(0);
             output.push(input[index]);
             index += 1;
