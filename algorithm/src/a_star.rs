@@ -1,9 +1,11 @@
+//! [A* search](https://en.wikipedia.org/wiki/A*_search_algorithm).
+
 use std::{
     cmp::{Ordering, Reverse},
     collections::{BinaryHeap, HashMap, HashSet},
 };
 
-// https://en.wikipedia.org/wiki/A*_search_algorithm
+/// Searches a path from the start node to the end node.
 pub fn search(
     start: usize,
     end: usize,
