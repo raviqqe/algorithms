@@ -29,7 +29,7 @@ pub fn parse(s: String) -> i32 {
     y
 }
 
-fn is_digit(x: Option<&u8>) -> bool {
+const fn is_digit(x: Option<&u8>) -> bool {
     matches!(x, Some(b'0'..=b'9'))
 }
 

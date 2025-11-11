@@ -1,4 +1,4 @@
-use std::mem::swap;
+use core::mem::swap;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
