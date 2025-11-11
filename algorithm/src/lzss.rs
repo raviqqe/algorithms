@@ -1,0 +1,96 @@
+use std::io::{self, Read, Write};
+
+const WINDOW_SIZE: usize = 4096;
+const LOOKAHEAD_SIZE: usize = 18;
+const MIN_MATCH: usize = 3;
+
+pub fn compress(input: &[u8]) -> Vec<u8> {
+    let mut output = Vec::new();
+    let mut pos = 0;
+
+    while pos < input.len() {
+        let mut best_len = 0;
+        let mut best_offset = 0;
+
+        // Search for longest match in the window
+        let window_start = pos.saturating_sub(WINDOW_SIZE);
+        for i in window_start..pos {
+            let mut length = 0;
+            while length < LOOKAHEAD_SIZE
+                && pos + length < input.len()
+                && input[i + length] == input[pos + length]
+            {
+                length += 1;
+            }
+
+            if length >= MIN_MATCH && length > best_len {
+                best_len = length;
+                best_offset = pos - i;
+            }
+        }
+
+        if best_len >= MIN_MATCH {
+            // Output as (offset, length)
+            output.push(1);
+            output.push((best_offset >> 8) as u8);
+            output.push(best_offset as u8);
+            output.push(best_len as u8);
+            pos += best_len;
+        } else {
+            // Output as literal
+            output.push(0);
+            output.push(input[pos]);
+            pos += 1;
+        }
+    }
+
+    output
+}
+
+pub fn decompress(input: &[u8]) -> Vec<u8> {
+    let mut output = Vec::new();
+    let mut pos = 0;
+
+    while pos < input.len() {
+        let flag = input[pos];
+        pos += 1;
+
+        if flag == 0 {
+            // Literal
+            output.push(input[pos]);
+            pos += 1;
+        } else {
+            // Reference
+            let offset = ((input[pos] as usize) << 8) | (input[pos + 1] as usize);
+            let length = input[pos + 2] as usize;
+            pos += 3;
+
+            let start = output.len() - offset;
+            for i in 0..length {
+                let b = output[start + i];
+                output.push(b);
+            }
+        }
+    }
+
+    output
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test() -> io::Result<()> {
+        let data = b"ABABABABABABABABABABA123123123123";
+        println!("Original: {:?}", String::from_utf8_lossy(data));
+
+        let compressed = compress(data);
+        println!("Compressed: {:?}", compressed);
+
+        let decompressed = decompress(&compressed);
+        println!("Decompressed: {:?}", String::from_utf8_lossy(&decompressed));
+
+        Ok(())
+    }
+}
