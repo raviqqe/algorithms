@@ -1,5 +1,7 @@
 //! Algorithms.
 
+extern crate alloc;
+
 pub mod a_star;
 pub mod binary_search;
 pub mod lru_cache;
