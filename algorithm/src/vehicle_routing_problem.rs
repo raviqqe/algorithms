@@ -48,7 +48,7 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
         .unwrap()
         .iter()
         .enumerate()
-        .min_by_key(|(_, &x)| OrderedFloat(x))
+        .min_by_key(|(_, x)| OrderedFloat(**x))
         .unwrap();
 
     (y, reconstruct(m, xs, &dp, k, y))

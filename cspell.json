@@ -1,11 +1,13 @@
 {
   "words": [
+    "clippy",
     "deque",
     "funke",
     "itertools",
     "lzss",
-    "proconio",
     "powi",
-    "tessoku"
+    "proconio",
+    "tessoku",
+    "uninlined",
   ]
 }
