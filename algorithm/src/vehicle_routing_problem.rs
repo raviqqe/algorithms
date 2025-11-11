@@ -9,8 +9,8 @@ pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
 
-    for i in 0..n {
-        dp[0][0][i] = 0.0;
+    for x in &mut dp[0][0] {
+        *x = 0.0;
     }
 
     for i in 0..1 << n {
