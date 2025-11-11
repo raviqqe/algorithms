@@ -3,7 +3,7 @@
 const MIN_MATCH: usize = 3;
 
 /// Compresses a byte array.
-pub fn compress<const N: usize, const M: usize>(xs: &[u8]) -> Vec<u8> {
+pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
     let mut ys = vec![];
     let mut i = 0;
 
@@ -11,10 +11,10 @@ pub fn compress<const N: usize, const M: usize>(xs: &[u8]) -> Vec<u8> {
         let mut best_len = 0;
         let mut best_offset = 0;
 
-        for j in i.saturating_sub(N)..i {
+        for j in i.saturating_sub(W)..i {
             let mut length = 0;
 
-            while length < M && i + length < xs.len() && xs[j + length] == xs[i + length] {
+            while length < L && i + length < xs.len() && xs[j + length] == xs[i + length] {
                 length += 1;
             }
 
@@ -25,14 +25,18 @@ pub fn compress<const N: usize, const M: usize>(xs: &[u8]) -> Vec<u8> {
         }
 
         if best_len >= MIN_MATCH {
-            ys.push(1);
-            ys.push((best_offset >> 8) as u8);
-            ys.push(best_offset as u8);
-            ys.push(best_len as u8);
+            ys.extend([
+                1,
+                (best_offset >> 8) as u8,
+                best_offset as u8,
+                best_len as u8,
+            ]);
+
             i += best_len;
         } else {
             ys.push(0);
             ys.push(xs[i]);
+
             i += 1;
         }
     }
@@ -50,6 +54,7 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 
         if x.is_multiple_of(2) {
             ys.push(x);
+
             i += 1;
         } else {
             for j in 0..xs[i] {
