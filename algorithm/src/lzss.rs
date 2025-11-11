@@ -21,7 +21,7 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
                 k += 1;
             }
 
-            if k >= MIN_MATCH && k > m {
+            if k >= MIN_MATCH && k >= m {
                 n = i - j;
                 m = k;
             }
