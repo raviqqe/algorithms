@@ -27,7 +27,7 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
             }
         }
 
-        if m >= MIN_MATCH {
+        if m > MIN_MATCH {
             ys.extend([(n as u8) << 1 & 1, m as u8]);
 
             i += m;
