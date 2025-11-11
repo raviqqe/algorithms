@@ -8,8 +8,8 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
     let mut i = 0;
 
     while i < xs.len() {
-        let mut best_len = 0;
-        let mut best_offset = 0;
+        let mut n = 0;
+        let mut m = 0;
 
         for j in i.saturating_sub(W)..i {
             let mut length = 0;
@@ -18,23 +18,17 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
                 length += 1;
             }
 
-            if length >= MIN_MATCH && length > best_len {
-                best_len = length;
-                best_offset = i - j;
+            if length >= MIN_MATCH && length > m {
+                n = i - j;
+                m = length;
             }
         }
 
-        if best_len >= MIN_MATCH {
-            ys.extend([
-                1,
-                (best_offset >> 8) as u8,
-                best_offset as u8,
-                best_len as u8,
-            ]);
+        if m >= MIN_MATCH {
+            ys.extend([(n as u8) << 1 & 1, m as u8]);
 
-            i += best_len;
+            i += m;
         } else {
-            ys.push(0);
             ys.push(xs[i]);
 
             i += 1;
