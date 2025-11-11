@@ -12,15 +12,18 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
         let mut m = 0;
 
         for j in i.saturating_sub(W)..i {
-            let mut length = 0;
+            let mut k = 0;
 
-            while length < L && i + length < xs.len() && xs[j + length] == xs[i + length] {
-                length += 1;
+            while k < L
+                && let Some(&x) = xs.get(i + k)
+                && xs[j + k] == x
+            {
+                k += 1;
             }
 
-            if length >= MIN_MATCH && length > m {
+            if k >= MIN_MATCH && k > m {
                 n = i - j;
-                m = length;
+                m = k;
             }
         }
 
