@@ -1,8 +1,11 @@
+//! LRU cache.
+
 use std::{
     collections::{HashMap, VecDeque},
     hash::Hash,
 };
 
+/// An LRU cache.
 pub struct LruCache<K, V> {
     // TODO Use a linked list.
     queue: VecDeque<K>,
@@ -11,6 +14,7 @@ pub struct LruCache<K, V> {
 }
 
 impl<K, V> LruCache<K, V> {
+    /// Creates a cache.
     pub fn new(capacity: usize) -> Self {
         Self {
             queue: Default::default(),
@@ -19,6 +23,7 @@ impl<K, V> LruCache<K, V> {
         }
     }
 
+    /// Sets a capacity.
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             queue: VecDeque::with_capacity(capacity),
@@ -29,11 +34,13 @@ impl<K, V> LruCache<K, V> {
 }
 
 impl<K: Clone + Eq + Hash, V> LruCache<K, V> {
+    /// Gets an item.
     pub fn get(&mut self, key: &K) -> Option<&V> {
         self.update_key(key);
         self.map.get(key)
     }
 
+    /// Inserts an item.
     pub fn insert(&mut self, key: K, value: V) {
         self.update_key(&key);
         self.map.insert(key, value);
