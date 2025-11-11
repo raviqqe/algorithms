@@ -32,12 +32,13 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
 
             i += m;
         } else {
-            ys.push(xs[i]);
+            ys.push(xs[i] << 1);
 
             i += 1;
         }
     }
 
+    dbg!(&ys);
     ys
 }
 
@@ -49,8 +50,10 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
     while i < xs.len() {
         let x = xs[i];
 
+        dbg!(x);
+
         if x.is_multiple_of(2) {
-            ys.push(x);
+            ys.push(x >> 1);
 
             i += 1;
         } else {
