@@ -1,9 +1,10 @@
+//! Vehicle Routing Problem (VRP) solver using the giant-tour TSP.
+//!
+//! Local Search for Vehicle Routing and Scheduling Problems: Review and Conceptual Integration, Funke et al. (2005)
+
 use ordered_float::OrderedFloat;
 
-// The giant-tour TSP for VRP
-//
-// Local Search for Vehicle Routing and Scheduling Problems: Review and
-// Conceptual Integration, Funke et al. (2005)
+/// Finds the shortest path from an arbitrary node to another node for each vehicle.
 pub fn solve(m: usize, xs: &[(f64, f64)]) -> (f64, Vec<Vec<usize>>) {
     let n = xs.len();
     let mut dp = vec![vec![vec![f64::INFINITY; n]; m]; 1 << n];
