@@ -1,5 +1,8 @@
+//! Traveling Salesman Problem (TSP).
+
 use ordered_float::OrderedFloat;
 
+/// Finds the shortest path from an arbitrary node to another node.
 pub fn solve(xs: &[(f64, f64)]) -> (f64, Vec<usize>) {
     let n = xs.len();
     let mut dp = vec![vec![f64::INFINITY; n]; 1 << n];
