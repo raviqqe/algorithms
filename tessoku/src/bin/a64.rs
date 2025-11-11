@@ -1,7 +1,7 @@
 use std::{
     cmp::{Ordering, Reverse},
     collections::{BinaryHeap, HashMap},
-    io::{stdin, Read},
+    io::{Read, stdin},
 };
 
 fn main() {

@@ -1,4 +1,4 @@
-use std::mem::swap;
+use core::mem::swap;
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
@@ -41,9 +41,7 @@ pub fn add_two_numbers(
 }
 
 fn list_len(l: &Option<Box<ListNode>>) -> usize {
-    if let Some(l) = l {
-        list_len(&l.next) + 1
-    } else {
-        0
-    }
+    l.as_ref()
+        .map(|l| list_len(&l.next) + 1)
+        .unwrap_or_default()
 }

@@ -1,4 +1,4 @@
-pub fn is_palindrome(x: i32) -> bool {
+pub const fn is_palindrome(x: i32) -> bool {
     x >= 0
         && x == {
             let mut x = x;

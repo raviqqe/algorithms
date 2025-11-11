@@ -40,11 +40,7 @@ fn main() {
             .enumerate()
             .rev()
             .find_map(|(i, x)| if let Some(x) = x {
-                if *x <= w {
-                    Some(i)
-                } else {
-                    None
-                }
+                if *x <= w { Some(i) } else { None }
             } else {
                 None
             })

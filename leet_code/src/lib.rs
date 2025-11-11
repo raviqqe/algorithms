@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 pub mod p1;
 pub mod p2;
 pub mod p3;

@@ -1,7 +1,13 @@
 [package]
 name = "algorithm"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
+description = "Algorithms"
+readme.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
 ordered-float = "5.1.0"
@@ -9,3 +15,6 @@ ordered-float = "5.1.0"
 [dev-dependencies]
 itertools = "0.14.0"
 pretty_assertions = "1.4.1"
+
+[lints]
+workspace = true

@@ -1,9 +1,18 @@
 [package]
 name = "leet_code"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
+description = "Solutions for Leet Code"
+readme.workspace = true
+repository.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
 
 [dependencies]
 
 [dev-dependencies]
 pretty_assertions = "1.4.1"
+
+[lints]
+workspace = true

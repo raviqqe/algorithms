@@ -1,5 +1,8 @@
+//! Binary search.
+
 use core::cmp::Ordering;
 
+/// Searches an item from a slice.
 pub fn binary_search<T: Ord>(xs: &[T], y: &T) -> Result<usize, usize> {
     let mut left = 0;
     let mut right = xs.len();

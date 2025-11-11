@@ -1,4 +1,4 @@
-use std::io::{stdin, Read};
+use std::io::{Read, stdin};
 
 fn main() {
     let mut s = String::new();

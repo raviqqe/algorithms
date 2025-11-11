@@ -1,7 +1,7 @@
 use std::{
     collections::HashSet,
     convert::identity,
-    io::{stdin, Read},
+    io::{Read, stdin},
 };
 
 fn main() {
