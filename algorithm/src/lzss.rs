@@ -1,6 +1,6 @@
 //! LZSS compression.
 
-const MIN_MATCH: usize = 3;
+const MIN_MATCH: usize = 2;
 
 /// Compresses a byte array.
 pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
