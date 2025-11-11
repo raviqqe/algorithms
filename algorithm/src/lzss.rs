@@ -11,8 +11,7 @@ pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
         let mut best_len = 0;
         let mut best_offset = 0;
 
-        let window_start = index.saturating_sub(N);
-        for i in window_start..index {
+        for i in index.saturating_sub(N)..index {
             let mut length = 0;
             while length < M
                 && index + length < input.len()
