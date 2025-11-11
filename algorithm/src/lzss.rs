@@ -55,8 +55,8 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
             ys.push(x);
             i += 1;
         } else {
-            for index in 0..xs[i] {
-                ys.push(ys[ys.len() - (x >> 1) as usize + index as usize]);
+            for j in 0..xs[i] {
+                ys.push(ys[ys.len() - (x >> 1) as usize + j as usize]);
             }
 
             i += 2;
