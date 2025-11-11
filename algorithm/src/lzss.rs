@@ -49,10 +49,10 @@ pub fn decompress(input: &[u8]) -> Vec<u8> {
     let mut index = 0;
 
     while index < input.len() {
-        let flag = input[index];
+        let x = input[index];
         index += 1;
 
-        if flag == 0 {
+        if x.is_multiple_of(2) {
             output.push(input[index]);
             index += 1;
         } else {
