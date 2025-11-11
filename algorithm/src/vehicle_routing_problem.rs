@@ -1,6 +1,7 @@
 //! Vehicle Routing Problem (VRP) solver using the giant-tour TSP.
 //!
-//! Local Search for Vehicle Routing and Scheduling Problems: Review and Conceptual Integration, Funke et al. (2005)
+//! Local Search for Vehicle Routing and Scheduling Problems: Review and
+//! Conceptual Integration, Funke et al. (2005)
 
 use ordered_float::OrderedFloat;
 
