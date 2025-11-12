@@ -3,7 +3,7 @@
 const MIN_MATCH: usize = 2;
 
 /// Compresses a byte array.
-pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
+pub fn compress<const B: usize, const A: usize>(xs: &[u8]) -> Vec<u8> {
     let mut ys = vec![];
     let mut i = 0;
 
@@ -11,10 +11,10 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
         let mut n = 0;
         let mut m = 0;
 
-        for j in i.saturating_sub(W)..i {
+        for j in i.saturating_sub(B)..i {
             let mut k = 0;
 
-            while k < L && Some(&xs[j + k]) == xs.get(i + k) {
+            while k < A && Some(&xs[j + k]) == xs.get(i + k) {
                 k += 1;
             }
 
