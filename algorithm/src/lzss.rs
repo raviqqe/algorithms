@@ -3,7 +3,7 @@
 const MIN_MATCH: usize = 2;
 
 /// Compresses a byte array.
-pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
+pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
     let mut ys = vec![];
     let mut i = 0;
 
@@ -11,13 +11,10 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
         let mut n = 0;
         let mut m = 0;
 
-        for j in i.saturating_sub(W)..i {
+        for j in i.saturating_sub(N)..i {
             let mut k = 0;
 
-            while k < L
-                && let Some(&x) = xs.get(i + k)
-                && xs[j + k] == x
-            {
+            while k < L && Some(&xs[j + k]) == xs.get(i + k) {
                 k += 1;
             }
 
@@ -51,15 +48,13 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 
         if x.is_multiple_of(2) {
             ys.push(x >> 1);
-
-            i += 1;
         } else {
             for _ in 0..xs[i + 1] {
                 ys.push(ys[ys.len() - (x >> 1) as usize]);
             }
-
-            i += 2;
         }
+
+        i += 1 + x as usize % 2;
     }
 
     ys
@@ -72,7 +67,7 @@ mod tests {
     #[test]
     fn test() {
         let data = b"ABABABABABABABABABABA123123123123";
-        let compressed = compress::<64, 32>(data);
+        let compressed = compress::<64, 256>(data);
 
         assert_eq!(decompress(&compressed), data);
     }
