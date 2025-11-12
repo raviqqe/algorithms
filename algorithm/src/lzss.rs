@@ -51,15 +51,13 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 
         if x.is_multiple_of(2) {
             ys.push(x >> 1);
-
-            i += 1;
         } else {
             for _ in 0..xs[i + 1] {
                 ys.push(ys[ys.len() - (x >> 1) as usize]);
             }
-
-            i += 2;
         }
+
+        i += 1 + x as usize % 2;
     }
 
     ys
