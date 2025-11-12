@@ -1,76 +1,68 @@
 //! LZSS compression.
 
-const MIN_MATCH: usize = 3;
+const MIN_MATCH: usize = 2;
 
 /// Compresses a byte array.
-pub fn compress<const N: usize, const M: usize>(input: &[u8]) -> Vec<u8> {
-    let mut output = Vec::new();
-    let mut pos = 0;
+pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
+    let mut ys = vec![];
+    let mut i = 0;
 
-    while pos < input.len() {
-        let mut best_len = 0;
-        let mut best_offset = 0;
+    while i < xs.len() {
+        let mut n = 0;
+        let mut m = 0;
 
-        let window_start = pos.saturating_sub(N);
-        for i in window_start..pos {
-            let mut length = 0;
-            while length < M
-                && pos + length < input.len()
-                && input[i + length] == input[pos + length]
+        for j in i.saturating_sub(W)..i {
+            let mut k = 0;
+
+            while k < L
+                && let Some(&x) = xs.get(i + k)
+                && xs[j + k] == x
             {
-                length += 1;
+                k += 1;
             }
 
-            if length >= MIN_MATCH && length > best_len {
-                best_len = length;
-                best_offset = pos - i;
+            if k >= MIN_MATCH && k >= m {
+                n = i - j;
+                m = k;
             }
         }
 
-        if best_len >= MIN_MATCH {
-            // Output as (offset, length)
-            output.push(1);
-            output.push((best_offset >> 8) as u8);
-            output.push(best_offset as u8);
-            output.push(best_len as u8);
-            pos += best_len;
+        if m > MIN_MATCH {
+            ys.extend([(n as u8) << 1 | 1, m as u8]);
+
+            i += m;
         } else {
-            // Output as literal
-            output.push(0);
-            output.push(input[pos]);
-            pos += 1;
+            ys.push(xs[i] << 1);
+
+            i += 1;
         }
     }
 
-    output
+    ys
 }
 
 /// Decompresses a byte array.
-pub fn decompress(input: &[u8]) -> Vec<u8> {
-    let mut output = Vec::new();
-    let mut pos = 0;
+pub fn decompress(xs: &[u8]) -> Vec<u8> {
+    let mut ys = vec![];
+    let mut i = 0;
 
-    while pos < input.len() {
-        let flag = input[pos];
-        pos += 1;
+    while i < xs.len() {
+        let x = xs[i];
 
-        if flag == 0 {
-            output.push(input[pos]);
-            pos += 1;
+        if x.is_multiple_of(2) {
+            ys.push(x >> 1);
+
+            i += 1;
         } else {
-            let offset = ((input[pos] as usize) << 8) | (input[pos + 1] as usize);
-            let length = input[pos + 2] as usize;
-            pos += 3;
-
-            let start = output.len() - offset;
-            for i in 0..length {
-                let b = output[start + i];
-                output.push(b);
+            for _ in 0..xs[i + 1] {
+                ys.push(ys[ys.len() - (x >> 1) as usize]);
             }
+
+            i += 2;
         }
     }
 
-    output
+    ys
 }
 
 #[cfg(test)]
@@ -80,7 +72,7 @@ mod tests {
     #[test]
     fn test() {
         let data = b"ABABABABABABABABABABA123123123123";
-        let compressed = compress::<64, 4>(data);
+        let compressed = compress::<64, 32>(data);
 
         assert_eq!(decompress(&compressed), data);
     }
