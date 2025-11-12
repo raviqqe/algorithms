@@ -70,7 +70,7 @@ mod tests {
     #[test]
     fn test() {
         let data = b"ABABABABABABABABABABA123123123123";
-        let compressed = compress::<64, 32>(data);
+        let compressed = compress::<64, 256>(data);
 
         assert_eq!(decompress(&compressed), data);
     }
