@@ -26,7 +26,6 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
                 m = k;
             }
         }
-        dbg!(((n as u8) << 1 & 1, m));
 
         if m > MIN_MATCH {
             ys.extend([(n as u8) << 1 | 1, m as u8]);
@@ -39,7 +38,6 @@ pub fn compress<const W: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
         }
     }
 
-    dbg!(&ys);
     ys
 }
 
@@ -50,8 +48,6 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 
     while i < xs.len() {
         let x = xs[i];
-
-        dbg!(x);
 
         if x.is_multiple_of(2) {
             ys.push(x >> 1);
