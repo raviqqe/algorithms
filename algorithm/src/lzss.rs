@@ -14,7 +14,7 @@ pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
         for j in i.saturating_sub(N)..i {
             let mut k = 0;
 
-            while k < L && Some(&xs[j + k]) == xs.get(i + k) {
+            while k < L && xs.get(i + k) == xs.get(j + k) {
                 k += 1;
             }
 
