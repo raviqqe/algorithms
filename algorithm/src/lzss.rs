@@ -43,9 +43,7 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
     let mut ys = vec![];
     let mut i = 0;
 
-    while i < xs.len() {
-        let x = xs[i];
-
+    while let Some(&x) = xs.get(i) {
         if x.is_multiple_of(2) {
             ys.push(x >> 1);
         } else {
