@@ -18,7 +18,7 @@ pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
 
                 (i - j, k)
             })
-            .min_by_key(|(_, m)| *m)
+            .max_by_key(|(_, m)| *m)
             .unwrap_or_default();
 
         if m > MIN_MATCH {
@@ -64,6 +64,7 @@ mod tests {
         let data = b"ABABABABABABABABABABA123123123123";
         let compressed = compress::<64, 256>(data);
 
+        assert!(compressed.len() < data.len());
         assert_eq!(decompress(&compressed), data);
     }
 }
