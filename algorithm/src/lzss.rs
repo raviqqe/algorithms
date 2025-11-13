@@ -9,7 +9,6 @@ pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
 
     while i < xs.len() {
         let (n, m) = (i.saturating_sub(N)..i)
-            .into_iter()
             .map(|j| {
                 let mut k = 0;
 
