@@ -8,21 +8,18 @@ pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
     let mut i = 0;
 
     while i < xs.len() {
-        let mut n = 0;
-        let mut m = 0;
+        let (n, m) = (i.saturating_sub(N)..i)
+            .map(|j| {
+                let mut k = 0;
 
-        for j in i.saturating_sub(N)..i {
-            let mut k = 0;
+                while k < L && xs.get(i + k) == xs.get(j + k) {
+                    k += 1;
+                }
 
-            while k < L && xs.get(i + k) == xs.get(j + k) {
-                k += 1;
-            }
-
-            if k >= MIN_MATCH && k >= m {
-                n = i - j;
-                m = k;
-            }
-        }
+                (i - j, k)
+            })
+            .min_by_key(|(_, m)| *m)
+            .unwrap_or_default();
 
         if m > MIN_MATCH {
             ys.extend([(n as u8) << 1 | 1, m as u8]);
