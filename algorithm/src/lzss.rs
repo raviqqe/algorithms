@@ -58,13 +58,25 @@ pub fn decompress(xs: &[u8]) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::prelude::*;
 
     #[test]
-    fn test() {
+    fn repetitions() {
         let data = b"ABABABABABABABABABABA123123123123";
         let compressed = compress::<64, 256>(data);
 
         assert!(compressed.len() < data.len());
         assert_eq!(decompress(&compressed), data);
+    }
+
+    proptest! {
+      #[test]
+      fn random(a in ".*", b: String) {
+        let data = b"ABABABABABABABABABABA123123123123";
+        let compressed = compress::<64, 256>(data);
+
+        assert!(compressed.len() < data.len());
+        assert_eq!(decompress(&compressed), data);
+      }
     }
 }
