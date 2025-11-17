@@ -11,11 +11,11 @@ categories.workspace = true
 
 [dependencies]
 ordered-float = "5.1.0"
-proptest = "1.9.0"
 
 [dev-dependencies]
 itertools = "0.14.0"
 pretty_assertions = "1.4.1"
+proptest = "1.9.0"
 
 [lints]
 workspace = true
