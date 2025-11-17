@@ -20,11 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: rustup install nightly
-      - uses: Swatinem/rust-cache@v2
-      - run: |
-          rustup run nightly cargo install cargo-udeps
-          cargo +nightly udeps
+      - uses: bnjbvr/cargo-machete@main
   spell_check:
     runs-on: ubuntu-latest
     steps:
