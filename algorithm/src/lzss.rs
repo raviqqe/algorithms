@@ -71,9 +71,9 @@ mod tests {
 
     proptest! {
       #[test]
-      fn random(a in ".*", b: String) {
-        let data = b"ABABABABABABABABABABA123123123123";
-        let compressed = compress::<64, 256>(data);
+      fn random(data: Vec<u8>) {
+        let data = data.into_iter().map(|byte| byte >> 1).collect::<Vec<_>>();
+        let compressed = compress::<64, 256>(&data);
 
         assert!(compressed.len() < data.len());
         assert_eq!(decompress(&compressed), data);
