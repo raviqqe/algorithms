@@ -3,20 +3,20 @@
 const MIN_MATCH: usize = 2;
 
 /// Compresses a byte array.
-pub fn compress<const N: usize, const L: usize>(xs: &[u8]) -> Vec<u8> {
+pub fn compress<const W: usize, const N: usize>(xs: &[u8]) -> Vec<u8> {
     let mut ys = vec![];
     let mut i = 0;
 
     while i < xs.len() {
-        let (n, m) = (i.saturating_sub(N)..i)
+        let (n, m) = (i.saturating_sub(W)..i)
             .map(|j| {
-                let mut k = 0;
+                let mut n = 0;
 
-                while k < L && xs.get(i + k) == xs.get(j + k) {
-                    k += 1;
+                while n < N && xs.get(i + n) == xs.get(j + n) {
+                    n += 1;
                 }
 
-                (i - j, k)
+                (i - j, n)
             })
             .max_by_key(|(_, m)| *m)
             .unwrap_or_default();
