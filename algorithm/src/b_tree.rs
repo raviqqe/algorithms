@@ -61,6 +61,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         if self.is_leaf {
             self.keys.push(key.clone());
             self.cells.push(value.clone());
+
             while i > 0 && &key < &self.keys[i - 1] {
                 self.keys.swap(i, i - 1);
                 self.cells.swap(i, i - 1);
