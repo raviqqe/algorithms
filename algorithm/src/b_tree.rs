@@ -17,29 +17,27 @@ impl<T: Ord, const N: usize> BTree<T, N> {
         self.root.as_ref().and_then(|node| node.get(value))
     }
 
-    // pub fn insert(&mut self, key: K, value: V) {
-    //     if self.root.is_none() {
-    //         let mut root = Node::new(true);
-    //         root.keys.push(key);
-    //         root.cells.push(value);
-    //         self.root = Some(root);
-    //         return;
-    //     }
-    //
-    //     if self.root.as_ref().unwrap().is_full(self.t) {
-    //         let mut new_root = Node::new(false);
-    //         let old_root = self.root.take().unwrap();
-    //         new_root.children.push(old_root);
-    //         new_root.split_child(0, self.t);
-    //         new_root.insert_non_full(key, value, self.t);
-    //         self.root = Some(new_root);
-    //     } else {
-    //         self.root
-    //             .as_mut()
-    //             .unwrap()
-    //             .insert_non_full(key, value, self.t);
-    //     }
-    // }
+    /// Inserts an element.
+    pub fn insert(&mut self, value: T) {
+        if self.root.is_none() {
+            self.root = Some(Node::new(value));
+            return;
+        }
+
+        if self.root.as_ref().unwrap().is_full(self.t) {
+            let mut new_root = Node::new(false);
+            let old_root = self.root.take().unwrap();
+            new_root.children.push(old_root);
+            new_root.split_child(0, self.t);
+            new_root.insert_non_full(key, value, self.t);
+            self.root = Some(new_root);
+        } else {
+            self.root
+                .as_mut()
+                .unwrap()
+                .insert_non_full(key, value, self.t);
+        }
+    }
 
     /// Returns `true` if a tree is empty, or `false` otherwise.
     pub const fn is_empty(&self) -> bool {
@@ -54,6 +52,13 @@ struct Node<T: Ord, const N: usize> {
 }
 
 impl<T: Ord, const N: usize> Node<T, N> {
+    fn new(value: T) -> Self {
+        Self {
+            nodes: vec![],
+            values: vec![value],
+        }
+    }
+
     pub fn get(&self, value: &T) -> Option<&T> {
         let index = match self.values.binary_search(value) {
             Ok(index) => return self.values.get(index),
