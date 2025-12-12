@@ -69,7 +69,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
     pub fn get(&self, value: &T) -> Option<&T> {
         let mut i = 0;
 
-        while i < self.keys.len() && key > &self.keys[i] {
+        while i < self.cells.len() && key > &self.cells[i] {
             i += 1;
         }
 
@@ -78,7 +78,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         } else if self.is_leaf {
             None
         } else {
-            self.cells[i].search(key)
+            self.cells[i].get(value)
         }
     }
 
