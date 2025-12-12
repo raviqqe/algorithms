@@ -7,10 +7,12 @@ pub struct BTree<T: Ord, const N: usize = 32> {
 }
 
 impl<T: Ord, const N: usize> BTree<T, N> {
+    /// Creats a B-tree.
     pub fn new() -> Self {
         Self { root: None }
     }
 
+    /// Gets an element.
     pub fn get(&self, value: &T) -> Option<&T> {
         if let Some(node) = &self.root {
             node.get(value)
@@ -43,6 +45,7 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     //     }
     // }
 
+    /// Returns `true` if a tree is empty, or `false` otherwise.
     pub fn is_empty(&self) -> bool {
         self.root.is_none()
     }
