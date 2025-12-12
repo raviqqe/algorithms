@@ -19,7 +19,7 @@ impl<T: Ord, const N: usize> BTree<T, N> {
 
     /// Inserts an element.
     pub fn insert(&mut self, value: T) {
-        if let Some(node) = self.root {
+        if let Some(node) = &mut self.root {
             node.insert(value);
         } else {
             self.root = Some(Node::new(value));
