@@ -3,7 +3,7 @@
 /// A B-tree.
 #[derive(Clone, Debug)]
 pub struct BTree<T: Ord, const N: usize = 32> {
-    root: Option<Node<V, N>>,
+    root: Option<Node<T, N>>,
 }
 
 #[derive(Clone, Debug)]
@@ -18,7 +18,7 @@ struct Node<T: Ord, const N: usize> {
     cells: Vec<Cell<T, N>>,
 }
 
-impl<K: Ord + Clone, V: Clone> Node<K, V> {
+impl<T: Ord, const N: usize> Node<T, N> {
     fn new() -> Self {
         Node {
             keys: vec![],
