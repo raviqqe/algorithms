@@ -22,9 +22,9 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     /// Inserts an element.
     pub fn insert(&mut self, value: T) {
         if let Some(node) = &mut self.root {
-            if let Some((value, new_node)) = node.insert(value) {
+            if let Some((value, split_node)) = node.insert(value) {
                 self.root = Some(Node {
-                    nodes: vec![take(node), new_node],
+                    nodes: vec![take(node), split_node],
                     values: vec![value],
                 });
             }
