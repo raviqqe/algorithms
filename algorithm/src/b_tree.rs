@@ -61,7 +61,6 @@ impl<T: Ord, const N: usize> Node<T, N> {
                 Ok(index) => self.values[index] = value,
                 Err(index) => self.values.insert(index, value),
             }
-            return;
         }
     }
 
