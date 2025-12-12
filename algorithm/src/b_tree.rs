@@ -55,7 +55,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
-    fn insert(&mut self, value: T) -> Option<()> {
+    fn insert(&mut self, value: T) -> Option<(T, Vec<T>)> {
         let index = match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;
@@ -64,14 +64,15 @@ impl<T: Ord, const N: usize> Node<T, N> {
             Err(index) => index,
         };
 
-        if self.values.len() < N - 1 {
-            self.values.insert(index, value);
+        self.values.insert(index, value);
+
+        if self.values.len() < N {
             return None;
         }
 
-        self.nodes.resize_with(N.max(index + 1), Default::default);
+        let values = self.values.split_off(N / 2);
 
-        None
+        Some((self.values.pop().unwrap(), values))
     }
 
     // fn split_child(&mut self, index: usize, t: usize) {
