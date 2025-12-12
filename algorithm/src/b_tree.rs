@@ -48,12 +48,6 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     }
 }
 
-#[derive(Clone, Debug)]
-enum Cell<T: Ord, const N: usize> {
-    Node(Node<T, N>),
-    Value(T),
-}
-
 #[derive(Clone, Debug, Default)]
 struct Node<T: Ord, const N: usize> {
     nodes: Vec<Node<T, N>>,
