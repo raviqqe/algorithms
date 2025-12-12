@@ -1,5 +1,7 @@
 //! The B-tree data structure.
 
+use core::mem::take;
+
 /// A B-tree.
 #[derive(Clone, Debug, Default)]
 pub struct BTree<T, const N: usize = 32> {
@@ -20,7 +22,12 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     /// Inserts an element.
     pub fn insert(&mut self, value: T) {
         if let Some(node) = &mut self.root {
-            node.insert(value);
+            if let Some((value, new_node)) = node.insert(value) {
+                self.root = Some(Node {
+                    nodes: vec![take(node), new_node],
+                    values: vec![value],
+                });
+            }
         } else {
             self.root = Some(Node::new(value));
         }
@@ -55,7 +62,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
-    fn insert(&mut self, value: T) -> Option<(T, Vec<T>)> {
+    fn insert(&mut self, value: T) -> Option<(T, Node<T, N>)> {
         let index = match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;
@@ -72,7 +79,13 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         let values = self.values.split_off(N / 2);
 
-        Some((self.values.pop().unwrap(), values))
+        Some((
+            self.values.pop().unwrap(),
+            Node {
+                nodes: vec![],
+                values,
+            },
+        ))
     }
 
     // fn split_child(&mut self, index: usize, t: usize) {
