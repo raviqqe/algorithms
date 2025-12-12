@@ -56,7 +56,8 @@ enum Cell<T: Ord, const N: usize> {
 
 #[derive(Clone, Debug)]
 struct Node<T: Ord, const N: usize> {
-    cells: Box<[Option<Cell<T, N>>; N]>,
+    values: Vec<T>,
+    nodes: Vec<Cell<T, N>>,
 }
 
 impl<T: Ord, const N: usize> Node<T, N> {
