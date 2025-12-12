@@ -73,10 +73,10 @@ impl<T: Ord, const N: usize> Node<T, N> {
             index += 1;
         }
 
-        if let Some() = &self.keys.get(index) {
-            Some(&self.cells[index])
-        } else {
-            self.cells[index].get(value)
+        match &self.cells.get(index) {
+            Some(Some(Cell::Node(value))) => node.get(value),
+            Some(Some(Cell::Value(value))) => Some(value),
+            _ => None,
         }
     }
 
