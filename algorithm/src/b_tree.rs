@@ -54,31 +54,23 @@ enum Cell<T: Ord, const N: usize> {
     Value(T),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 struct Node<T: Ord, const N: usize> {
     nodes: Vec<Node<T, N>>,
     values: Vec<T>,
 }
 
 impl<T: Ord, const N: usize> Node<T, N> {
-    fn new() -> Self {
-        Self {
-            nodes: vec![],
-            values: vec![],
-        }
-    }
-
     pub fn get(&self, value: &T) -> Option<&T> {
-        let mut index = 0;
+        let index = match self.values.binary_search(value) {
+            Ok(index) => return self.values.get(index),
+            Err(index) => index,
+        };
 
-        while index < self.cells.len() && value > &self.cells[index] {
-            index += 1;
-        }
-
-        match &self.cells.get(index) {
-            Some(Some(Cell::Node(node))) => node.get(value),
-            Some(Some(Cell::Value(value))) => Some(value),
-            _ => None,
+        if let Some(node) = self.nodes.get(index) {
+            node.get(value)
+        } else {
+            None
         }
     }
 
