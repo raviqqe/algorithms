@@ -71,11 +71,12 @@ impl<T: Ord, const N: usize> Node<T, N> {
             Err(index) => index,
         };
 
-        self.values.insert(index, value);
-
-        if self.values.len() < N {
+        if self.values.len() < N - 1 {
+            self.values.insert(index, value);
             return None;
         }
+
+        self.values.insert(index, value);
 
         let values = self.values.split_off(N / 2);
 
