@@ -93,4 +93,14 @@ mod tests {
     fn new() {
         BTree::<(), 0>::new();
     }
+
+    #[test]
+    fn insert_before_degree() {
+        const DEGREE: usize = 8;
+        let mut tree = BTree::<usize, DEGREE>::new();
+
+        for x in 0..DEGREE - 1 {
+            tree.insert(x)
+        }
+    }
 }
