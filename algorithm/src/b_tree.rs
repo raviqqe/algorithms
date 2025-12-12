@@ -69,6 +69,8 @@ impl<T: Ord, const N: usize> Node<T, N> {
             return None;
         }
 
+        self.nodes.resize_with(N.max(index + 1), Default::default);
+
         None
     }
 
