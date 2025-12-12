@@ -100,7 +100,12 @@ mod tests {
         let mut tree = BTree::<usize, DEGREE>::new();
 
         for x in 0..DEGREE - 1 {
-            tree.insert(x)
+            assert_eq!(tree.get(&x), None);
+            tree.insert(x);
+
+            for y in 0..x + 1 {
+                assert_eq!(tree.get(&x), Some(&y));
+            }
         }
     }
 }
