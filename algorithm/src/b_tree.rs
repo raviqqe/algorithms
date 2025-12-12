@@ -56,9 +56,12 @@ impl<T: Ord, const N: usize> Node<T, N> {
     }
 
     fn insert(&mut self, value: T) {
-        match self.values.binary_search(&value) {
-            Ok(index) => self.values[index] = value,
-            Err(index) => {}
+        if self.values.len() < N - 1 {
+            match self.values.binary_search(&value) {
+                Ok(index) => self.values[index] = value,
+                Err(index) => self.values.insert(index, value),
+            }
+            return;
         }
     }
 
