@@ -23,6 +23,7 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     pub fn insert(&mut self, value: T) {
         if let Some(node) = &mut self.root {
             if let Some((value, split_node)) = node.insert(value) {
+                // TODO Create a `Node::new_split()` function.
                 self.root = Some(Node {
                     nodes: vec![take(node), split_node],
                     values: vec![value],
