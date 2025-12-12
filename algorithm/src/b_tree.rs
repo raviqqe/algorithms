@@ -104,7 +104,7 @@ mod tests {
             tree.insert(x);
 
             for y in 0..x + 1 {
-                assert_eq!(tree.get(&x), Some(&y));
+                assert_eq!(tree.get(&y), Some(&y));
             }
         }
     }
