@@ -62,7 +62,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
-    fn insert(&mut self, value: T) -> Option<(T, Node<T, N>)> {
+    fn insert(&mut self, value: T) -> Option<(T, Self)> {
         let index = match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;
@@ -81,7 +81,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         Some((
             self.values.pop().unwrap(),
-            Node {
+            Self {
                 nodes: vec![],
                 values,
             },
