@@ -61,24 +61,22 @@ struct Node<T: Ord, const N: usize> {
 
 impl<T: Ord, const N: usize> Node<T, N> {
     fn new() -> Self {
-        Node {
+        Self {
             cells: [const { None }; N].into(),
         }
     }
 
     pub fn get(&self, value: &T) -> Option<&T> {
-        let mut i = 0;
+        let mut index = 0;
 
-        while i < self.cells.len() && key > &self.cells[i] {
-            i += 1;
+        while index < self.cells.len() && key > &self.cells[index] {
+            index += 1;
         }
 
-        if i < self.keys.len() && key == &self.keys[i] {
-            Some(&self.cells[i])
-        } else if self.is_leaf {
-            None
+        if let Some() = &self.keys.get(index) {
+            Some(&self.cells[index])
         } else {
-            self.cells[i].get(value)
+            self.cells[index].get(value)
         }
     }
 
