@@ -69,12 +69,12 @@ impl<T: Ord, const N: usize> Node<T, N> {
     pub fn get(&self, value: &T) -> Option<&T> {
         let mut index = 0;
 
-        while index < self.cells.len() && key > &self.cells[index] {
+        while index < self.cells.len() && value > &self.cells[index] {
             index += 1;
         }
 
         match &self.cells.get(index) {
-            Some(Some(Cell::Node(value))) => node.get(value),
+            Some(Some(Cell::Node(node))) => node.get(value),
             Some(Some(Cell::Value(value))) => Some(value),
             _ => None,
         }
