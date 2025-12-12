@@ -7,7 +7,7 @@ pub struct BTree<T: Ord, const N: usize = 32> {
 }
 
 impl<T: Ord, const N: usize> BTree<T, N> {
-    /// Creats a B-tree.
+    /// Creates a B-tree.
     pub fn new() -> Self {
         Self { root: None }
     }
