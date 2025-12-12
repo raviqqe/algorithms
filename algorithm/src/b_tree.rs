@@ -1,7 +1,7 @@
 //! The B-tree data structure.
 
 /// A B-tree.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct BTree<T: Ord, const N: usize = 32> {
     root: Option<Node<T, N>>,
 }
@@ -14,11 +14,7 @@ impl<T: Ord, const N: usize> BTree<T, N> {
 
     /// Gets an element.
     pub fn get(&self, value: &T) -> Option<&T> {
-        if let Some(node) = &self.root {
-            node.get(value)
-        } else {
-            None
-        }
+        self.root.as_ref().and_then(|node| node.get(value))
     }
 
     // pub fn insert(&mut self, key: K, value: V) {
@@ -64,11 +60,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
             Err(index) => index,
         };
 
-        if let Some(node) = self.nodes.get(index) {
-            node.get(value)
-        } else {
-            None
-        }
+        self.nodes.get(index).and_then(|node| node.get(value))
     }
 
     // fn insert_non_full(&mut self, key: K, value: V, t: usize) {
