@@ -8,7 +8,7 @@ pub struct BTree<T: Ord, const N: usize = 32> {
 
 impl<T: Ord, const N: usize> BTree<T, N> {
     /// Creates a B-tree.
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self { root: None }
     }
 
@@ -46,14 +46,14 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     // }
 
     /// Returns `true` if a tree is empty, or `false` otherwise.
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.root.is_none()
     }
 }
 
 #[derive(Clone, Debug, Default)]
 struct Node<T: Ord, const N: usize> {
-    nodes: Vec<Node<T, N>>,
+    nodes: Vec<Self>,
     values: Vec<T>,
 }
 
