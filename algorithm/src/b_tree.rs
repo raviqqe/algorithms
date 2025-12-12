@@ -2,7 +2,7 @@
 
 /// A B-tree.
 #[derive(Clone, Debug, Default)]
-pub struct BTree<T: Ord, const N: usize = 32> {
+pub struct BTree<T, const N: usize = 32> {
     root: Option<Node<T, N>>,
 }
 
@@ -32,8 +32,8 @@ impl<T: Ord, const N: usize> BTree<T, N> {
     }
 }
 
-#[derive(Clone, Debug, Default)]
-struct Node<T: Ord, const N: usize> {
+#[derive(Clone, Debug)]
+struct Node<T, const N: usize> {
     nodes: Vec<Self>,
     values: Vec<T>,
 }
@@ -92,6 +92,15 @@ impl<T: Ord, const N: usize> Node<T, N> {
     //     self.cells.insert(index, mid_value);
     //     self.children.insert(index + 1, new_node);
     // }
+}
+
+impl<T, const N: usize> Default for Node<T, N> {
+    fn default() -> Self {
+        Self {
+            nodes: vec![],
+            values: vec![],
+        }
+    }
 }
 
 #[cfg(test)]
