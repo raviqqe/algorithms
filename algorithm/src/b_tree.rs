@@ -116,3 +116,13 @@ impl<T: Ord, const N: usize> Node<T, N> {
     //     self.children.insert(index + 1, new_node);
     // }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new() {
+        BTree::<(), 0>::new();
+    }
+}
