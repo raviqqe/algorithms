@@ -55,32 +55,32 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
-    // fn insert_non_full(&mut self, key: K, value: V, t: usize) {
-    //     let mut i = self.keys.len();
-    //
-    //     if self.is_leaf {
-    //         self.keys.push(key.clone());
-    //         self.cells.push(value.clone());
-    //         while i > 0 && &key < &self.keys[i - 1] {
-    //             self.keys.swap(i, i - 1);
-    //             self.cells.swap(i, i - 1);
-    //             i -= 1;
-    //         }
-    //     } else {
-    //         while i > 0 && &key < &self.keys[i - 1] {
-    //             i -= 1;
-    //         }
-    //
-    //         if self.children[i].is_full(t) {
-    //             self.split_child(i, t);
-    //             if &key > &self.keys[i] {
-    //                 i += 1;
-    //             }
-    //         }
-    //         self.children[i].insert_non_full(key, value, t);
-    //     }
-    // }
-    //
+    fn insert(&mut self, value: T) {
+        let mut i = self.keys.len();
+
+        if self.is_leaf {
+            self.keys.push(key.clone());
+            self.cells.push(value.clone());
+            while i > 0 && &key < &self.keys[i - 1] {
+                self.keys.swap(i, i - 1);
+                self.cells.swap(i, i - 1);
+                i -= 1;
+            }
+        } else {
+            while i > 0 && &key < &self.keys[i - 1] {
+                i -= 1;
+            }
+
+            if self.children[i].is_full(t) {
+                self.split_child(i, t);
+                if &key > &self.keys[i] {
+                    i += 1;
+                }
+            }
+            self.children[i].insert_non_full(key, value, t);
+        }
+    }
+
     // fn split_child(&mut self, index: usize, t: usize) {
     //     let mut new_node = Node::new(self.children[index].is_leaf);
     //     let mid = t - 1;
