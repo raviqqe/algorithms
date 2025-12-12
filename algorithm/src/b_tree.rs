@@ -56,29 +56,9 @@ impl<T: Ord, const N: usize> Node<T, N> {
     }
 
     fn insert(&mut self, value: T) {
-        let mut i = self.keys.len();
-
-        if self.is_leaf {
-            self.keys.push(key.clone());
-            self.cells.push(value.clone());
-
-            while i > 0 && &key < &self.keys[i - 1] {
-                self.keys.swap(i, i - 1);
-                self.cells.swap(i, i - 1);
-                i -= 1;
-            }
-        } else {
-            while i > 0 && &key < &self.keys[i - 1] {
-                i -= 1;
-            }
-
-            if self.children[i].is_full(t) {
-                self.split_child(i, t);
-                if &key > &self.keys[i] {
-                    i += 1;
-                }
-            }
-            self.children[i].insert_non_full(key, value, t);
+        match self.values.binary_search(&value) {
+            Ok(index) => return self.values.get(index),
+            Err(index) => index,
         }
     }
 
