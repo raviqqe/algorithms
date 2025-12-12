@@ -58,7 +58,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
     fn insert(&mut self, value: T) {
         match self.values.binary_search(&value) {
             Ok(index) => self.values[index] = value,
-            Err(index) => index,
+            Err(index) => {}
         }
     }
 
