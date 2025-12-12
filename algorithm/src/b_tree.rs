@@ -19,23 +19,10 @@ impl<T: Ord, const N: usize> BTree<T, N> {
 
     /// Inserts an element.
     pub fn insert(&mut self, value: T) {
-        if self.root.is_none() {
-            self.root = Some(Node::new(value));
-            return;
-        }
-
-        if self.root.as_ref().unwrap().is_full(self.t) {
-            let mut new_root = Node::new(false);
-            let old_root = self.root.take().unwrap();
-            new_root.children.push(old_root);
-            new_root.split_child(0, self.t);
-            new_root.insert_non_full(key, value, self.t);
-            self.root = Some(new_root);
+        if let Some(node) = self.root {
+            node.insert(value);
         } else {
-            self.root
-                .as_mut()
-                .unwrap()
-                .insert_non_full(key, value, self.t);
+            self.root = Some(Node::new(value));
         }
     }
 
