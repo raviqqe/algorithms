@@ -3,6 +3,7 @@
 extern crate alloc;
 
 pub mod a_star;
+pub mod b_tree;
 pub mod binary_search;
 pub mod lru_cache;
 pub mod lzss;
