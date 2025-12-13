@@ -159,7 +159,6 @@ mod tests {
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
-
             assert_eq!(node.insert(x), None);
         }
 
