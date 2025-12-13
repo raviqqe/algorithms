@@ -83,3 +83,23 @@ impl<T, const N: usize> Default for Node<T, N> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn insert_before_degree() {
+        const DEGREE: usize = 8;
+        let mut node = Node::<usize, DEGREE>::new(0);
+
+        for x in 1..DEGREE - 1 {
+            assert_eq!(node.get(&x), None);
+            node.insert(x);
+
+            for y in 0..x + 1 {
+                assert_eq!(node.get(&y), Some(&y));
+            }
+        }
+    }
+}
