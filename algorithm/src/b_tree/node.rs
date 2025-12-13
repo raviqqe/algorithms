@@ -12,7 +12,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         }
     }
 
-    pub fn new_split(left: Node<T, N>, value: T, right: Node<T, N>) -> Self {
+    pub fn new_split(left: Self, value: T, right: Self) -> Self {
         Self {
             nodes: vec![left, right],
             values: vec![value],
@@ -52,7 +52,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         self.values.insert(index, value);
 
-        let values = self.values.split_off((N + 1) / 2);
+        let values = self.values.split_off(N.div_ceil(2));
 
         Some((
             self.values.pop().unwrap(),
