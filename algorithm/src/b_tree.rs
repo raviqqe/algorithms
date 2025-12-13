@@ -42,8 +42,6 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
             if let Some((value, split_node)) = node.insert(value) {
                 self.root = Some(Node::new(vec![take(node), split_node], vec![value]));
             }
-        } else {
-            self.root = Some(Node::new(vec![], vec![value]));
         }
 
         #[cfg(test)]
