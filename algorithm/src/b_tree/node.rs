@@ -44,9 +44,15 @@ impl<T: Ord, const N: usize> Node<T, N> {
                     self.values.insert(index, value);
                     None
                 } else {
-                    let nodes = self.nodes.split_off(N.div_ceil(2));
-                    let values = self.values.split_off(N.div_ceil(2));
+                    let index = N.div_ceil(2);
+                    let mut nodes = self.nodes.split_off(index + 1);
+                    let values = self.values.split_off(index);
+                    let mut left = self.nodes.pop().unwrap();
+                    let right = left.split();
                     let value = self.values.pop().unwrap();
+
+                    self.nodes.push(left);
+                    nodes.insert(0, right);
 
                     debug_assert_eq!(nodes.len(), values.len() + 1);
                     debug_assert!(values.iter().all(|element| element > &value));
@@ -74,6 +80,28 @@ impl<T: Ord, const N: usize> Node<T, N> {
                 values,
             },
         ))
+    }
+
+    fn split(&mut self) -> Self {
+        let index = self.nodes.len() / 2;
+        let mut nodes = if self.nodes.is_empty() {
+            vec![]
+        } else {
+            self.nodes.split_off(index + 1)
+        };
+        let values = self.values.split_off(index);
+
+        if self.nodes.is_empty() {
+            Self { nodes, values }
+        } else {
+            let mut left = self.nodes.pop().unwrap();
+            let right = left.split();
+
+            self.nodes.push(left);
+            nodes.insert(0, right);
+
+            Self { nodes, values }
+        }
     }
 }
 
