@@ -17,7 +17,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
         Self { root: None }
     }
 
-    /// Gets an element.
+    /// Returns an element.
     pub fn get(&self, value: &T) -> Option<&T> {
         self.root.as_ref().and_then(|node| node.get(value))
     }
