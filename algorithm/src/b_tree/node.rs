@@ -272,31 +272,29 @@ mod tests {
                 );
             }
 
-            // #[test]
-            // fn split_five_nodes() {
-            //     assert_eq!(
-            //         split(Node::new(
-            //             vec![
-            //                 dummy_node(10),
-            //                 dummy_node(20),
-            //                 dummy_node(30),
-            //                 dummy_node(40),
-            //                 dummy_node(50),
-            //             ],
-            //             vec![1, 2, 3, 4]
-            //         )),
-            //         (
-            //             Node::new(
-            //                 vec![dummy_node(10), dummy_node(20), dummy_node(30)],
-            //                 vec![1, 2]
-            //             ),
-            //             Node::new(
-            //                 vec![dummy_node(30), dummy_node(40), dummy_node(50)],
-            //                 vec![3, 4]
-            //             )
-            //         )
-            //     );
-            // }
+            #[test]
+            fn split_five_nodes() {
+                assert_eq!(
+                    split(Node::new(
+                        vec![
+                            dummy_node(10),
+                            dummy_node(20),
+                            dummy_node(30),
+                            dummy_node(40),
+                            dummy_node(50),
+                        ],
+                        vec![1, 2, 3, 4]
+                    )),
+                    (
+                        Node::new(
+                            vec![dummy_node(10), dummy_node(20), dummy_node(30)],
+                            vec![1, 2]
+                        ),
+                        3,
+                        Node::new(vec![dummy_node(40), dummy_node(50)], vec![4])
+                    )
+                );
+            }
         }
     }
 }
