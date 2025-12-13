@@ -1,5 +1,4 @@
 use core::fmt::Debug;
-use std::collections::HashSet;
 
 macro_rules! assert_invariant {
     ($self:expr) => {
@@ -83,9 +82,9 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 .nodes
                 .iter()
                 .map(Self::assert_depth)
-                .collect::<HashSet<_>>();
+                .collect::<Vec<_>>();
 
-            assert!(depths.len() == 1);
+            assert!(depths.all(|depth| *depth == depths[0]));
 
             depths.into_iter().next().unwrap() + 1
         }
