@@ -37,7 +37,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     }
 
     /// Deletes an element.
-    pub fn insert(&mut self, value: T) {
+    pub fn delete(&mut self, value: T) {
         if let Some(node) = &mut self.root {
             node.delete(value);
         }
