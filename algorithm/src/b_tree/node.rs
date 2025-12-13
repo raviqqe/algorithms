@@ -1,18 +1,18 @@
 #[derive(Clone, Debug)]
-struct Node<T, const N: usize> {
+pub struct Node<T, const N: usize> {
     nodes: Vec<Self>,
     values: Vec<T>,
 }
 
 impl<T: Ord, const N: usize> Node<T, N> {
-    fn new(value: T) -> Self {
+    pub fn new(value: T) -> Self {
         Self {
             nodes: vec![],
             values: vec![value],
         }
     }
 
-    fn new_split(left: Node<T, N>, value: T, right: Node<T, N>) -> Self {
+    pub fn new_split(left: Node<T, N>, value: T, right: Node<T, N>) -> Self {
         Self {
             nodes: vec![left, right],
             values: vec![value],
@@ -28,7 +28,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
-    fn insert(&mut self, value: T) -> Option<(T, Self)> {
+    pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
         let index = match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;

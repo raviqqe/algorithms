@@ -2,6 +2,7 @@
 
 mod node;
 
+use self::node::Node;
 use core::mem::take;
 
 /// A B-tree.
