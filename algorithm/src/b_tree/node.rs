@@ -1,4 +1,4 @@
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Node<T, const N: usize> {
     nodes: Vec<Self>,
     values: Vec<T>,
@@ -52,7 +52,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         self.values.insert(index, value);
 
-        let values = self.values.split_off(N / 2);
+        let values = self.values.split_off((N + 1) / 2);
 
         Some((
             self.values.pop().unwrap(),
@@ -94,17 +94,48 @@ mod tests {
     }
 
     #[test]
-    fn insert_after_degree() {
+    fn insert_after_degree_with_even_degree() {
         const DEGREE: usize = 8;
         let mut node = Node::<usize, DEGREE>::new(0);
 
-        for x in 1..100 {
+        for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
-            node.insert(x);
 
-            for y in 0..x + 1 {
-                assert_eq!(node.get(&y), Some(&y), "x = {x}, y = {y}");
-            }
+            assert_eq!(node.insert(x), None);
         }
+
+        assert_eq!(
+            node.insert(7),
+            Some((
+                3,
+                Node {
+                    nodes: vec![],
+                    values: vec![4, 5, 6, 7],
+                }
+            ))
+        );
+    }
+
+    #[test]
+    fn insert_after_degree_with_odd_degree() {
+        const DEGREE: usize = 9;
+        let mut node = Node::<usize, DEGREE>::new(0);
+
+        for x in 1..DEGREE - 1 {
+            assert_eq!(node.get(&x), None);
+
+            assert_eq!(node.insert(x), None);
+        }
+
+        assert_eq!(
+            node.insert(8),
+            Some((
+                4,
+                Node {
+                    nodes: vec![],
+                    values: vec![5, 6, 7, 8],
+                }
+            ))
+        );
     }
 }
