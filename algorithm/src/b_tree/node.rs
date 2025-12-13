@@ -99,7 +99,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     fn split(&mut self) -> Self {
-        let index = self.nodes.len().div_ceil(2);
+        let index = self.values.len() / 2;
         let mut nodes = self.nodes.split_off(self.nodes.len().min(index + 1));
         let values = self.values.split_off(index);
 
