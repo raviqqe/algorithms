@@ -84,9 +84,9 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 .map(Self::assert_depth)
                 .collect::<Vec<_>>();
 
-            assert!(depths.all(|depth| *depth == depths[0]));
+            assert!(depths.iter().all(|depth| *depth == depths[0]));
 
-            depths.into_iter().next().unwrap() + 1
+            depths[0] + 1
         }
     }
 }
