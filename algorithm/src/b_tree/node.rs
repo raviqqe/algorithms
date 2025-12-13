@@ -54,25 +54,6 @@ impl<T: Ord, const N: usize> Node<T, N> {
             },
         ))
     }
-
-    // fn split_child(&mut self, index: usize, t: usize) {
-    //     let mut new_node = Node::new(self.children[index].is_leaf);
-    //     let mid = t - 1;
-    //
-    //     new_node.keys = self.children[index].keys.split_off(mid + 1);
-    //     new_node.cells = self.children[index].values.split_off(mid + 1);
-    //
-    //     if !self.children[index].is_leaf {
-    //         new_node.children = self.children[index].children.split_off(mid + 1);
-    //     }
-    //
-    //     let mid_key = self.children[index].keys.pop().unwrap();
-    //     let mid_value = self.children[index].values.pop().unwrap();
-    //
-    //     self.keys.insert(index, mid_key);
-    //     self.cells.insert(index, mid_value);
-    //     self.children.insert(index + 1, new_node);
-    // }
 }
 
 impl<T, const N: usize> Default for Node<T, N> {
