@@ -44,7 +44,14 @@ impl<T: Ord, const N: usize> Node<T, N> {
                     self.values.insert(index, value);
                     None
                 } else {
-                    todo!()
+                    let nodes = self.nodes.split_off(N.div_ceil(2));
+                    let values = self.values.split_off(N.div_ceil(2));
+                    let value = self.values.pop().unwrap();
+
+                    debug_assert_eq!(nodes.len(), values.len() + 1);
+                    debug_assert!(values.iter().all(|element| element > &value));
+
+                    Some((value, Self { nodes, values }))
                 }
             } else {
                 None
