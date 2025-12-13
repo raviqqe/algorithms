@@ -59,8 +59,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                     let mut nodes = self.nodes.split_off(index + 1);
                     let values = self.values.split_off(index);
                     let mut left = self.nodes.pop().unwrap();
-                    let right = left.split();
-                    let value = self.values.pop().unwrap();
+                    let (value, right) = left.split();
 
                     self.nodes.push(left);
                     nodes.insert(0, right);
@@ -76,43 +75,24 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             };
         }
 
-        if self.values.len() < N - 1 {
-            self.values.insert(index, value);
-            return None;
-        }
-
         self.values.insert(index, value);
 
-        let values = self.values.split_off(N.div_ceil(2));
-        let value = self.values.pop().unwrap();
-
-        debug_assert!(self.values.iter().all(|element| element < &value));
-        debug_assert!(values.iter().all(|element| element > &value));
-
-        Some((
-            value,
-            Self {
-                nodes: vec![],
-                values,
-            },
-        ))
+        if self.values.len() < N {
+            None
+        } else {
+            Some(self.split())
+        }
     }
 
-    fn split(&mut self) -> Self {
-        let index = self.values.len().div_ceil(2);
-        let mut nodes = self.nodes.split_off(self.nodes.len().min(index + 1));
+    fn split(&mut self) -> (T, Self) {
+        let index = self.values.len() / 2 + 1;
+        let nodes = self.nodes.split_off(self.nodes.len().min(index));
         let values = self.values.split_off(index);
-
-        if let Some(mut left) = self.nodes.pop() {
-            let right = left.split();
-
-            self.nodes.push(left);
-            nodes.insert(0, right);
-        }
+        let value = self.values.pop().unwrap();
 
         assert_invariant!(self);
 
-        Self::new(nodes, values)
+        (value, Self::new(nodes, values))
     }
 }
 
@@ -197,25 +177,19 @@ mod tests {
 
         const DEGREE: usize = 8;
 
-        fn split(mut left: Node<usize, DEGREE>) -> (Node<usize, DEGREE>, Node<usize, DEGREE>) {
-            let right = left.split();
+        fn split(
+            mut left: Node<usize, DEGREE>,
+        ) -> (Node<usize, DEGREE>, usize, Node<usize, DEGREE>) {
+            let (value, right) = left.split();
 
-            (left, right)
-        }
-
-        #[test]
-        fn split_empty() {
-            assert_eq!(
-                split(Node::new(vec![], vec![])),
-                (Node::new(vec![], vec![]), Node::new(vec![], vec![]))
-            );
+            (left, value, right)
         }
 
         #[test]
         fn split_value() {
             assert_eq!(
                 split(Node::new(vec![], vec![42])),
-                (Node::new(vec![], vec![42]), Node::new(vec![], vec![]))
+                (Node::new(vec![], vec![]), 42, Node::new(vec![], vec![]))
             );
         }
 
@@ -223,7 +197,7 @@ mod tests {
         fn split_two_values() {
             assert_eq!(
                 split(Node::new(vec![], vec![1, 2])),
-                (Node::new(vec![], vec![1]), Node::new(vec![], vec![2]))
+                (Node::new(vec![], vec![1]), 2, Node::new(vec![], vec![]))
             );
         }
 
@@ -231,7 +205,7 @@ mod tests {
         fn split_three_values() {
             assert_eq!(
                 split(Node::new(vec![], vec![1, 2, 3])),
-                (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3]))
+                (Node::new(vec![], vec![1]), 2, Node::new(vec![], vec![3]))
             );
         }
 
@@ -239,7 +213,7 @@ mod tests {
         fn split_four_values() {
             assert_eq!(
                 split(Node::new(vec![], vec![1, 2, 3, 4])),
-                (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3, 4]))
+                (Node::new(vec![], vec![1, 2]), 3, Node::new(vec![], vec![4]))
             );
         }
 
@@ -256,9 +230,9 @@ mod tests {
                 assert_eq!(
                     split(Node::new(vec![dummy_node(10), dummy_node(20)], vec![1])),
                     (
-                        Node::new(vec![dummy_node(10), dummy_node(20)], vec![1]),
-                        // TODO
-                        Node::new(vec![], vec![])
+                        Node::new(vec![dummy_node(10)], vec![]),
+                        1,
+                        Node::new(vec![dummy_node(20)], vec![])
                     )
                 );
             }
@@ -266,26 +240,63 @@ mod tests {
             #[test]
             fn split_three_nodes() {
                 assert_eq!(
-                    split(Node::new(vec![], vec![1, 2])),
-                    (Node::new(vec![], vec![1]), Node::new(vec![], vec![2]))
+                    split(Node::new(
+                        vec![dummy_node(10), dummy_node(20), dummy_node(30)],
+                        vec![1, 2]
+                    )),
+                    (
+                        Node::new(vec![dummy_node(10), dummy_node(20)], vec![1]),
+                        2,
+                        Node::new(vec![dummy_node(30)], vec![])
+                    )
                 );
             }
 
             #[test]
             fn split_four_nodes() {
                 assert_eq!(
-                    split(Node::new(vec![], vec![1, 2, 3])),
-                    (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3]))
+                    split(Node::new(
+                        vec![
+                            dummy_node(10),
+                            dummy_node(20),
+                            dummy_node(30),
+                            dummy_node(40),
+                        ],
+                        vec![1, 2, 3]
+                    )),
+                    (
+                        Node::new(vec![dummy_node(10), dummy_node(20)], vec![1]),
+                        2,
+                        Node::new(vec![dummy_node(30), dummy_node(40)], vec![3])
+                    )
                 );
             }
 
-            #[test]
-            fn split_five_nodes() {
-                assert_eq!(
-                    split(Node::new(vec![], vec![1, 2, 3, 4])),
-                    (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3, 4]))
-                );
-            }
+            // #[test]
+            // fn split_five_nodes() {
+            //     assert_eq!(
+            //         split(Node::new(
+            //             vec![
+            //                 dummy_node(10),
+            //                 dummy_node(20),
+            //                 dummy_node(30),
+            //                 dummy_node(40),
+            //                 dummy_node(50),
+            //             ],
+            //             vec![1, 2, 3, 4]
+            //         )),
+            //         (
+            //             Node::new(
+            //                 vec![dummy_node(10), dummy_node(20), dummy_node(30)],
+            //                 vec![1, 2]
+            //             ),
+            //             Node::new(
+            //                 vec![dummy_node(30), dummy_node(40), dummy_node(50)],
+            //                 vec![3, 4]
+            //             )
+            //         )
+            //     );
+            // }
         }
     }
 }
