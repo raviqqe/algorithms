@@ -46,25 +46,16 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         };
 
         if self.nodes.is_empty() {
-            // This node is a leaf.
             self.values.insert(index, value);
-
-            if self.values.len() < N {
-                None
-            } else {
-                Some(self.split())
-            }
         } else if let Some((value, node)) = self.nodes[index].insert(value) {
             self.nodes.insert(index + 1, node);
             self.values.insert(index, value);
+        }
 
-            if self.values.len() < N {
-                None
-            } else {
-                Some(self.split())
-            }
-        } else {
+        if self.values.len() < N {
             None
+        } else {
+            Some(self.split())
         }
     }
 
