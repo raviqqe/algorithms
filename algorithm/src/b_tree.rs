@@ -3,8 +3,7 @@
 mod node;
 
 use self::node::Node;
-use core::fmt::Debug;
-use core::mem::take;
+use core::{fmt::Debug, mem::take};
 
 /// A B-tree.
 #[derive(Clone, Debug, Default)]
