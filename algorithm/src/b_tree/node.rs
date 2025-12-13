@@ -84,25 +84,18 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     fn split(&mut self) -> Self {
-        let index = self.nodes.len() / 2;
-        let mut nodes = if self.nodes.is_empty() {
-            vec![]
-        } else {
-            self.nodes.split_off(index + 1)
-        };
+        let index = self.nodes.len().div_ceil(2);
+        let mut nodes = self.nodes.split_off(self.nodes.len().min(index + 1));
         let values = self.values.split_off(index);
 
-        if self.nodes.is_empty() {
-            Self::new(nodes, values)
-        } else {
-            let mut left = self.nodes.pop().unwrap();
+        if let Some(mut left) = self.nodes.pop() {
             let right = left.split();
 
             self.nodes.push(left);
             nodes.insert(0, right);
-
-            Self::new(nodes, values)
         }
+
+        Self::new(nodes, values)
     }
 }
 
