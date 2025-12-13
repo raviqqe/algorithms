@@ -242,5 +242,49 @@ mod tests {
                 (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3, 4]))
             );
         }
+
+        mod node {
+            use super::*;
+            use pretty_assertions::assert_eq;
+
+            fn dummy_node(value: usize) -> Node<usize, DEGREE> {
+                Node::new(vec![], vec![value])
+            }
+
+            #[test]
+            fn split_two_nodes() {
+                assert_eq!(
+                    split(Node::new(vec![dummy_node(10), dummy_node(20)], vec![1])),
+                    (
+                        Node::new(vec![dummy_node(10), dummy_node(20)], vec![1]),
+                        Node::new(vec![], vec![])
+                    )
+                );
+            }
+
+            #[test]
+            fn split_three_nodes() {
+                assert_eq!(
+                    split(Node::new(vec![], vec![1, 2])),
+                    (Node::new(vec![], vec![1]), Node::new(vec![], vec![2]))
+                );
+            }
+
+            #[test]
+            fn split_four_nodes() {
+                assert_eq!(
+                    split(Node::new(vec![], vec![1, 2, 3])),
+                    (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3]))
+                );
+            }
+
+            #[test]
+            fn split_five_nodes() {
+                assert_eq!(
+                    split(Node::new(vec![], vec![1, 2, 3, 4])),
+                    (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3, 4]))
+                );
+            }
+        }
     }
 }
