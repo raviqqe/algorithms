@@ -37,6 +37,14 @@ impl<T: Ord, const N: usize> Node<T, N> {
             Err(index) => index,
         };
 
+        if !self.nodes.is_empty() {
+            return if let Some((_value, _node)) = self.nodes[index].insert(value) {
+                todo!();
+            } else {
+                None
+            };
+        }
+
         if self.values.len() < N - 1 {
             self.values.insert(index, value);
             return None;
@@ -68,6 +76,7 @@ impl<T, const N: usize> Default for Node<T, N> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use pretty_assertions::assert_eq;
 
     #[test]
     fn insert_before_degree() {
@@ -80,6 +89,21 @@ mod tests {
 
             for y in 0..x + 1 {
                 assert_eq!(node.get(&y), Some(&y));
+            }
+        }
+    }
+
+    #[test]
+    fn insert_after_degree() {
+        const DEGREE: usize = 8;
+        let mut node = Node::<usize, DEGREE>::new(0);
+
+        for x in 1..100 {
+            assert_eq!(node.get(&x), None);
+            node.insert(x);
+
+            for y in 0..x + 1 {
+                assert_eq!(node.get(&y), Some(&y), "x = {x}, y = {y}");
             }
         }
     }
