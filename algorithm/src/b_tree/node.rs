@@ -41,6 +41,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
             return if let Some((value, node)) = self.nodes[index].insert(value) {
                 self.nodes.insert(index, node);
                 self.values.insert(index, value);
+                // TODO
                 return None;
             } else {
                 None
