@@ -73,7 +73,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    pub fn delete(&mut self, value: T) {
+    pub fn delete(&mut self, _value: T) {
         todo!();
     }
 
