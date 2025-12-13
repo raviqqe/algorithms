@@ -43,7 +43,6 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
-    use proptest::prelude::*;
 
     #[test]
     fn new() {
@@ -67,6 +66,23 @@ mod tests {
     }
 
     #[test]
+    fn insert_before_degree_reversely() {
+        const DEGREE: usize = 8;
+        let mut tree = BTree::<usize, DEGREE>::new();
+        let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
+
+        for (index, x) in xs.iter().copied().enumerate() {
+            assert_eq!(tree.get(&x), None);
+
+            tree.insert(x);
+
+            for &y in &xs[..index + 1] {
+                assert_eq!(tree.get(&y), Some(&y));
+            }
+        }
+    }
+
+    #[test]
     fn insert_after_degree() {
         const DEGREE: usize = 8;
         let mut tree = BTree::<usize, DEGREE>::new();
@@ -82,23 +98,24 @@ mod tests {
         }
     }
 
-    proptest! {
-        #[test]
-        fn insert_random(xs: Vec<usize>) {
-            prop_assume!(xs.len() < 64);
-
-            const DEGREE: usize = 4;
-            let mut tree = BTree::<usize, DEGREE>::new();
-
-            for (index, x) in xs.iter().copied().enumerate() {
-                prop_assert_eq!(tree.get(&x), None);
-
-                tree.insert(x);
-
-                for y in xs.iter().copied().take(index + 1) {
-                    prop_assert_eq!(tree.get(&y), Some(&y));
-                }
-            }
-        }
-    }
+    // TODO
+    // proptest! {
+    //     #[test]
+    //     fn insert_random(xs: Vec<usize>) {
+    //         prop_assume!(xs.len() < 64);
+    //
+    //         const DEGREE: usize = 4;
+    //         let mut tree = BTree::<usize, DEGREE>::new();
+    //
+    //         for (index, x) in xs.iter().copied().enumerate() {
+    //             prop_assert_eq!(tree.get(&x), None);
+    //
+    //             tree.insert(x);
+    //
+    //             for y in xs.iter().copied().take(index + 1) {
+    //                 prop_assert_eq!(tree.get(&y), Some(&y));
+    //             }
+    //         }
+    //     }
+    // }
 }

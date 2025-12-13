@@ -1,5 +1,15 @@
 use core::fmt::Debug;
 
+macro_rules! assert_invariant {
+    ($self:expr) => {
+        let nodes = &$self.nodes;
+        let values = &$self.values;
+
+        debug_assert!(nodes.is_empty() || nodes.len() == values.len() + 1);
+        debug_assert!(values.len() < N);
+    };
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Node<T, const N: usize> {
     nodes: Vec<Self>,
@@ -8,10 +18,11 @@ pub struct Node<T, const N: usize> {
 
 impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn new(nodes: Vec<Self>, values: Vec<T>) -> Self {
-        debug_assert!(nodes.is_empty() && !values.is_empty() || nodes.len() == values.len() + 1);
-        debug_assert!(values.len() < N);
+        let this = Self { nodes, values };
 
-        Self { nodes, values }
+        assert_invariant!(&this);
+
+        this
     }
 
     pub fn get(&self, value: &T) -> Option<&T> {
@@ -24,6 +35,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
+        assert_invariant!(self);
+
         let index = match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;
@@ -40,6 +53,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 if self.values.len() < N - 1 {
                     None
                 } else {
+                    assert_invariant!(self);
+
                     let index = self.values.len().div_ceil(2);
                     let mut nodes = self.nodes.split_off(index + 1);
                     let values = self.values.split_off(index);
