@@ -42,7 +42,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
                 self.nodes.insert(index + 1, node);
                 self.values.insert(index, value);
                 // TODO
-                return None;
+                None
             } else {
                 None
             };
