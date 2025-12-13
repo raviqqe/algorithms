@@ -71,6 +71,7 @@ mod tests {
     #[test]
     fn insert_before_degree_reversely() {
         const DEGREE: usize = 8;
+
         let mut tree = BTree::<usize, DEGREE>::new();
         let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
 
@@ -88,6 +89,7 @@ mod tests {
     #[test]
     fn insert_after_degree() {
         const DEGREE: usize = 8;
+
         let mut tree = BTree::<usize, DEGREE>::new();
 
         for x in 0..MAX_ITERATIONS {
@@ -103,10 +105,26 @@ mod tests {
 
     proptest! {
         #[test]
-        fn insert_random(xs: Vec<usize>) {
-            prop_assume!(xs.len() < 64);
-
+        fn insert_random_with_even_degree(xs: Vec<usize>) {
             const DEGREE: usize = 4;
+
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for (index, x) in xs.iter().copied().enumerate() {
+                prop_assert_eq!(tree.get(&x), None);
+
+                tree.insert(x);
+
+                for y in xs.iter().copied().take(index + 1) {
+                    prop_assert_eq!(tree.get(&y), Some(&y));
+                }
+            }
+        }
+
+        #[test]
+        fn insert_random_with_odd_degree(xs: Vec<usize>) {
+            const DEGREE: usize = 5;
+
             let mut tree = BTree::<usize, DEGREE>::new();
 
             for (index, x) in xs.iter().copied().enumerate() {
