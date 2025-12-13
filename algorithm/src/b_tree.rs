@@ -27,10 +27,10 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     pub fn insert(&mut self, value: T) {
         if let Some(node) = &mut self.root {
             if let Some((value, split_node)) = node.insert(value) {
-                self.root = Some(Node::new_split(take(node), value, split_node));
+                self.root = Some(Node::new(vec![take(node), split_node], vec![value]));
             }
         } else {
-            self.root = Some(Node::new(value));
+            self.root = Some(Node::new(vec![], vec![value]));
         }
     }
 

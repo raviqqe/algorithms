@@ -7,18 +7,11 @@ pub struct Node<T, const N: usize> {
 }
 
 impl<T: Debug + Ord, const N: usize> Node<T, N> {
-    pub fn new(value: T) -> Self {
-        Self {
-            nodes: vec![],
-            values: vec![value],
-        }
-    }
+    pub fn new(nodes: Vec<Self>, values: Vec<T>) -> Self {
+        debug_assert!(nodes.is_empty() || nodes.len() == values.len() + 1);
+        debug_assert!(values.len() < N);
 
-    pub fn new_split(left: Self, value: T, right: Self) -> Self {
-        Self {
-            nodes: vec![left, right],
-            values: vec![value],
-        }
+        Self { nodes, values }
     }
 
     pub fn get(&self, value: &T) -> Option<&T> {
@@ -61,7 +54,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                     debug_assert!(self.values.iter().all(|element| element < &value));
                     debug_assert!(values.iter().all(|element| element > &value));
 
-                    Some((value, Self { nodes, values }))
+                    Some((value, Self::new(nodes, values)))
                 }
             } else {
                 None
@@ -100,7 +93,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         let values = self.values.split_off(index);
 
         if self.nodes.is_empty() {
-            Self { nodes, values }
+            Self::new(nodes, values)
         } else {
             let mut left = self.nodes.pop().unwrap();
             let right = left.split();
@@ -108,13 +101,14 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             self.nodes.push(left);
             nodes.insert(0, right);
 
-            Self { nodes, values }
+            Self::new(nodes, values)
         }
     }
 }
 
 impl<T, const N: usize> Default for Node<T, N> {
     fn default() -> Self {
+        // A temporary node with dummy data.
         Self {
             nodes: vec![],
             values: vec![],
@@ -130,7 +124,7 @@ mod tests {
     #[test]
     fn insert_before_degree() {
         const DEGREE: usize = 8;
-        let mut node = Node::<usize, DEGREE>::new(0);
+        let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
@@ -145,7 +139,7 @@ mod tests {
     #[test]
     fn insert_after_degree_with_even_degree() {
         const DEGREE: usize = 8;
-        let mut node = Node::<usize, DEGREE>::new(0);
+        let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
@@ -168,7 +162,7 @@ mod tests {
     #[test]
     fn insert_after_degree_with_odd_degree() {
         const DEGREE: usize = 9;
-        let mut node = Node::<usize, DEGREE>::new(0);
+        let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
