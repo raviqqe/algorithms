@@ -73,6 +73,10 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
+    fn is_full(&self) -> bool {
+        self.values.len() >= N
+    }
+
     #[cfg(test)]
     pub fn assert_depth(&self) -> usize {
         if self.nodes.is_empty() {
