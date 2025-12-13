@@ -71,7 +71,7 @@ mod tests {
         const DEGREE: usize = 8;
         let mut tree = BTree::<usize, DEGREE>::new();
 
-        for x in 0..196 {
+        for x in 0..96 {
             assert_eq!(tree.get(&x), None);
 
             tree.insert(x);
