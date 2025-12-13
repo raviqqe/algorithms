@@ -99,7 +99,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     fn split(&mut self) -> Self {
-        let index = self.values.len() / 2;
+        let index = self.values.len().div_ceil(2);
         let mut nodes = self.nodes.split_off(self.nodes.len().min(index + 1));
         let values = self.values.split_off(index);
 
@@ -189,5 +189,58 @@ mod tests {
                 }
             ))
         );
+    }
+
+    mod split {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        const DEGREE: usize = 8;
+
+        fn split(mut left: Node<usize, DEGREE>) -> (Node<usize, DEGREE>, Node<usize, DEGREE>) {
+            let right = left.split();
+
+            (left, right)
+        }
+
+        #[test]
+        fn split_empty() {
+            assert_eq!(
+                split(Node::new(vec![], vec![])),
+                (Node::new(vec![], vec![]), Node::new(vec![], vec![]))
+            );
+        }
+
+        #[test]
+        fn split_value() {
+            assert_eq!(
+                split(Node::new(vec![], vec![42])),
+                (Node::new(vec![], vec![42]), Node::new(vec![], vec![]))
+            );
+        }
+
+        #[test]
+        fn split_two_values() {
+            assert_eq!(
+                split(Node::new(vec![], vec![1, 2])),
+                (Node::new(vec![], vec![1]), Node::new(vec![], vec![2]))
+            );
+        }
+
+        #[test]
+        fn split_three_values() {
+            assert_eq!(
+                split(Node::new(vec![], vec![1, 2, 3])),
+                (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3]))
+            );
+        }
+
+        #[test]
+        fn split_four_values() {
+            assert_eq!(
+                split(Node::new(vec![], vec![1, 2, 3, 4])),
+                (Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![3, 4]))
+            );
+        }
     }
 }
