@@ -43,6 +43,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
 mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
+    use proptest::prelude::*;
 
     #[test]
     fn new() {
@@ -77,6 +78,26 @@ mod tests {
 
             for y in 0..x + 1 {
                 assert_eq!(tree.get(&y), Some(&y), "x = {x}, y = {y}, tree = {tree:?}");
+            }
+        }
+    }
+
+    proptest! {
+        #[test]
+        fn insert_random(xs: Vec<usize>) {
+            prop_assume!(xs.len() < 64);
+
+            const DEGREE: usize = 8;
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for (index, x) in xs.iter().copied().enumerate() {
+                assert_eq!(tree.get(&x), None);
+
+                tree.insert(x);
+
+                for y in xs.iter().copied().take(index + 1) {
+                    assert_eq!(tree.get(&y), Some(&y), "x = {x}, y = {y}, tree = {tree:?}");
+                }
             }
         }
     }
