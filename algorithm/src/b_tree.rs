@@ -87,7 +87,7 @@ mod tests {
         fn insert_random(xs: Vec<usize>) {
             prop_assume!(xs.len() < 64);
 
-            const DEGREE: usize = 8;
+            const DEGREE: usize = 4;
             let mut tree = BTree::<usize, DEGREE>::new();
 
             for (index, x) in xs.iter().copied().enumerate() {
