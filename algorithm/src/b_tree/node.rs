@@ -39,12 +39,13 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         if !self.nodes.is_empty() {
             return if let Some((value, node)) = self.nodes[index].insert(value) {
+                self.nodes.insert(index + 1, node);
+                self.values.insert(index, value);
+
                 if self.values.len() < N - 1 {
-                    self.nodes.insert(index + 1, node);
-                    self.values.insert(index, value);
                     None
                 } else {
-                    let index = N.div_ceil(2);
+                    let index = self.values.len().div_ceil(2);
                     let mut nodes = self.nodes.split_off(index + 1);
                     let values = self.values.split_off(index);
                     let mut left = self.nodes.pop().unwrap();
