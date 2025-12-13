@@ -39,10 +39,13 @@ impl<T: Ord, const N: usize> Node<T, N> {
 
         if !self.nodes.is_empty() {
             return if let Some((value, node)) = self.nodes[index].insert(value) {
-                self.nodes.insert(index + 1, node);
-                self.values.insert(index, value);
-                // TODO
-                None
+                if self.values.len() < N - 1 {
+                    self.nodes.insert(index + 1, node);
+                    self.values.insert(index, value);
+                    None
+                } else {
+                    todo!()
+                }
             } else {
                 None
             };
