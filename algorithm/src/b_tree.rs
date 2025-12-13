@@ -3,6 +3,7 @@
 mod node;
 
 use self::node::Node;
+use core::fmt::Debug;
 use core::mem::take;
 
 /// A B-tree.
@@ -11,7 +12,7 @@ pub struct BTree<T, const N: usize = 32> {
     root: Option<Node<T, N>>,
 }
 
-impl<T: Ord, const N: usize> BTree<T, N> {
+impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     /// Creates a B-tree.
     pub const fn new() -> Self {
         Self { root: None }

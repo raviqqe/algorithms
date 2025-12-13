@@ -1,10 +1,12 @@
+use core::fmt::Debug;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Node<T, const N: usize> {
     nodes: Vec<Self>,
     values: Vec<T>,
 }
 
-impl<T: Ord, const N: usize> Node<T, N> {
+impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn new(value: T) -> Self {
         Self {
             nodes: vec![],
@@ -56,6 +58,7 @@ impl<T: Ord, const N: usize> Node<T, N> {
                     nodes.insert(0, right);
 
                     debug_assert_eq!(nodes.len(), values.len() + 1);
+                    debug_assert!(self.values.iter().all(|element| element < &value));
                     debug_assert!(values.iter().all(|element| element > &value));
 
                     Some((value, Self { nodes, values }))
@@ -73,9 +76,13 @@ impl<T: Ord, const N: usize> Node<T, N> {
         self.values.insert(index, value);
 
         let values = self.values.split_off(N.div_ceil(2));
+        let value = self.values.pop().unwrap();
+
+        debug_assert!(self.values.iter().all(|element| element < &value));
+        debug_assert!(values.iter().all(|element| element > &value));
 
         Some((
-            self.values.pop().unwrap(),
+            value,
             Self {
                 nodes: vec![],
                 values,
