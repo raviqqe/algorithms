@@ -110,6 +110,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             nodes.insert(0, right);
         }
 
+        assert_invariant!(self);
+
         Self::new(nodes, values)
     }
 }
