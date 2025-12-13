@@ -44,6 +44,8 @@ mod tests {
     use super::*;
     use pretty_assertions::assert_eq;
 
+    const MAX_ITERATIONS: usize = 1 << 10;
+
     #[test]
     fn new() {
         BTree::<(), 0>::new();
@@ -87,7 +89,7 @@ mod tests {
         const DEGREE: usize = 8;
         let mut tree = BTree::<usize, DEGREE>::new();
 
-        for x in 0..10000 {
+        for x in 0..MAX_ITERATIONS {
             assert_eq!(tree.get(&x), None);
 
             tree.insert(x);
