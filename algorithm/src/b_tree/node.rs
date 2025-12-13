@@ -140,10 +140,10 @@ mod tests {
         assert_eq!(
             node.insert(7),
             Some((
-                3,
+                4,
                 Node {
                     nodes: vec![],
-                    values: vec![4, 5, 6, 7],
+                    values: vec![5, 6, 7],
                 }
             ))
         );
