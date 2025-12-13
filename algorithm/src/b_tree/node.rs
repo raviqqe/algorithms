@@ -8,7 +8,7 @@ pub struct Node<T, const N: usize> {
 
 impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn new(nodes: Vec<Self>, values: Vec<T>) -> Self {
-        debug_assert!(nodes.is_empty() || nodes.len() == values.len() + 1);
+        debug_assert!(nodes.is_empty() && !values.is_empty() || nodes.len() == values.len() + 1);
         debug_assert!(values.len() < N);
 
         Self { nodes, values }
