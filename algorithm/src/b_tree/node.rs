@@ -46,6 +46,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         };
 
         if self.nodes.is_empty() {
+            // This node is a leaf.
             self.values.insert(index, value);
 
             if self.values.len() < N {
