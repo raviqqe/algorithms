@@ -45,42 +45,40 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Err(index) => index,
         };
 
-        if !self.nodes.is_empty() {
-            return if let Some((value, node)) = self.nodes[index].insert(value) {
-                self.nodes.insert(index + 1, node);
-                self.values.insert(index, value);
+        if self.nodes.is_empty() {
+            self.values.insert(index, value);
 
-                if self.values.len() < N - 1 {
-                    None
-                } else {
-                    assert_invariant!(self);
-
-                    let index = self.values.len().div_ceil(2);
-                    let mut nodes = self.nodes.split_off(index + 1);
-                    let values = self.values.split_off(index);
-                    let mut left = self.nodes.pop().unwrap();
-                    let (value, right) = left.split();
-
-                    self.nodes.push(left);
-                    nodes.insert(0, right);
-
-                    debug_assert_eq!(nodes.len(), values.len() + 1);
-                    debug_assert!(self.values.iter().all(|element| element < &value));
-                    debug_assert!(values.iter().all(|element| element > &value));
-
-                    Some((value, Self::new(nodes, values)))
-                }
-            } else {
+            if self.values.len() < N {
                 None
-            };
-        }
+            } else {
+                Some(self.split())
+            }
+        } else if let Some((value, node)) = self.nodes[index].insert(value) {
+            self.nodes.insert(index + 1, node);
+            self.values.insert(index, value);
 
-        self.values.insert(index, value);
+            if self.values.len() < N - 1 {
+                None
+            } else {
+                assert_invariant!(self);
 
-        if self.values.len() < N {
-            None
+                let index = self.values.len().div_ceil(2);
+                let mut nodes = self.nodes.split_off(index + 1);
+                let values = self.values.split_off(index);
+                let mut left = self.nodes.pop().unwrap();
+                let (value, right) = left.split();
+
+                self.nodes.push(left);
+                nodes.insert(0, right);
+
+                debug_assert_eq!(nodes.len(), values.len() + 1);
+                debug_assert!(self.values.iter().all(|element| element < &value));
+                debug_assert!(values.iter().all(|element| element > &value));
+
+                Some((value, Self::new(nodes, values)))
+            }
         } else {
-            Some(self.split())
+            None
         }
     }
 
