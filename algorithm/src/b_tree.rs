@@ -36,6 +36,20 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
         self.assert_depth();
     }
 
+    /// Deletes an element.
+    pub fn insert(&mut self, value: T) {
+        if let Some(node) = &mut self.root {
+            if let Some((value, split_node)) = node.insert(value) {
+                self.root = Some(Node::new(vec![take(node), split_node], vec![value]));
+            }
+        } else {
+            self.root = Some(Node::new(vec![], vec![value]));
+        }
+
+        #[cfg(test)]
+        self.assert_depth();
+    }
+
     /// Returns `true` if a tree is empty, or `false` otherwise.
     pub const fn is_empty(&self) -> bool {
         self.root.is_none()
