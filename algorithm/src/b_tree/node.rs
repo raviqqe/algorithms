@@ -38,8 +38,10 @@ impl<T: Ord, const N: usize> Node<T, N> {
         };
 
         if !self.nodes.is_empty() {
-            return if let Some((_value, _node)) = self.nodes[index].insert(value) {
-                todo!();
+            return if let Some((value, node)) = self.nodes[index].insert(value) {
+                self.nodes.insert(index, node);
+                self.values.insert(index, value);
+                return None;
             } else {
                 None
             };
