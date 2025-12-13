@@ -91,12 +91,12 @@ mod tests {
             let mut tree = BTree::<usize, DEGREE>::new();
 
             for (index, x) in xs.iter().copied().enumerate() {
-                assert_eq!(tree.get(&x), None);
+                prop_assert_eq!(tree.get(&x), None);
 
                 tree.insert(x);
 
                 for y in xs.iter().copied().take(index + 1) {
-                    assert_eq!(tree.get(&y), Some(&y), "x = {x}, y = {y}, tree = {tree:?}");
+                    prop_assert_eq!(tree.get(&y), Some(&y));
                 }
             }
         }
