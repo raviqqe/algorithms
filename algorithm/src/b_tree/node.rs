@@ -72,6 +72,23 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
         (value, Self::new(nodes, values))
     }
+
+    #[cfg(test)]
+    pub fn assert_depth(&self) -> usize {
+        if self.nodes.is_empty() {
+            0
+        } else {
+            let depths = self
+                .nodes
+                .iter()
+                .map(Self::assert_depth)
+                .collect::<Vec<_>>();
+
+            assert!(depths.iter().all(|depth| *depth == depths[0]));
+
+            depths[0] + 1
+        }
+    }
 }
 
 impl<T, const N: usize> Default for Node<T, N> {

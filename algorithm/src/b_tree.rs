@@ -31,11 +31,21 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
         } else {
             self.root = Some(Node::new(vec![], vec![value]));
         }
+
+        #[cfg(test)]
+        self.assert_depth();
     }
 
     /// Returns `true` if a tree is empty, or `false` otherwise.
     pub const fn is_empty(&self) -> bool {
         self.root.is_none()
+    }
+
+    #[cfg(test)]
+    fn assert_depth(&self) {
+        if let Some(node) = &self.root {
+            node.assert_depth();
+        }
     }
 }
 
