@@ -73,6 +73,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
+    pub fn delete(&mut self, value: T) {}
+
     #[cfg(test)]
     pub fn assert_depth(&self) -> usize {
         if self.nodes.is_empty() {
