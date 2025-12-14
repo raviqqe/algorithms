@@ -207,6 +207,20 @@ mod tests {
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
+
+        #[test]
+        fn delete_two_elements() {
+            let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
+
+            node.delete(0);
+
+            assert_eq!(node.get(&0), None);
+            assert_eq!(node.get(&1), Some(&1));
+
+            node.delete(1);
+
+            assert_eq!(node, Node::new(vec![], vec![]));
+        }
     }
 
     mod split {
