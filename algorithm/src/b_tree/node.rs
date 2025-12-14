@@ -134,8 +134,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         let node_index = index + if right { 1 } else { 0 };
 
         if self.nodes[node_index].is_empty() {
-            let node = self.nodes.remove(node_index);
-            self.values.remove(value_index);
+            self.nodes.remove(node_index);
+            self.values.remove(index);
             self.insert(value)
         } else {
             None
