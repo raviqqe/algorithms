@@ -72,7 +72,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    pub fn delete(&mut self, value: &T) {
+    pub fn remove(&mut self, value: &T) {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values.remove(index);
@@ -84,7 +84,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
 
-                node.delete(&value);
+                node.remove(&value);
 
                 if node.is_empty() {
                     *node = Self::new(vec![], vec![self.values.remove(index)]);
@@ -187,52 +187,52 @@ mod tests {
         );
     }
 
-    mod delete {
+    mod remove {
         use super::*;
         use pretty_assertions::assert_eq;
 
         const DEGREE: usize = 8;
 
         #[test]
-        fn delete_none() {
+        fn remove_none() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.delete(&1);
+            node.remove(&1);
 
             assert_eq!(node, Node::new(vec![], vec![0]));
         }
 
         #[test]
-        fn delete_element() {
+        fn remove_element() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.delete(&0);
+            node.remove(&0);
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
         #[test]
-        fn delete_two_elements() {
+        fn remove_two_elements() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
 
-            node.delete(&0);
+            node.remove(&0);
 
             assert_eq!(node.get(&0), None);
             assert_eq!(node.get(&1), Some(&1));
 
-            node.delete(&1);
+            node.remove(&1);
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
         #[test]
-        fn delete_leftmost_element_in_left_node() {
+        fn remove_leftmost_element_in_left_node() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
                 vec![2],
             );
 
-            node.delete(&0);
+            node.remove(&0);
 
             assert_eq!(
                 node,
@@ -244,13 +244,13 @@ mod tests {
         }
 
         #[test]
-        fn delete_rightmost_element_in_left_node() {
+        fn remove_rightmost_element_in_left_node() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
                 vec![2],
             );
 
-            node.delete(&1);
+            node.remove(&1);
 
             assert_eq!(
                 node,
@@ -262,13 +262,13 @@ mod tests {
         }
 
         #[test]
-        fn delete_leftmost_element_in_right_node() {
+        fn remove_leftmost_element_in_right_node() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
                 vec![1],
             );
 
-            node.delete(&2);
+            node.remove(&2);
 
             assert_eq!(
                 node,
@@ -280,13 +280,13 @@ mod tests {
         }
 
         #[test]
-        fn delete_rightmost_element_in_right_node() {
+        fn remove_rightmost_element_in_right_node() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
                 vec![1],
             );
 
-            node.delete(&3);
+            node.remove(&3);
 
             assert_eq!(
                 node,
