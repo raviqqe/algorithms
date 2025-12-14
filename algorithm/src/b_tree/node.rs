@@ -76,7 +76,10 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values.remove(index);
-                // TODO
+
+                if !self.nodes.is_empty() {
+                    // TODO
+                }
             }
             Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
