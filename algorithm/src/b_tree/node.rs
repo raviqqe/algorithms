@@ -78,7 +78,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 self.values.remove(index);
                 // TODO
             }
-            Err(index) if index < N - 1 => {
+            Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
 
                 node.delete(value);
