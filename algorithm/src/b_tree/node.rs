@@ -78,7 +78,14 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 self.values.remove(index);
                 // TODO
             }
-            Err(index) => self.nodes[index].delete(value),
+            Err(index) => {
+                let node = &mut self.nodes[index];
+                node.delete(value);
+
+                if node.is_empty() {
+                    *node = Self::new(vec![], vec![self.values.remove(index)]);
+                }
+            }
         }
     }
 
