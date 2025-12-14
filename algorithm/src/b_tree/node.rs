@@ -221,6 +221,42 @@ mod tests {
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
+
+        #[test]
+        fn delete_leftmost_element_in_left_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![2])],
+                vec![3],
+            );
+
+            node.delete(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![1]), Node::new(vec![], vec![2])],
+                    vec![3],
+                )
+            );
+        }
+
+        #[test]
+        fn delete_rightmost_element_in_left_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![2])],
+                vec![3],
+            );
+
+            node.delete(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                    vec![3],
+                )
+            );
+        }
     }
 
     mod split {
