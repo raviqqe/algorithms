@@ -6,7 +6,7 @@ macro_rules! assert_invariant {
         let values = &$self.values;
 
         debug_assert!(nodes.is_empty() || nodes.len() == values.len() + 1);
-        debug_assert!(values.len() < N);
+        debug_assert!(!$self.is_full());
     };
 }
 
@@ -52,10 +52,10 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             self.values.insert(index, value);
         }
 
-        if self.values.len() < N {
-            None
-        } else {
+        if self.is_full() {
             Some(self.split())
+        } else {
+            None
         }
     }
 
@@ -74,6 +74,10 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     pub fn delete(&mut self, _value: T) {
         todo!();
+    }
+
+    const fn is_full(&self) -> bool {
+        self.values.len() >= N
     }
 
     #[cfg(test)]
