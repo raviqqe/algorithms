@@ -3,7 +3,7 @@
 mod node;
 
 use self::node::Node;
-use core::{fmt::Debug, mem::take};
+use core::fmt::Debug;
 
 /// A B-tree.
 #[derive(Clone, Debug, Default)]
@@ -26,7 +26,10 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     pub fn insert(&mut self, value: T) {
         if let Some(node) = &mut self.root {
             if let Some((value, split_node)) = node.insert(value) {
-                self.root = Some(Node::new(vec![take(node), split_node], vec![value]));
+                self.root = Some(Node::new(
+                    vec![self.root.take().unwrap(), split_node],
+                    vec![value],
+                ));
             }
         } else {
             self.root = Some(Node::new(vec![], vec![value]));

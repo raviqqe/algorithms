@@ -94,16 +94,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 }
 
-impl<T, const N: usize> Default for Node<T, N> {
-    fn default() -> Self {
-        // A temporary node with dummy data.
-        Self {
-            nodes: vec![],
-            values: vec![],
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
