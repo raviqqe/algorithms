@@ -108,7 +108,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     fn underflow(&mut self, index: usize) {
         let node = &mut self.nodes[index];
-        let left_index = index.min(self.values.len() - 1);
+        let left_index = index.saturating_sub(1);
 
         if node.nodes.len() == 1 {
             self.merge(left_index);
@@ -380,8 +380,8 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3, 4])],
-                    vec![2],
+                    vec![Node::new(vec![], vec![0, 2]), Node::new(vec![], vec![4])],
+                    vec![3],
                 )
             );
         }
