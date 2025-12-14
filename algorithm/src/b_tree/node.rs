@@ -189,25 +189,21 @@ mod tests {
         const DEGREE: usize = 8;
 
         #[test]
-        fn delete_before_degree() {
+        fn delete_none() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            for x in 1..DEGREE - 1 {
-                assert_eq!(node.get(&x), None);
+            node.delete(1);
 
-                assert_eq!(node.insert(x), None);
-            }
+            assert_eq!(node, Node::new(vec![], vec![0]));
+        }
 
-            assert_eq!(
-                node.insert(7),
-                Some((
-                    4,
-                    Node {
-                        nodes: vec![],
-                        values: vec![5, 6, 7],
-                    }
-                ))
-            );
+        #[test]
+        fn delete_element() {
+            let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
+
+            node.delete(0);
+
+            assert_eq!(node, Node::new(vec![], vec![]));
         }
     }
 
