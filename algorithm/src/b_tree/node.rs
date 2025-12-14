@@ -75,7 +75,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn remove(&mut self, value: &T) {
         match self.values.binary_search(&value) {
             Ok(index) => {
-                if let Some(node) = self.nodes.get_mut(index) {
+                if let Some(node) = self.nodes.get_mut(index + 1) {
                     self.values[index] = node.remove_left();
                 } else {
                     self.values.remove(index);
