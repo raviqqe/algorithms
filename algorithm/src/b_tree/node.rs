@@ -123,7 +123,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     fn remove_left(&mut self) -> T {
         if let Some(node) = self.nodes.get_mut(0) {
             let value = node.remove_left();
-            self.underflow(0, 0);
+            self.underflow(0, false);
             value
         } else {
             self.values.remove(0)
