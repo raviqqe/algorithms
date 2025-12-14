@@ -82,10 +82,16 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
                     let value = node.remove_left();
 
+                    // TODO
                     if node.is_empty() {
+                        dbg!(&node);
+                        dbg!(&self);
                         self.nodes.remove(index + 1);
                         self.values.remove(index);
-                        self.insert(value)
+                        dbg!(&self);
+                        let foo = self.insert(value);
+                        dbg!(&self);
+                        foo
                     } else {
                         self.values[index] = value;
                         None
@@ -116,9 +122,23 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     fn remove_left(&mut self) -> T {
         if let Some(node) = self.nodes.get_mut(0) {
-            node.remove_left()
+            let value = node.remove_left();
+            self.underflow(0, 0);
+            value
         } else {
             self.values.remove(0)
+        }
+    }
+
+    fn underflow(&self, index: usize, right: bool) -> Option<()> {
+        let node_index = index + if right { 1 } else { 0 };
+
+        if self.nodes[node_index].is_empty() {
+            let node = self.nodes.remove(node_index);
+            self.values.remove(value_index);
+            self.insert(value)
+        } else {
+            None
         }
     }
 
