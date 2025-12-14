@@ -37,25 +37,25 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
         assert_invariant!(self);
 
-        let index = match self.values.binary_search(&value) {
+        match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values[index] = value;
-                return None;
+                None
             }
-            Err(index) => index,
-        };
+            Err(index) => {
+                if self.nodes.is_empty() {
+                    self.values.insert(index, value);
+                } else if let Some((value, node)) = self.nodes[index].insert(value) {
+                    self.nodes.insert(index + 1, node);
+                    self.values.insert(index, value);
+                }
 
-        if self.nodes.is_empty() {
-            self.values.insert(index, value);
-        } else if let Some((value, node)) = self.nodes[index].insert(value) {
-            self.nodes.insert(index + 1, node);
-            self.values.insert(index, value);
-        }
-
-        if self.is_full() {
-            Some(self.split())
-        } else {
-            None
+                if self.is_full() {
+                    Some(self.split())
+                } else {
+                    None
+                }
+            }
         }
     }
 
