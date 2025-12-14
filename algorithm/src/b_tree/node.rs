@@ -334,7 +334,7 @@ mod tests {
         }
 
         #[test]
-        fn remove_element_from_non_leaf_with_underflow() {
+        fn remove_element_from_non_leaf() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
                 vec![1],
@@ -368,7 +368,7 @@ mod tests {
         }
 
         #[test]
-        fn remove_right_element_from_non_leaf_with_underflow() {
+        fn remove_right_element_from_non_leaf() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![
                     Node::new(vec![], vec![0]),
@@ -379,6 +379,28 @@ mod tests {
             );
 
             node.remove(&3);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 4]),],
+                    vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&4);
 
             assert_eq!(
                 node,
