@@ -96,6 +96,14 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         }
     }
 
+    fn remove_left(&mut self) -> T {
+        if let Some(node) = self.nodes.get_mut(0) {
+            node.remove_left()
+        } else {
+            self.values.remove(0)
+        }
+    }
+
     pub const fn is_empty(&self) -> bool {
         self.values.is_empty()
     }
