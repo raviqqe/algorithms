@@ -80,6 +80,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             }
             Err(index) if index < N - 1 => {
                 let node = &mut self.nodes[index];
+
                 node.delete(value);
 
                 if node.is_empty() {
