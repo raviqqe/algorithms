@@ -78,7 +78,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 self.values.remove(index);
                 // TODO
             }
-            Err(index) => {
+            Err(index) if index < N - 1 => {
                 let node = &mut self.nodes[index];
                 node.delete(value);
 
@@ -88,6 +88,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
                 assert_invariant!(self);
             }
+            Err(_) => {}
         }
     }
 
