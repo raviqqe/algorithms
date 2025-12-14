@@ -72,8 +72,25 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    pub fn delete(&mut self, _value: T) {
-        todo!();
+    pub fn delete(&mut self, value: T) {
+        match self.values.binary_search(&value) {
+            Ok(index) => {
+                self.values.remove(index);
+                // TODO
+            }
+            Err(index) => {
+                if self.nodes.is_empty() {
+                    self.values.insert(index, value);
+                } else if let Some((value, node)) = self.nodes[index].insert(value) {
+                    self.nodes.insert(index + 1, node);
+                    self.values.insert(index, value);
+                }
+            }
+        }
+    }
+
+    const fn is_empty(&self) -> bool {
+        self.values.is_empty()
     }
 
     const fn is_full(&self) -> bool {
