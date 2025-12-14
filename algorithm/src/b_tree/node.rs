@@ -76,7 +76,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index) {
-                    foo
+                    self.values[index] = node.remove_left();
                 } else {
                     self.values.remove(index);
                 }
