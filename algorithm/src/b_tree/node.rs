@@ -405,7 +405,7 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 4]),],
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3]),],
                     vec![1],
                 )
             );
