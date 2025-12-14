@@ -130,15 +130,15 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         }
     }
 
-    fn underflow(&self, index: usize, right: bool) -> Option<()> {
+    fn underflow(&mut self, index: usize, right: bool) {
         let node_index = index + if right { 1 } else { 0 };
 
         if self.nodes[node_index].is_empty() {
             self.nodes.remove(node_index);
-            self.values.remove(index);
-            self.insert(value)
-        } else {
-            None
+            let value = self.values.remove(index);
+            let option = self.insert(value);
+
+            debug_assert_eq!(option, None);
         }
     }
 
