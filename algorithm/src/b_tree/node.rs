@@ -148,7 +148,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 .map(Self::assert_depth)
                 .collect::<Vec<_>>();
 
-            assert!(depths.iter().all(|depth| *depth == depths[0]));
+            debug_assert!(depths.iter().all(|depth| *depth == depths[0]));
 
             depths[0] + 1
         }
