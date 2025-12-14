@@ -24,15 +24,15 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
 
     /// Inserts an element.
     pub fn insert(&mut self, value: T) {
-        if let Some(mut node) = self.root.take() {
-            self.root = Some(if let Some((value, split_node)) = node.insert(value) {
+        self.root = Some(if let Some(mut node) = self.root.take() {
+            if let Some((value, split_node)) = node.insert(value) {
                 Node::new(vec![node, split_node], vec![value])
             } else {
                 node
-            });
+            }
         } else {
-            self.root = Some(Node::new(vec![], vec![value]));
-        }
+            Node::new(vec![], vec![value])
+        });
 
         #[cfg(test)]
         self.assert_depth();
