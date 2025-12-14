@@ -334,7 +334,7 @@ mod tests {
         }
 
         #[test]
-        fn remove_element_from_non_leaf() {
+        fn remove_element_from_non_leaf_with_underflow() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
                 vec![1],
