@@ -108,13 +108,13 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     fn underflow(&mut self, index: usize) {
         let node = &mut self.nodes[index];
-        let value_index = index.min(self.values.len() - 1);
+        let left_index = index.min(self.values.len() - 1);
 
         if node.nodes.len() == 1 {
-            self.merge(value_index);
+            self.merge(left_index);
         } else if node.is_empty() {
             self.nodes.remove(index);
-            let value = self.values.remove(value_index);
+            let value = self.values.remove(left_index);
             let option = self.insert(value);
 
             debug_assert_eq!(option, None);
