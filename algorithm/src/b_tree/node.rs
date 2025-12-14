@@ -75,48 +75,35 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    #[must_use]
-    pub fn remove(&mut self, value: &T) -> Option<(T, Self)> {
+    pub fn remove(&mut self, value: &T) {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
                     let value = node.remove_left();
 
-                    // TODO
                     if node.is_empty() {
-                        dbg!(&node);
-                        dbg!(&self);
+                        // TODO
                         self.nodes.remove(index + 1);
                         self.values.remove(index);
-                        dbg!(&self);
-                        let foo = self.insert(value);
-                        dbg!(&self);
-                        foo
                     } else {
                         self.values[index] = value;
-                        None
                     }
                 } else {
                     self.values.remove(index);
-                    None
                 }
             }
             Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
 
-                if let Some((_value, _node)) = node.remove(&value) {
-                    // TODO
-                }
+                node.remove(&value);
 
                 if node.is_empty() {
                     *node = Self::new(vec![], vec![self.values.remove(index)]);
                 }
 
                 assert_invariant!(self);
-
-                None
             }
-            Err(_) => None,
+            Err(_) => {}
         }
     }
 
@@ -243,7 +230,8 @@ mod tests {
         fn remove_none() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            assert_eq!(node.remove(&1), None);
+            node.remove(&1);
+
             assert_eq!(node, Node::new(vec![], vec![0]));
         }
 
@@ -251,7 +239,8 @@ mod tests {
         fn remove_element() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            assert_eq!(node.remove(&0), None);
+            node.remove(&0);
+
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
@@ -259,11 +248,13 @@ mod tests {
         fn remove_two_elements() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
 
-            assert_eq!(node.remove(&0), None);
+            node.remove(&0);
+
             assert_eq!(node.get(&0), None);
             assert_eq!(node.get(&1), Some(&1));
 
-            assert_eq!(node.remove(&1), None);
+            node.remove(&1);
+
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
@@ -274,7 +265,8 @@ mod tests {
                 vec![2],
             );
 
-            assert_eq!(node.remove(&0), None);
+            node.remove(&0);
+
             assert_eq!(
                 node,
                 Node::new(
@@ -291,7 +283,8 @@ mod tests {
                 vec![2],
             );
 
-            assert_eq!(node.remove(&1), None);
+            node.remove(&1);
+
             assert_eq!(
                 node,
                 Node::new(
@@ -308,7 +301,8 @@ mod tests {
                 vec![1],
             );
 
-            assert_eq!(node.remove(&2), None);
+            node.remove(&2);
+
             assert_eq!(
                 node,
                 Node::new(
@@ -325,7 +319,8 @@ mod tests {
                 vec![1],
             );
 
-            assert_eq!(node.remove(&3), None);
+            node.remove(&3);
+
             assert_eq!(
                 node,
                 Node::new(
@@ -342,7 +337,8 @@ mod tests {
                 vec![1],
             );
 
-            assert_eq!(node.remove(&1), None);
+            node.remove(&1);
+
             assert_eq!(
                 node,
                 Node::new(
@@ -359,9 +355,9 @@ mod tests {
                 vec![1],
             );
 
-            let option = node.remove(&1);
+            node.remove(&1);
 
-            assert_eq!(option, Some((3, Node::new(vec![], vec![0]))));
+            assert_eq!(node, Node::new(vec![Node::new(vec![], vec![0, 3])], vec![]));
         }
     }
 
