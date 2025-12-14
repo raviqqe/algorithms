@@ -85,6 +85,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 if node.is_empty() {
                     *node = Self::new(vec![], vec![self.values.remove(index)]);
                 }
+
+                assert_invariant!(self);
             }
         }
     }
