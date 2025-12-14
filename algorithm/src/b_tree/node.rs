@@ -123,6 +123,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     fn merge(&mut self, index: usize) {
         let right = self.nodes.remove(index + 1);
         let left = &mut self.nodes[index];
+
         left.nodes.extend(right.nodes);
         left.values.push(self.values.remove(index));
         left.values.extend(right.values);
