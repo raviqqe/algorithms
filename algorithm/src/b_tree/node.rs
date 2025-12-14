@@ -128,7 +128,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         left.values.push(self.values.remove(index));
         left.values.extend(right.values);
 
-        // TODO Split the node.
+        assert_invariant!(left);
+        // TODO Split the left node.
     }
 
     const fn is_empty(&self) -> bool {
