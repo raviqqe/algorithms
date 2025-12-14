@@ -80,42 +80,34 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
                     self.values[index] = node.remove_left();
-                    self.underflow(index, true);
+                    self.underflow(index + 1);
                 } else {
                     self.values.remove(index);
                 }
             }
-            Err(index) if index < N - 1 && !self.nodes.is_empty() => {
-                let node = &mut self.nodes[index];
-
-                node.remove(&value);
-
-                if node.is_empty() {
-                    *node = Self::new(vec![], vec![self.values.remove(index)]);
+            Err(index) => {
+                if !self.nodes.is_empty() {
+                    self.nodes[index].remove(&value);
+                    self.underflow(index)
                 }
-
-                assert_invariant!(self);
             }
-            Err(_) => {}
         }
     }
 
     fn remove_left(&mut self) -> T {
         if let Some(node) = self.nodes.get_mut(0) {
             let value = node.remove_left();
-            self.underflow(0, false);
+            self.underflow(0);
             value
         } else {
             self.values.remove(0)
         }
     }
 
-    fn underflow(&mut self, index: usize, right: bool) {
-        let node_index = index + if right { 1 } else { 0 };
-
-        if self.nodes[node_index].is_empty() {
-            self.nodes.remove(node_index);
-            let value = self.values.remove(index);
+    fn underflow(&mut self, index: usize) {
+        if self.nodes[index].is_empty() {
+            self.nodes.remove(index);
+            let value = self.values.remove(index.min(self.values.len() - 1));
             let option = self.insert(value);
 
             debug_assert_eq!(option, None);
