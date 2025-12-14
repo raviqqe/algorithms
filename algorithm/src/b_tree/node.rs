@@ -344,6 +344,50 @@ mod tests {
 
             assert_eq!(node, Node::new(vec![Node::new(vec![], vec![0, 3])], vec![]));
         }
+
+        #[test]
+        fn remove_left_element_from_non_leaf_with_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3, 4])],
+                    vec![2],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_non_leaf_with_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&3);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 4]),],
+                    vec![1],
+                )
+            );
+        }
     }
 
     mod split {
