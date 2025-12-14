@@ -304,6 +304,24 @@ mod tests {
                 )
             );
         }
+
+        #[test]
+        fn remove_element_from_non_leaf() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![2],
+                )
+            );
+        }
     }
 
     mod split {
