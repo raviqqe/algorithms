@@ -88,9 +88,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Err(index) => {
                 if !self.nodes.is_empty() {
                     self.nodes[index].remove(&value);
-                    dbg!(&self);
                     self.underflow(index);
-                    dbg!("under", &self);
                 }
             }
         }
