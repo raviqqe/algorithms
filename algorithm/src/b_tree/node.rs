@@ -257,6 +257,42 @@ mod tests {
                 )
             );
         }
+
+        #[test]
+        fn delete_leftmost_element_in_right_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
+                vec![2, 3],
+            );
+
+            node.delete(&2);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
+                    vec![3],
+                )
+            );
+        }
+
+        #[test]
+        fn delete_rightmost_element_in_right_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
+                vec![2, 3],
+            );
+
+            node.delete(&3);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
+                    vec![2],
+                )
+            );
+        }
     }
 
     mod split {
