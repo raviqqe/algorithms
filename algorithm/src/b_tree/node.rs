@@ -72,7 +72,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    pub fn delete(&mut self, value: T) {
+    pub fn delete(&mut self, value: &T) {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 self.values.remove(index);
@@ -81,7 +81,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
 
-                node.delete(value);
+                node.delete(&value);
 
                 if node.is_empty() {
                     *node = Self::new(vec![], vec![self.values.remove(index)]);
@@ -194,7 +194,7 @@ mod tests {
         fn delete_none() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.delete(1);
+            node.delete(&1);
 
             assert_eq!(node, Node::new(vec![], vec![0]));
         }
@@ -203,7 +203,7 @@ mod tests {
         fn delete_element() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.delete(0);
+            node.delete(&0);
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
@@ -212,12 +212,12 @@ mod tests {
         fn delete_two_elements() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
 
-            node.delete(0);
+            node.delete(&0);
 
             assert_eq!(node.get(&0), None);
             assert_eq!(node.get(&1), Some(&1));
 
-            node.delete(1);
+            node.delete(&1);
 
             assert_eq!(node, Node::new(vec![], vec![]));
         }
