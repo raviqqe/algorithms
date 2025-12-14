@@ -110,7 +110,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
         if node.nodes.len() == 1 {
             self.merge(left_index);
-        } else if node.is_empty() {
+        } else if node.values.is_empty() {
             self.nodes.remove(index);
             let value = self.values.remove(left_index);
             let option = self.insert(value);
@@ -129,10 +129,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
         assert_invariant!(left);
         // TODO Split the left node.
-    }
-
-    const fn is_empty(&self) -> bool {
-        self.values.is_empty()
     }
 
     const fn is_full(&self) -> bool {
