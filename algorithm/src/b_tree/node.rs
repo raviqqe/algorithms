@@ -25,6 +25,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         this
     }
 
+    #[must_use]
     pub fn get(&self, value: &T) -> Option<&T> {
         let index = match self.values.binary_search(value) {
             Ok(index) => return self.values.get(index),
@@ -34,6 +35,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
+    #[must_use]
     pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
         assert_invariant!(self);
 
@@ -59,6 +61,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         }
     }
 
+    #[must_use]
     fn split(&mut self) -> (T, Self) {
         let index = self.values.len() / 2 + 1;
         let nodes = self.nodes.split_off(self.nodes.len().min(index));
@@ -72,27 +75,42 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         (value, Self::new(nodes, values))
     }
 
-    pub fn remove(&mut self, value: &T) {
+    #[must_use]
+    pub fn remove(&mut self, value: &T) -> Option<(T, Self)> {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
-                    self.values[index] = node.remove_left();
+                    let value = node.remove_left();
+
+                    if node.is_empty() {
+                        self.nodes.remove(index + 1);
+                        self.values.remove(index);
+                        self.insert(value)
+                    } else {
+                        self.values[index] = value;
+                        None
+                    }
                 } else {
                     self.values.remove(index);
+                    None
                 }
             }
             Err(index) if index < N - 1 && !self.nodes.is_empty() => {
                 let node = &mut self.nodes[index];
 
-                node.remove(&value);
+                if let Some((_value, _node)) = node.remove(&value) {
+                    // TODO
+                }
 
                 if node.is_empty() {
                     *node = Self::new(vec![], vec![self.values.remove(index)]);
                 }
 
                 assert_invariant!(self);
+
+                None
             }
-            Err(_) => {}
+            Err(_) => None,
         }
     }
 
@@ -142,7 +160,7 @@ mod tests {
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
-            node.insert(x);
+            assert_eq!(node.insert(x), None);
 
             for y in 0..x + 1 {
                 assert_eq!(node.get(&y), Some(&y));
@@ -205,8 +223,7 @@ mod tests {
         fn remove_none() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.remove(&1);
-
+            assert_eq!(node.remove(&1), None);
             assert_eq!(node, Node::new(vec![], vec![0]));
         }
 
@@ -214,8 +231,7 @@ mod tests {
         fn remove_element() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
 
-            node.remove(&0);
-
+            assert_eq!(node.remove(&0), None);
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
@@ -223,13 +239,11 @@ mod tests {
         fn remove_two_elements() {
             let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
 
-            node.remove(&0);
-
+            assert_eq!(node.remove(&0), None);
             assert_eq!(node.get(&0), None);
             assert_eq!(node.get(&1), Some(&1));
 
-            node.remove(&1);
-
+            assert_eq!(node.remove(&1), None);
             assert_eq!(node, Node::new(vec![], vec![]));
         }
 
@@ -240,8 +254,7 @@ mod tests {
                 vec![2],
             );
 
-            node.remove(&0);
-
+            assert_eq!(node.remove(&0), None);
             assert_eq!(
                 node,
                 Node::new(
@@ -258,8 +271,7 @@ mod tests {
                 vec![2],
             );
 
-            node.remove(&1);
-
+            assert_eq!(node.remove(&1), None);
             assert_eq!(
                 node,
                 Node::new(
@@ -276,8 +288,7 @@ mod tests {
                 vec![1],
             );
 
-            node.remove(&2);
-
+            assert_eq!(node.remove(&2), None);
             assert_eq!(
                 node,
                 Node::new(
@@ -294,8 +305,7 @@ mod tests {
                 vec![1],
             );
 
-            node.remove(&3);
-
+            assert_eq!(node.remove(&3), None);
             assert_eq!(
                 node,
                 Node::new(
@@ -312,8 +322,7 @@ mod tests {
                 vec![1],
             );
 
-            node.remove(&1);
-
+            assert_eq!(node.remove(&1), None);
             assert_eq!(
                 node,
                 Node::new(
@@ -321,6 +330,18 @@ mod tests {
                     vec![2],
                 )
             );
+        }
+
+        #[test]
+        fn remove_element_from_non_leaf_with_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                vec![1],
+            );
+
+            let option = node.remove(&1);
+
+            assert_eq!(option, Some((3, Node::new(vec![], vec![0]))));
         }
     }
 
