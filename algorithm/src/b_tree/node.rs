@@ -88,7 +88,9 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             Err(index) => {
                 if !self.nodes.is_empty() {
                     self.nodes[index].remove(&value);
-                    self.underflow(index)
+                    dbg!(&self);
+                    self.underflow(index);
+                    dbg!("under", &self);
                 }
             }
         }
@@ -105,13 +107,27 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     fn underflow(&mut self, index: usize) {
-        if self.nodes[index].is_empty() {
+        let node = &mut self.nodes[index];
+
+        if node.nodes.len() == 1 {
+            self.merge(index.min(self.values.len() - 1));
+        } else if node.is_empty() {
             self.nodes.remove(index);
             let value = self.values.remove(index.min(self.values.len() - 1));
             let option = self.insert(value);
 
             debug_assert_eq!(option, None);
         }
+    }
+
+    fn merge(&mut self, index: usize) {
+        let right = self.nodes.remove(index + 1);
+        let left = &mut self.nodes[index];
+        left.nodes.extend(right.nodes);
+        left.values.push(self.values.remove(index));
+        left.values.extend(right.values);
+
+        // TODO Split the node.
     }
 
     pub const fn is_empty(&self) -> bool {
@@ -390,7 +406,7 @@ mod tests {
         }
 
         #[test]
-        fn remove_left_element_from_deep_leaf_with_leaf_underflow() {
+        fn remove_left_element_from_leaf_with_leaf_underflow() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![
                     Node::new(vec![], vec![0]),
@@ -412,7 +428,7 @@ mod tests {
         }
 
         #[test]
-        fn remove_right_element_from_deep_leaf_with_leaf_underflow() {
+        fn remove_right_element_from_leaf_with_leaf_underflow() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![
                     Node::new(vec![], vec![0]),
@@ -429,6 +445,74 @@ mod tests {
                 Node::new(
                     vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3]),],
                     vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_left_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(
+                        vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                        vec![1],
+                    ),
+                    Node::new(
+                        vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                        vec![5],
+                    ),
+                ],
+                vec![3],
+            );
+
+            node.remove(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(
+                        vec![
+                            Node::new(vec![], vec![1, 2]),
+                            Node::new(vec![], vec![4]),
+                            Node::new(vec![], vec![6])
+                        ],
+                        vec![3, 5],
+                    ),],
+                    vec![],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(
+                        vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                        vec![1],
+                    ),
+                    Node::new(
+                        vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                        vec![5],
+                    ),
+                ],
+                vec![3],
+            );
+
+            node.remove(&6);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(
+                        vec![
+                            Node::new(vec![], vec![0]),
+                            Node::new(vec![], vec![2]),
+                            Node::new(vec![], vec![4, 5]),
+                        ],
+                        vec![1, 3],
+                    ),],
+                    vec![],
                 )
             );
         }
