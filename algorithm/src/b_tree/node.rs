@@ -78,14 +78,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 self.values.remove(index);
                 // TODO
             }
-            Err(index) => {
-                if self.nodes.is_empty() {
-                    self.values.insert(index, value);
-                } else if let Some((value, node)) = self.nodes[index].insert(value) {
-                    self.nodes.insert(index + 1, node);
-                    self.values.insert(index, value);
-                }
-            }
+            Err(index) => self.nodes[index].delete(value),
         }
     }
 
