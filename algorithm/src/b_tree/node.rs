@@ -89,7 +89,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         }
     }
 
-    const fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.values.is_empty()
     }
 
