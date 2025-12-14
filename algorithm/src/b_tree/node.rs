@@ -79,15 +79,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         match self.values.binary_search(&value) {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
-                    let value = node.remove_left();
-
-                    if node.is_empty() {
-                        // TODO
-                        self.nodes.remove(index + 1);
-                        self.values.remove(index);
-                    } else {
-                        self.values[index] = value;
-                    }
+                    self.values[index] = node.remove_left();
+                    self.underflow(index, true);
                 } else {
                     self.values.remove(index);
                 }
