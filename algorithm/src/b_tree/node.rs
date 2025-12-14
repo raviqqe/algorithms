@@ -390,6 +390,28 @@ mod tests {
         }
 
         #[test]
+        fn remove_left_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![4]),],
+                    vec![3],
+                )
+            );
+        }
+
+        #[test]
         fn remove_right_element_from_deep_leaf_with_leaf_underflow() {
             let mut node = Node::<usize, DEGREE>::new(
                 vec![
