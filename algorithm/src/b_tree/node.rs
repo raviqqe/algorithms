@@ -130,7 +130,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         // TODO Split the node.
     }
 
-    pub const fn is_empty(&self) -> bool {
+    const fn is_empty(&self) -> bool {
         self.values.is_empty()
     }
 
