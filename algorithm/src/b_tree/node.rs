@@ -225,8 +225,8 @@ mod tests {
         #[test]
         fn delete_leftmost_element_in_left_node() {
             let mut node = Node::<usize, DEGREE>::new(
-                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![2])],
-                vec![3],
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
+                vec![2],
             );
 
             node.delete(&0);
@@ -234,8 +234,8 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![1]), Node::new(vec![], vec![2])],
-                    vec![3],
+                    vec![Node::new(vec![], vec![1]), Node::new(vec![], vec![3])],
+                    vec![2],
                 )
             );
         }
@@ -243,8 +243,8 @@ mod tests {
         #[test]
         fn delete_rightmost_element_in_left_node() {
             let mut node = Node::<usize, DEGREE>::new(
-                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![2])],
-                vec![3],
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
+                vec![2],
             );
 
             node.delete(&1);
@@ -252,8 +252,8 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
-                    vec![3],
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![2],
                 )
             );
         }
@@ -261,8 +261,8 @@ mod tests {
         #[test]
         fn delete_leftmost_element_in_right_node() {
             let mut node = Node::<usize, DEGREE>::new(
-                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
-                vec![2, 3],
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
             );
 
             node.delete(&2);
@@ -270,8 +270,8 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
-                    vec![3],
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![1],
                 )
             );
         }
@@ -279,8 +279,8 @@ mod tests {
         #[test]
         fn delete_rightmost_element_in_right_node() {
             let mut node = Node::<usize, DEGREE>::new(
-                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
-                vec![2, 3],
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
             );
 
             node.delete(&3);
@@ -288,8 +288,8 @@ mod tests {
             assert_eq!(
                 node,
                 Node::new(
-                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![1])],
-                    vec![2],
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                    vec![1],
                 )
             );
         }
