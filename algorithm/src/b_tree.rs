@@ -281,22 +281,40 @@ mod tests {
             }
         }
 
-        // #[test]
-        // fn insert_before_degree_reversely() {
-        //     const DEGREE: usize = 8;
-        //
-        //     let mut tree = BTree::<usize, DEGREE>::new();
-        //     let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
-        //
-        //     for (index, x) in xs.iter().copied().enumerate() {
-        //         assert_eq!(tree.get(&x), None);
-        //
-        //         tree.insert(x);
-        //
-        //         for &y in &xs[..index + 1] {
-        //             assert_eq!(tree.get(&y), Some(&y));
-        //         }
-        //     }
-        // }
+        proptest! {
+            #[test]
+            fn remove_random_with_even_degree(xs: Vec<usize>, ys: Vec<usize>) {
+                const DEGREE: usize = 4;
+
+                let mut tree = BTree::<usize, DEGREE>::new();
+
+                for x in xs.iter().copied() {
+                    tree.insert(x);
+                }
+
+                for y in ys {
+                    tree.remove(&y);
+
+                    assert_eq!(tree.get(&y), None);
+                }
+            }
+
+            // #[test]
+            // fn remove_random_with_odd_degree(xs: Vec<usize>) {
+            //     const DEGREE: usize = 5;
+            //
+            //     let mut tree = BTree::<usize, DEGREE>::new();
+            //
+            //     for (index, x) in xs.iter().copied().enumerate() {
+            //         assert_eq!(tree.get(&x), None);
+            //
+            //         tree.remove(&x);
+            //
+            //         for y in xs.iter().copied().take(index + 1) {
+            //             assert_eq!(tree.get(&y), Some(&y));
+            //         }
+            //     }
+            // }
+        }
     }
 }
