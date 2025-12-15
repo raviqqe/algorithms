@@ -82,7 +82,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     pub fn remove(&mut self, value: &T) {
-        match self.values.binary_search(&value) {
+        match self.values.binary_search(value) {
             Ok(index) => {
                 if let Some(node) = self.nodes.get_mut(index + 1) {
                     self.values[index] = node.remove_left();
@@ -93,7 +93,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             }
             Err(index) => {
                 if !self.nodes.is_empty() {
-                    self.nodes[index].remove(&value);
+                    self.nodes[index].remove(value);
                     self.underflow(index);
                 }
             }
