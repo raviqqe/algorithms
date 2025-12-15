@@ -1,12 +1,18 @@
 use core::fmt::Debug;
 
-macro_rules! assert_invariant {
+macro_rules! assert_value_count {
     ($self:expr) => {
         let nodes = &$self.nodes;
         let values = &$self.values;
 
         debug_assert!(nodes.is_empty() || nodes.len() == values.len() + 1);
         debug_assert!(!$self.is_full());
+    };
+}
+
+macro_rules! assert_node_count {
+    ($self:expr) => {
+        debug_assert!($self.nodes.len() != 1);
     };
 }
 
@@ -20,11 +26,12 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn new(nodes: Vec<Self>, values: Vec<T>) -> Self {
         let this = Self { nodes, values };
 
-        assert_invariant!(&this);
+        assert_value_count!(&this);
 
         this
     }
 
+    #[must_use]
     pub fn get(&self, value: &T) -> Option<&T> {
         let index = match self.values.binary_search(value) {
             Ok(index) => return self.values.get(index),
@@ -34,8 +41,9 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         self.nodes.get(index).and_then(|node| node.get(value))
     }
 
+    #[must_use]
     pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
-        assert_invariant!(self);
+        assert_value_count!(self);
 
         match self.values.binary_search(&value) {
             Ok(index) => {
@@ -59,17 +67,90 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         }
     }
 
+    #[must_use]
     fn split(&mut self) -> (T, Self) {
         let index = self.values.len() / 2 + 1;
         let nodes = self.nodes.split_off(self.nodes.len().min(index));
         let values = self.values.split_off(index);
         let value = self.values.pop().unwrap();
 
-        assert_invariant!(self);
+        assert_value_count!(self);
         debug_assert!(self.values.iter().all(|element| element < &value));
         debug_assert!(values.iter().all(|element| element > &value));
 
         (value, Self::new(nodes, values))
+    }
+
+    pub fn remove(&mut self, value: &T) {
+        match self.values.binary_search(value) {
+            Ok(index) => {
+                if let Some(node) = self.nodes.get_mut(index + 1) {
+                    self.values[index] = node.remove_left();
+                    self.underflow(index + 1);
+                } else {
+                    self.values.remove(index);
+                }
+            }
+            Err(index) => {
+                if !self.nodes.is_empty() {
+                    self.nodes[index].remove(value);
+                    self.underflow(index);
+                }
+            }
+        }
+    }
+
+    fn remove_left(&mut self) -> T {
+        if let Some(node) = self.nodes.get_mut(0) {
+            let value = node.remove_left();
+            self.underflow(0);
+            value
+        } else {
+            self.values.remove(0)
+        }
+    }
+
+    fn underflow(&mut self, index: usize) {
+        let node = &mut self.nodes[index];
+        let left_index = index.saturating_sub(1);
+
+        if node.nodes.len() == 1 {
+            self.merge(left_index);
+        } else if node.values.is_empty() {
+            self.nodes.remove(index);
+            let value = self.values.remove(left_index);
+            let option = self.insert(value);
+
+            debug_assert_eq!(option, None);
+        }
+    }
+
+    fn merge(&mut self, index: usize) {
+        let right = self.nodes.remove(index + 1);
+        let left = &mut self.nodes[index];
+
+        left.nodes.extend(right.nodes);
+        left.values.push(self.values.remove(index));
+        left.values.extend(right.values);
+
+        if left.is_full() {
+            let (value, node) = left.split();
+
+            assert_value_count!(node);
+            assert_node_count!(node);
+
+            self.nodes.insert(index + 1, node);
+            self.values.insert(index, value);
+        }
+
+        assert_value_count!(self.nodes[index]);
+        assert_node_count!(self.nodes[index]);
+    }
+
+    pub fn flatten(&mut self) {
+        if self.nodes.len() == 1 {
+            *self = self.nodes.remove(0);
+        }
     }
 
     const fn is_full(&self) -> bool {
@@ -77,19 +158,31 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     #[cfg(test)]
-    pub fn assert_depth(&self) -> usize {
-        if self.nodes.is_empty() {
-            0
-        } else {
-            let depths = self
+    pub fn validate(&self) -> usize {
+        assert_value_count!(self);
+        assert_node_count!(self);
+
+        if let Some(node) = self.nodes.get(0) {
+            let depth = node.validate();
+
+            for node in &self.nodes {
+                debug_assert_eq!(node.validate(), depth);
+                debug_assert!(!node.values.is_empty());
+            }
+
+            for ((left, value), right) in self
                 .nodes
                 .iter()
-                .map(Self::assert_depth)
-                .collect::<Vec<_>>();
+                .zip(&self.values)
+                .zip(self.nodes.iter().skip(1))
+            {
+                debug_assert!(left.values.iter().all(|element| element < value));
+                debug_assert!(right.values.iter().all(|element| element > value));
+            }
 
-            assert!(depths.iter().all(|depth| *depth == depths[0]));
-
-            depths[0] + 1
+            depth + 1
+        } else {
+            0
         }
     }
 }
@@ -106,7 +199,7 @@ mod tests {
 
         for x in 1..DEGREE - 1 {
             assert_eq!(node.get(&x), None);
-            node.insert(x);
+            assert_eq!(node.insert(x), None);
 
             for y in 0..x + 1 {
                 assert_eq!(node.get(&y), Some(&y));
@@ -157,6 +250,472 @@ mod tests {
                 }
             ))
         );
+    }
+
+    mod remove {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        const DEGREE: usize = 8;
+
+        #[test]
+        fn remove_none() {
+            let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
+
+            node.remove(&1);
+
+            assert_eq!(node, Node::new(vec![], vec![0]));
+        }
+
+        #[test]
+        fn remove_element() {
+            let mut node = Node::<usize, DEGREE>::new(vec![], vec![0]);
+
+            node.remove(&0);
+
+            assert_eq!(node, Node::new(vec![], vec![]));
+        }
+
+        #[test]
+        fn remove_two_elements() {
+            let mut node = Node::<usize, DEGREE>::new(vec![], vec![0, 1]);
+
+            node.remove(&0);
+
+            assert_eq!(node.get(&0), None);
+            assert_eq!(node.get(&1), Some(&1));
+
+            node.remove(&1);
+
+            assert_eq!(node, Node::new(vec![], vec![]));
+        }
+
+        #[test]
+        fn remove_leftmost_element_in_left_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
+                vec![2],
+            );
+
+            node.remove(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![1]), Node::new(vec![], vec![3])],
+                    vec![2],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_rightmost_element_in_left_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0, 1]), Node::new(vec![], vec![3])],
+                vec![2],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![2],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_leftmost_element_in_right_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
+            );
+
+            node.remove(&2);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_rightmost_element_in_right_node() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
+            );
+
+            node.remove(&3);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                    vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_element_from_non_leaf() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3])],
+                vec![1],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                    vec![2],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_element_from_non_leaf_with_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![3])],
+                vec![1],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(node, Node::new(vec![Node::new(vec![], vec![0, 3])], vec![]));
+        }
+
+        #[test]
+        fn remove_left_element_from_non_leaf_with_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&1);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0, 2]), Node::new(vec![], vec![4])],
+                    vec![3],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_non_leaf() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&3);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 4]),],
+                    vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_left_element_from_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![1, 2]), Node::new(vec![], vec![4]),],
+                    vec![3],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(vec![], vec![0]),
+                    Node::new(vec![], vec![2]),
+                    Node::new(vec![], vec![4]),
+                ],
+                vec![1, 3],
+            );
+
+            node.remove(&4);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2, 3]),],
+                    vec![1],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_left_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(
+                        vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                        vec![1],
+                    ),
+                    Node::new(
+                        vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                        vec![5],
+                    ),
+                ],
+                vec![3],
+            );
+
+            node.remove(&0);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(
+                        vec![
+                            Node::new(vec![], vec![1, 2]),
+                            Node::new(vec![], vec![4]),
+                            Node::new(vec![], vec![6])
+                        ],
+                        vec![3, 5],
+                    ),],
+                    vec![],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_right_element_from_deep_leaf_with_leaf_underflow() {
+            let mut node = Node::<usize, DEGREE>::new(
+                vec![
+                    Node::new(
+                        vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                        vec![1],
+                    ),
+                    Node::new(
+                        vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                        vec![5],
+                    ),
+                ],
+                vec![3],
+            );
+
+            node.remove(&6);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![Node::new(
+                        vec![
+                            Node::new(vec![], vec![0]),
+                            Node::new(vec![], vec![2]),
+                            Node::new(vec![], vec![4, 5]),
+                        ],
+                        vec![1, 3],
+                    ),],
+                    vec![],
+                )
+            );
+        }
+
+        #[test]
+        fn remove_to_merge_and_overflow() {
+            let mut node = Node::<usize, 3>::new(
+                vec![
+                    Node::new(
+                        vec![
+                            Node::new(
+                                vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                                vec![1],
+                            ),
+                            Node::new(
+                                vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                                vec![5],
+                            ),
+                        ],
+                        vec![3],
+                    ),
+                    Node::new(
+                        vec![
+                            Node::new(
+                                vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
+                                vec![9],
+                            ),
+                            Node::new(
+                                vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
+                                vec![13],
+                            ),
+                        ],
+                        vec![11],
+                    ),
+                ],
+                vec![7],
+            );
+
+            node.validate();
+            node.remove(&4);
+            node.flatten();
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![0]),
+                                Node::new(vec![], vec![2]),
+                                Node::new(vec![], vec![5, 6])
+                            ],
+                            vec![1, 3],
+                        ),
+                        Node::new(
+                            vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
+                            vec![9],
+                        ),
+                        Node::new(
+                            vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
+                            vec![13],
+                        ),
+                    ],
+                    vec![7, 11],
+                )
+            );
+
+            node.validate();
+            node.remove(&14);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![0]),
+                                Node::new(vec![], vec![2]),
+                                Node::new(vec![], vec![5, 6])
+                            ],
+                            vec![1, 3],
+                        ),
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![8]),
+                                Node::new(vec![], vec![10]),
+                                Node::new(vec![], vec![12, 13])
+                            ],
+                            vec![9, 11],
+                        ),
+                    ],
+                    vec![7],
+                )
+            );
+
+            node.validate();
+            node.remove(&8);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![0]),
+                                Node::new(vec![], vec![2]),
+                                Node::new(vec![], vec![5, 6])
+                            ],
+                            vec![1, 3],
+                        ),
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![9, 10]),
+                                Node::new(vec![], vec![12, 13])
+                            ],
+                            vec![11],
+                        ),
+                    ],
+                    vec![7],
+                )
+            );
+
+            node.validate();
+            node.remove(&9);
+            node.remove(&10);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![0]),
+                                Node::new(vec![], vec![2]),
+                                Node::new(vec![], vec![5, 6])
+                            ],
+                            vec![1, 3],
+                        ),
+                        Node::new(
+                            vec![Node::new(vec![], vec![11]), Node::new(vec![], vec![13])],
+                            vec![12],
+                        ),
+                    ],
+                    vec![7],
+                )
+            );
+
+            node.validate();
+            node.remove(&11);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                            vec![1],
+                        ),
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![5, 6]),
+                                Node::new(vec![], vec![12, 13])
+                            ],
+                            vec![7],
+                        ),
+                    ],
+                    vec![3],
+                )
+            );
+
+            node.validate();
+        }
     }
 
     mod split {
