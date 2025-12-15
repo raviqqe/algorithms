@@ -160,7 +160,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     #[cfg(test)]
     pub fn validate(&self) -> usize {
         assert_value_count!(self);
-        assert_node_count!(self, N);
 
         if let Some(node) = self.nodes.get(0) {
             let depth = node.validate();
@@ -168,6 +167,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             for node in &self.nodes {
                 debug_assert_eq!(node.validate(), depth);
                 debug_assert!(!node.values.is_empty());
+                assert_node_count!(node, N);
             }
 
             for ((left, value), right) in self
