@@ -548,11 +548,11 @@ mod tests {
                     Node::new(
                         vec![
                             Node::new(
-                                vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![2])],
+                                vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
                                 vec![9],
                             ),
                             Node::new(
-                                vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![6])],
+                                vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
                                 vec![13],
                             ),
                         ],
@@ -577,7 +577,7 @@ mod tests {
                                 ),
                                 Node::new(
                                     vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
-                                    vec![5]
+                                    vec![5],
                                 ),
                             ],
                             vec![3],
@@ -585,11 +585,11 @@ mod tests {
                         Node::new(
                             vec![
                                 Node::new(
-                                    vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![2])],
+                                    vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
                                     vec![9],
                                 ),
                                 Node::new(
-                                    vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![6])],
+                                    vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
                                     vec![13],
                                 ),
                             ],
