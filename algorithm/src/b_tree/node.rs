@@ -104,7 +104,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         if let Some(node) = self.nodes.get_mut(0) {
             let value = node.remove_left();
             self.underflow(0);
-            dbg!(self);
             value
         } else {
             self.values.remove(0)
