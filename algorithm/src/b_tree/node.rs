@@ -11,8 +11,8 @@ macro_rules! assert_value_count {
 }
 
 macro_rules! assert_node_count {
-    ($self:expr) => {
-        debug_assert!($self.nodes.len() != 1);
+    ($self:expr, $degree:expr) => {
+        debug_assert!($self.nodes.is_empty() || $self.nodes.len() >= $degree.div_ceil(2));
     };
 }
 
@@ -114,7 +114,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         let node = &mut self.nodes[index];
         let left_index = index.saturating_sub(1);
 
-        if node.nodes.len() == 1 {
+        if node.nodes.len() < N.div_ceil(2) {
             self.merge(left_index);
         } else if node.values.is_empty() {
             self.nodes.remove(index);
@@ -137,14 +137,14 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             let (value, node) = left.split();
 
             assert_value_count!(node);
-            assert_node_count!(node);
+            assert_node_count!(node, N);
 
             self.nodes.insert(index + 1, node);
             self.values.insert(index, value);
         }
 
         assert_value_count!(self.nodes[index]);
-        assert_node_count!(self.nodes[index]);
+        assert_node_count!(self.nodes[index], N);
     }
 
     pub fn flatten(&mut self) {
@@ -160,7 +160,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     #[cfg(test)]
     pub fn validate(&self) -> usize {
         assert_value_count!(self);
-        assert_node_count!(self);
 
         if let Some(node) = self.nodes.get(0) {
             let depth = node.validate();
@@ -168,6 +167,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
             for node in &self.nodes {
                 debug_assert_eq!(node.validate(), depth);
                 debug_assert!(!node.values.is_empty());
+                assert_node_count!(node, N);
             }
 
             for ((left, value), right) in self
@@ -256,7 +256,7 @@ mod tests {
         use super::*;
         use pretty_assertions::assert_eq;
 
-        const DEGREE: usize = 8;
+        const DEGREE: usize = 3;
 
         #[test]
         fn remove_none() {
