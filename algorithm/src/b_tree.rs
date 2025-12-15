@@ -218,6 +218,52 @@ mod tests {
             }
         }
 
+        #[test]
+        fn remove_after_degree() {
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for x in 0..MAX_ITERATIONS {
+                tree.insert(x);
+            }
+
+            for x in 0..MAX_ITERATIONS {
+                assert_eq!(tree.get(&x), Some(&x));
+
+                tree.remove(&x);
+
+                for y in 0..x + 1 {
+                    assert_eq!(tree.get(&y), None);
+                }
+
+                for y in x + 1..MAX_ITERATIONS {
+                    assert_eq!(tree.get(&y), Some(&y));
+                }
+            }
+        }
+
+        #[test]
+        fn remove_after_degree_reversely() {
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for x in 0..MAX_ITERATIONS {
+                tree.insert(x);
+            }
+
+            for x in (0..MAX_ITERATIONS).rev() {
+                assert_eq!(tree.get(&x), Some(&x));
+
+                tree.remove(&x);
+
+                for y in 0..x {
+                    assert_eq!(tree.get(&y), Some(&y));
+                }
+
+                for y in x..MAX_ITERATIONS {
+                    assert_eq!(tree.get(&y), None);
+                }
+            }
+        }
+
         // #[test]
         // fn insert_before_degree_reversely() {
         //     const DEGREE: usize = 8;
