@@ -35,7 +35,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
         });
 
         #[cfg(test)]
-        self.assert_depth();
+        self.validate();
     }
 
     /// Removes an element.
@@ -46,7 +46,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
         }
 
         #[cfg(test)]
-        self.assert_depth();
+        self.validate();
     }
 
     /// Returns `true` if a tree is empty, or `false` otherwise.
@@ -55,9 +55,9 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     }
 
     #[cfg(test)]
-    fn assert_depth(&self) {
+    fn validate(&self) {
         if let Some(node) = &self.root {
-            node.assert_depth();
+            node.validate();
         }
     }
 }

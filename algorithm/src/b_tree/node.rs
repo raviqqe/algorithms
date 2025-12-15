@@ -1,6 +1,6 @@
 use core::fmt::Debug;
 
-macro_rules! assert_invariant {
+macro_rules! assert_value_count {
     ($self:expr) => {
         let nodes = &$self.nodes;
         let values = &$self.values;
@@ -20,7 +20,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     pub fn new(nodes: Vec<Self>, values: Vec<T>) -> Self {
         let this = Self { nodes, values };
 
-        assert_invariant!(&this);
+        assert_value_count!(&this);
 
         this
     }
@@ -37,7 +37,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     #[must_use]
     pub fn insert(&mut self, value: T) -> Option<(T, Self)> {
-        assert_invariant!(self);
+        assert_value_count!(self);
 
         match self.values.binary_search(&value) {
             Ok(index) => {
@@ -68,7 +68,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         let values = self.values.split_off(index);
         let value = self.values.pop().unwrap();
 
-        assert_invariant!(self);
+        assert_value_count!(self);
         debug_assert!(self.values.iter().all(|element| element < &value));
         debug_assert!(values.iter().all(|element| element > &value));
 
@@ -127,7 +127,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         left.values.push(self.values.remove(index));
         left.values.extend(right.values);
 
-        assert_invariant!(left);
+        assert_value_count!(left);
         // TODO Split the left node.
     }
 
@@ -142,15 +142,11 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     }
 
     #[cfg(test)]
-    pub fn assert_depth(&self) -> usize {
+    pub fn validate(&self) -> usize {
         if self.nodes.is_empty() {
             0
         } else {
-            let depths = self
-                .nodes
-                .iter()
-                .map(Self::assert_depth)
-                .collect::<Vec<_>>();
+            let depths = self.nodes.iter().map(Self::validate).collect::<Vec<_>>();
 
             debug_assert!(depths.iter().all(|depth| *depth == depths[0]));
 
