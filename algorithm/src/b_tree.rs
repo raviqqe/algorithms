@@ -299,22 +299,22 @@ mod tests {
                 }
             }
 
-            // #[test]
-            // fn remove_random_with_odd_degree(xs: Vec<usize>) {
-            //     const DEGREE: usize = 5;
-            //
-            //     let mut tree = BTree::<usize, DEGREE>::new();
-            //
-            //     for (index, x) in xs.iter().copied().enumerate() {
-            //         assert_eq!(tree.get(&x), None);
-            //
-            //         tree.remove(&x);
-            //
-            //         for y in xs.iter().copied().take(index + 1) {
-            //             assert_eq!(tree.get(&y), Some(&y));
-            //         }
-            //     }
-            // }
+            #[test]
+            fn remove_random_with_odd_degree(xs: Vec<usize>, ys: Vec<usize>) {
+                const DEGREE: usize = 5;
+
+                let mut tree = BTree::<usize, DEGREE>::new();
+
+                for x in xs.iter().copied() {
+                    tree.insert(x);
+                }
+
+                for y in ys {
+                    tree.remove(&y);
+
+                    assert_eq!(tree.get(&y), None);
+                }
+            }
         }
     }
 }
