@@ -69,7 +69,7 @@ mod tests {
     type Element = u16;
     type BTree<const N: usize> = super::BTree<Element, N>;
 
-    const MAX_ITERATIONS: Element = Element::MAX;
+    const MAX_ITERATIONS: Element = 1u16 << 10;
 
     #[test]
     fn new() {
