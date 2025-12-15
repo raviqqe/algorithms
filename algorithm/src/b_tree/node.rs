@@ -170,6 +170,16 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
                 debug_assert!(!node.values.is_empty());
             }
 
+            for ((left, value), right) in self
+                .nodes
+                .iter()
+                .zip(&self.values)
+                .zip(self.nodes.iter().skip(1))
+            {
+                debug_assert!(left.values.iter().all(|element| element < value));
+                debug_assert!(right.values.iter().all(|element| element > value));
+            }
+
             depth + 1
         } else {
             0
