@@ -162,14 +162,16 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         assert_value_count!(self);
         assert_node_count!(self);
 
-        if self.nodes.is_empty() {
-            0
+        if let Some(node) = self.nodes.get(0) {
+            let depth = node.validate();
+
+            for node in &self.nodes {
+                debug_assert_eq!(node.validate(), depth);
+            }
+
+            depth + 1
         } else {
-            let depths = self.nodes.iter().map(Self::validate).collect::<Vec<_>>();
-
-            debug_assert!(depths.iter().all(|depth| *depth == depths[0]));
-
-            depths[0] + 1
+            0
         }
     }
 }
