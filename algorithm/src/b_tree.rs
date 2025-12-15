@@ -86,7 +86,7 @@ mod tests {
                             tree.remove(&x);
 
                             assert_eq!(tree.get(&x), None);
-                        } else{
+                        } else {
                             tree.insert(x);
 
                             assert_eq!(tree.get(&x), Some(&x));
