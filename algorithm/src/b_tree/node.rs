@@ -104,6 +104,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         if let Some(node) = self.nodes.get_mut(0) {
             let value = node.remove_left();
             self.underflow(0);
+            dbg!(self);
             value
         } else {
             self.values.remove(0)
@@ -574,7 +575,10 @@ mod tests {
                                     vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
                                     vec![1],
                                 ),
-                                Node::new(vec![Node::new(vec![], vec![5])], vec![6]),
+                                Node::new(
+                                    vec![Node::new(vec![], vec![4]), Node::new(vec![], vec![6])],
+                                    vec![5]
+                                ),
                             ],
                             vec![3],
                         ),
