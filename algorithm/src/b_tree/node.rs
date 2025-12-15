@@ -10,6 +10,12 @@ macro_rules! assert_value_count {
     };
 }
 
+macro_rules! assert_node_count {
+    ($self:expr) => {
+        debug_assert!($self.nodes.len() != 1);
+    };
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Node<T, const N: usize> {
     nodes: Vec<Self>,
@@ -128,6 +134,8 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         left.values.extend(right.values);
 
         assert_value_count!(left);
+        assert_node_count!(left);
+
         // TODO Split the left node.
     }
 
@@ -144,7 +152,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
     #[cfg(test)]
     pub fn validate(&self) -> usize {
         assert_value_count!(self);
-        debug_assert!(self.nodes.len() != 1);
+        assert_node_count!(self);
 
         if self.nodes.is_empty() {
             0
