@@ -78,10 +78,10 @@ mod tests {
         ($name:ident, $degree:expr) => {
             proptest! {
                 #[test]
-                fn $name(xs: Vec<(bool, usize)>) {
+                fn $name(xs: Vec<(usize, bool)>) {
                     let mut tree = BTree::<usize, $degree>::new();
 
-                    for (remove, x) in xs {
+                    for (x, remove) in xs {
                         assert_eq!(tree.get(&x), None);
 
                         if remove {
