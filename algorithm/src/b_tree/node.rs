@@ -529,7 +529,7 @@ mod tests {
 
         #[test]
         fn remove_to_merge_and_overflow() {
-            let mut node = Node::<usize, 2>::new(
+            let mut node = Node::<usize, 3>::new(
                 vec![
                     Node::new(
                         vec![
