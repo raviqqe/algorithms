@@ -146,41 +146,29 @@ mod tests {
             }
         }
 
-        proptest! {
-            #[test]
-            fn insert_random_with_even_degree(xs: Vec<usize>) {
-                const DEGREE: usize = 4;
+        macro_rules! test_insert {
+            ($name:ident, $degree:expr) => {
+                proptest! {
+                    #[test]
+                    fn $name(xs: Vec<usize>) {
+                        let mut tree = BTree::<usize, $degree>::new();
 
-                let mut tree = BTree::<usize, DEGREE>::new();
+                        for (index, x) in xs.iter().copied().enumerate() {
+                            assert_eq!(tree.get(&x), None);
 
-                for (index, x) in xs.iter().copied().enumerate() {
-                    assert_eq!(tree.get(&x), None);
+                            tree.insert(x);
 
-                    tree.insert(x);
-
-                    for y in xs.iter().copied().take(index + 1) {
-                        assert_eq!(tree.get(&y), Some(&y));
+                            for y in xs.iter().copied().take(index + 1) {
+                                assert_eq!(tree.get(&y), Some(&y));
+                            }
+                        }
                     }
                 }
-            }
-
-            #[test]
-            fn insert_random_with_odd_degree(xs: Vec<usize>) {
-                const DEGREE: usize = 5;
-
-                let mut tree = BTree::<usize, DEGREE>::new();
-
-                for (index, x) in xs.iter().copied().enumerate() {
-                    assert_eq!(tree.get(&x), None);
-
-                    tree.insert(x);
-
-                    for y in xs.iter().copied().take(index + 1) {
-                        assert_eq!(tree.get(&y), Some(&y));
-                    }
-                }
-            }
+            };
         }
+
+        test_insert!(insert_random_with_even_degree, 4);
+        test_insert!(insert_random_with_odd_degree, 5);
     }
 
     mod remove {
