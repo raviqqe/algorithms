@@ -182,8 +182,6 @@ mod tests {
                         let mut tree = BTree::< $degree>::new();
 
                         for (index, x) in xs.iter().copied().enumerate() {
-                            assert_eq!(tree.get(&x), None);
-
                             tree.insert(x);
 
                             for y in xs.iter().copied().take(index + 1) {

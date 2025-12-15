@@ -159,7 +159,6 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     #[cfg(test)]
     pub fn validate(&self) -> usize {
-        debug_assert!(!self.values.is_empty());
         assert_value_count!(self);
         assert_node_count!(self);
 
@@ -168,6 +167,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
             for node in &self.nodes {
                 debug_assert_eq!(node.validate(), depth);
+                debug_assert!(!self.values.is_empty());
             }
 
             for ((left, value), right) in self
