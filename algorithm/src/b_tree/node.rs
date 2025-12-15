@@ -11,8 +11,8 @@ macro_rules! assert_value_count {
 }
 
 macro_rules! assert_node_count {
-    ($self:expr) => {
-        debug_assert!($self.nodes.len() != 1);
+    ($self:expr, $degree:expr) => {
+        debug_assert!($self.nodes.is_empty() || $self.node.len() != $degree.div_ceil(2));
     };
 }
 
