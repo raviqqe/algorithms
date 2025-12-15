@@ -562,7 +562,6 @@ mod tests {
             );
 
             node.validate();
-
             node.remove(&4);
 
             assert_eq!(
@@ -599,6 +598,9 @@ mod tests {
                     vec![7],
                 )
             );
+
+            node.validate();
+            node.remove(&4);
         }
     }
 
