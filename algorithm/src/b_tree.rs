@@ -74,6 +74,34 @@ mod tests {
         BTree::<(), 0>::new();
     }
 
+    macro_rules! test_insert_and_delete {
+        ($name:ident, $degree:expr) => {
+            proptest! {
+                #[test]
+                fn $name(xs: Vec<(bool, usize)>) {
+                    let mut tree = BTree::<usize, $degree>::new();
+
+                    for (remove, x) in xs {
+                        assert_eq!(tree.get(&x), None);
+
+                        if remove {
+                            tree.remove(&x);
+
+                            assert_eq!(tree.get(&x), None);
+                        } else{
+                            tree.insert(x);
+
+                            assert_eq!(tree.get(&x), Some(&x));
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    test_insert_and_delete!(insert_and_delete_random_with_even_degree, 4);
+    test_insert_and_delete!(insert_and_delete_random_with_odd_degree, 5);
+
     mod insert {
         use super::*;
         use pretty_assertions::assert_eq;
