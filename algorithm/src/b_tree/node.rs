@@ -131,6 +131,12 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         // TODO Split the left node.
     }
 
+    pub fn flatten(&mut self) {
+        if self.nodes.len() == 1 {
+            *self = self.nodes.remove(0);
+        }
+    }
+
     const fn is_full(&self) -> bool {
         self.values.len() >= N
     }

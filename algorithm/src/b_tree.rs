@@ -42,6 +42,7 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
     pub fn remove(&mut self, value: &T) {
         if let Some(node) = &mut self.root {
             node.remove(value);
+            node.flatten();
         }
 
         #[cfg(test)]
