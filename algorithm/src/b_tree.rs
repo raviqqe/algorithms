@@ -74,7 +74,7 @@ mod tests {
         BTree::<(), 0>::new();
     }
 
-    macro_rules! test_insert_and_delete {
+    macro_rules! test_insert_and_remove {
         ($name:ident, $degree:expr) => {
             proptest! {
                 #[test]
@@ -99,8 +99,8 @@ mod tests {
         };
     }
 
-    test_insert_and_delete!(insert_and_delete_random_with_even_degree, 4);
-    test_insert_and_delete!(insert_and_delete_random_with_odd_degree, 5);
+    test_insert_and_remove!(insert_and_remove_random_with_even_degree, 4);
+    test_insert_and_remove!(insert_and_remove_random_with_odd_degree, 5);
 
     mod insert {
         use super::*;
