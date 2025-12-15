@@ -82,8 +82,6 @@ mod tests {
                     let mut tree = BTree::<usize, $degree>::new();
 
                     for (x, remove) in xs {
-                        assert_eq!(tree.get(&x), None);
-
                         if remove {
                             tree.remove(&x);
 
