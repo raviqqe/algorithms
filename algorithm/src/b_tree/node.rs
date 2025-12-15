@@ -591,7 +591,32 @@ mod tests {
             );
 
             node.validate();
-            node.remove(&4);
+            node.remove(&14);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![0]),
+                                Node::new(vec![], vec![2]),
+                                Node::new(vec![], vec![5, 6])
+                            ],
+                            vec![1, 3],
+                        ),
+                        Node::new(
+                            vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
+                            vec![9],
+                        ),
+                        Node::new(
+                            vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
+                            vec![13],
+                        ),
+                    ],
+                    vec![7, 11],
+                )
+            );
         }
     }
 
