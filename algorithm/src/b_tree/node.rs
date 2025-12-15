@@ -143,6 +143,9 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
     #[cfg(test)]
     pub fn validate(&self) -> usize {
+        assert_value_count!(self);
+        debug_assert!(self.nodes.len() != 1);
+
         if self.nodes.is_empty() {
             0
         } else {
