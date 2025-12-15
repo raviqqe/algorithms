@@ -256,7 +256,7 @@ mod tests {
         use super::*;
         use pretty_assertions::assert_eq;
 
-        const DEGREE: usize = 8;
+        const DEGREE: usize = 3;
 
         #[test]
         fn remove_none() {
