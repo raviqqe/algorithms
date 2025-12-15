@@ -606,15 +606,15 @@ mod tests {
                             vec![1, 3],
                         ),
                         Node::new(
-                            vec![Node::new(vec![], vec![8]), Node::new(vec![], vec![10])],
-                            vec![9],
-                        ),
-                        Node::new(
-                            vec![Node::new(vec![], vec![12]), Node::new(vec![], vec![14])],
-                            vec![13],
+                            vec![
+                                Node::new(vec![], vec![8]),
+                                Node::new(vec![], vec![10]),
+                                Node::new(vec![], vec![12, 13])
+                            ],
+                            vec![9, 11],
                         ),
                     ],
-                    vec![7, 11],
+                    vec![7],
                 )
             );
         }
