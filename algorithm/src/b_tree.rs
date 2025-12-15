@@ -65,7 +65,6 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pretty_assertions::assert_eq;
     use proptest::prelude::*;
 
     const MAX_ITERATIONS: usize = 1 << 10;
@@ -75,90 +74,166 @@ mod tests {
         BTree::<(), 0>::new();
     }
 
-    #[test]
-    fn insert_before_degree() {
-        const DEGREE: usize = 8;
-        let mut tree = BTree::<usize, DEGREE>::new();
+    mod insert {
+        use super::*;
+        use pretty_assertions::assert_eq;
 
-        for x in 0..DEGREE - 1 {
-            assert_eq!(tree.get(&x), None);
-
-            tree.insert(x);
-
-            for y in 0..x + 1 {
-                assert_eq!(tree.get(&y), Some(&y));
-            }
-        }
-    }
-
-    #[test]
-    fn insert_before_degree_reversely() {
-        const DEGREE: usize = 8;
-
-        let mut tree = BTree::<usize, DEGREE>::new();
-        let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
-
-        for (index, x) in xs.iter().copied().enumerate() {
-            assert_eq!(tree.get(&x), None);
-
-            tree.insert(x);
-
-            for &y in &xs[..index + 1] {
-                assert_eq!(tree.get(&y), Some(&y));
-            }
-        }
-    }
-
-    #[test]
-    fn insert_after_degree() {
-        const DEGREE: usize = 8;
-
-        let mut tree = BTree::<usize, DEGREE>::new();
-
-        for x in 0..MAX_ITERATIONS {
-            assert_eq!(tree.get(&x), None);
-
-            tree.insert(x);
-
-            for y in 0..x + 1 {
-                assert_eq!(tree.get(&y), Some(&y), "x = {x}, y = {y}, tree = {tree:#?}");
-            }
-        }
-    }
-
-    proptest! {
         #[test]
-        fn insert_random_with_even_degree(xs: Vec<usize>) {
-            const DEGREE: usize = 4;
-
+        fn insert_before_degree() {
+            const DEGREE: usize = 8;
             let mut tree = BTree::<usize, DEGREE>::new();
 
-            for (index, x) in xs.iter().copied().enumerate() {
+            for x in 0..DEGREE - 1 {
                 assert_eq!(tree.get(&x), None);
 
                 tree.insert(x);
 
-                for y in xs.iter().copied().take(index + 1) {
+                for y in 0..x + 1 {
                     assert_eq!(tree.get(&y), Some(&y));
                 }
             }
         }
 
         #[test]
-        fn insert_random_with_odd_degree(xs: Vec<usize>) {
-            const DEGREE: usize = 5;
+        fn insert_before_degree_reversely() {
+            const DEGREE: usize = 8;
 
             let mut tree = BTree::<usize, DEGREE>::new();
+            let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
 
             for (index, x) in xs.iter().copied().enumerate() {
                 assert_eq!(tree.get(&x), None);
 
                 tree.insert(x);
 
-                for y in xs.iter().copied().take(index + 1) {
+                for &y in &xs[..index + 1] {
                     assert_eq!(tree.get(&y), Some(&y));
                 }
             }
         }
+
+        #[test]
+        fn insert_after_degree() {
+            const DEGREE: usize = 8;
+
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for x in 0..MAX_ITERATIONS {
+                assert_eq!(tree.get(&x), None);
+
+                tree.insert(x);
+
+                for y in 0..x + 1 {
+                    assert_eq!(tree.get(&y), Some(&y), "x = {x}, y = {y}, tree = {tree:#?}");
+                }
+            }
+        }
+
+        proptest! {
+            #[test]
+            fn insert_random_with_even_degree(xs: Vec<usize>) {
+                const DEGREE: usize = 4;
+
+                let mut tree = BTree::<usize, DEGREE>::new();
+
+                for (index, x) in xs.iter().copied().enumerate() {
+                    assert_eq!(tree.get(&x), None);
+
+                    tree.insert(x);
+
+                    for y in xs.iter().copied().take(index + 1) {
+                        assert_eq!(tree.get(&y), Some(&y));
+                    }
+                }
+            }
+
+            #[test]
+            fn insert_random_with_odd_degree(xs: Vec<usize>) {
+                const DEGREE: usize = 5;
+
+                let mut tree = BTree::<usize, DEGREE>::new();
+
+                for (index, x) in xs.iter().copied().enumerate() {
+                    assert_eq!(tree.get(&x), None);
+
+                    tree.insert(x);
+
+                    for y in xs.iter().copied().take(index + 1) {
+                        assert_eq!(tree.get(&y), Some(&y));
+                    }
+                }
+            }
+        }
+    }
+
+    mod remove {
+        use super::*;
+        use pretty_assertions::assert_eq;
+
+        const DEGREE: usize = 8;
+
+        #[test]
+        fn remove_before_degree() {
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for x in 0..DEGREE - 1 {
+                tree.insert(x);
+            }
+
+            for x in 0..DEGREE - 1 {
+                assert_eq!(tree.get(&x), Some(&x));
+
+                tree.remove(&x);
+
+                for y in 0..x + 1 {
+                    assert_eq!(tree.get(&y), None);
+                }
+
+                for y in x + 1..DEGREE - 1 {
+                    assert_eq!(tree.get(&y), Some(&y));
+                }
+            }
+        }
+
+        #[test]
+        fn remove_before_degree_reversely() {
+            let mut tree = BTree::<usize, DEGREE>::new();
+
+            for x in 0..DEGREE - 1 {
+                tree.insert(x);
+            }
+
+            for x in (0..DEGREE - 1).rev() {
+                assert_eq!(tree.get(&x), Some(&x));
+
+                tree.remove(&x);
+
+                for y in 0..x {
+                    assert_eq!(tree.get(&y), Some(&y));
+                }
+
+                for y in x..DEGREE - 1 {
+                    assert_eq!(tree.get(&y), None);
+                }
+            }
+        }
+
+        // #[test]
+        // fn insert_before_degree_reversely() {
+        //     const DEGREE: usize = 8;
+        //
+        //     let mut tree = BTree::<usize, DEGREE>::new();
+        //     let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
+        //
+        //     for (index, x) in xs.iter().copied().enumerate() {
+        //         assert_eq!(tree.get(&x), None);
+        //
+        //         tree.insert(x);
+        //
+        //         for &y in &xs[..index + 1] {
+        //             assert_eq!(tree.get(&y), Some(&y));
+        //         }
+        //     }
+        // }
     }
 }
