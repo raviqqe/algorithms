@@ -281,40 +281,28 @@ mod tests {
             }
         }
 
-        proptest! {
-            #[test]
-            fn remove_random_with_even_degree(xs: Vec<usize>, ys: Vec<usize>) {
-                const DEGREE: usize = 4;
+        macro_rules! test_remove {
+            ($name:ident, $degree:expr) => {
+                proptest! {
+                    #[test]
+                    fn $name(xs: Vec<usize>, ys: Vec<usize>) {
+                        let mut tree = BTree::<usize, $degree>::new();
 
-                let mut tree = BTree::<usize, DEGREE>::new();
+                        for x in xs.iter().copied() {
+                            tree.insert(x);
+                        }
 
-                for x in xs.iter().copied() {
-                    tree.insert(x);
+                        for y in ys {
+                            tree.remove(&y);
+
+                            assert_eq!(tree.get(&y), None);
+                        }
+                    }
                 }
-
-                for y in ys {
-                    tree.remove(&y);
-
-                    assert_eq!(tree.get(&y), None);
-                }
-            }
-
-            #[test]
-            fn remove_random_with_odd_degree(xs: Vec<usize>, ys: Vec<usize>) {
-                const DEGREE: usize = 5;
-
-                let mut tree = BTree::<usize, DEGREE>::new();
-
-                for x in xs.iter().copied() {
-                    tree.insert(x);
-                }
-
-                for y in ys {
-                    tree.remove(&y);
-
-                    assert_eq!(tree.get(&y), None);
-                }
-            }
+            };
         }
+
+        test_remove!(remove_random_with_even_degree, 4);
+        test_remove!(remove_random_with_odd_degree, 5);
     }
 }
