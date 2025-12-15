@@ -114,7 +114,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         let node = &mut self.nodes[index];
         let left_index = index.saturating_sub(1);
 
-        if node.nodes.len() == 1 {
+        if node.nodes.len() < N.div_ceil(2) {
             self.merge(left_index);
         } else if node.values.is_empty() {
             self.nodes.remove(index);
