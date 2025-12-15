@@ -64,22 +64,24 @@ impl<T: Debug + Ord, const N: usize> BTree<T, N> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use proptest::prelude::*;
 
-    const MAX_ITERATIONS: usize = 1 << 10;
+    type Element = u16;
+    type BTree<const N: usize> = super::BTree<Element, N>;
+
+    const MAX_ITERATIONS: Element = Element::MAX;
 
     #[test]
     fn new() {
-        BTree::<(), 0>::new();
+        BTree::<3>::new();
     }
 
     macro_rules! test_insert_and_remove {
         ($name:ident, $degree:expr) => {
             proptest! {
                 #[test]
-                fn $name(xs: Vec<(usize, bool)>) {
-                    let mut tree = BTree::<usize, $degree>::new();
+                fn $name(xs: Vec<(u16, bool)>) {
+                    let mut tree = BTree::<$degree>::new();
 
                     for (x, remove) in xs {
                         if remove {
@@ -107,9 +109,9 @@ mod tests {
         #[test]
         fn insert_before_degree() {
             const DEGREE: usize = 8;
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
-            for x in 0..DEGREE - 1 {
+            for x in 0..(DEGREE - 1) as Element {
                 assert_eq!(tree.get(&x), None);
 
                 tree.insert(x);
@@ -124,8 +126,8 @@ mod tests {
         fn insert_before_degree_reversely() {
             const DEGREE: usize = 8;
 
-            let mut tree = BTree::<usize, DEGREE>::new();
-            let xs = (0..DEGREE - 1).rev().collect::<Vec<_>>();
+            let mut tree = BTree::<DEGREE>::new();
+            let xs = (0..(DEGREE - 1) as Element).rev().collect::<Vec<_>>();
 
             for (index, x) in xs.iter().copied().enumerate() {
                 assert_eq!(tree.get(&x), None);
@@ -142,7 +144,7 @@ mod tests {
         fn insert_after_degree() {
             const DEGREE: usize = 8;
 
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
             for x in 0..MAX_ITERATIONS {
                 assert_eq!(tree.get(&x), None);
@@ -159,7 +161,7 @@ mod tests {
         fn insert_after_degree_reversely() {
             const DEGREE: usize = 8;
 
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
             for x in (0..MAX_ITERATIONS).rev() {
                 assert_eq!(tree.get(&x), None);
@@ -176,8 +178,8 @@ mod tests {
             ($name:ident, $degree:expr) => {
                 proptest! {
                     #[test]
-                    fn $name(xs: Vec<usize>) {
-                        let mut tree = BTree::<usize, $degree>::new();
+                    fn $name(xs: Vec<Element>) {
+                        let mut tree = BTree::< $degree>::new();
 
                         for (index, x) in xs.iter().copied().enumerate() {
                             assert_eq!(tree.get(&x), None);
@@ -205,13 +207,13 @@ mod tests {
 
         #[test]
         fn remove_before_degree() {
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
-            for x in 0..DEGREE - 1 {
+            for x in 0..(DEGREE - 1) as Element {
                 tree.insert(x);
             }
 
-            for x in 0..DEGREE - 1 {
+            for x in 0..(DEGREE - 1) as Element {
                 assert_eq!(tree.get(&x), Some(&x));
 
                 tree.remove(&x);
@@ -220,7 +222,7 @@ mod tests {
                     assert_eq!(tree.get(&y), None);
                 }
 
-                for y in x + 1..DEGREE - 1 {
+                for y in x + 1..(DEGREE - 1) as Element {
                     assert_eq!(tree.get(&y), Some(&y));
                 }
             }
@@ -228,13 +230,13 @@ mod tests {
 
         #[test]
         fn remove_before_degree_reversely() {
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
-            for x in 0..DEGREE - 1 {
+            for x in 0..(DEGREE - 1) as Element {
                 tree.insert(x);
             }
 
-            for x in (0..DEGREE - 1).rev() {
+            for x in (0..(DEGREE - 1) as Element).rev() {
                 assert_eq!(tree.get(&x), Some(&x));
 
                 tree.remove(&x);
@@ -243,7 +245,7 @@ mod tests {
                     assert_eq!(tree.get(&y), Some(&y));
                 }
 
-                for y in x..DEGREE - 1 {
+                for y in x..(DEGREE - 1) as Element {
                     assert_eq!(tree.get(&y), None);
                 }
             }
@@ -251,7 +253,7 @@ mod tests {
 
         #[test]
         fn remove_after_degree() {
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
             for x in 0..MAX_ITERATIONS {
                 tree.insert(x);
@@ -274,7 +276,7 @@ mod tests {
 
         #[test]
         fn remove_after_degree_reversely() {
-            let mut tree = BTree::<usize, DEGREE>::new();
+            let mut tree = BTree::<DEGREE>::new();
 
             for x in 0..MAX_ITERATIONS {
                 tree.insert(x);
@@ -299,8 +301,8 @@ mod tests {
             ($name:ident, $degree:expr) => {
                 proptest! {
                     #[test]
-                    fn $name(xs: Vec<usize>, ys: Vec<usize>) {
-                        let mut tree = BTree::<usize, $degree>::new();
+                    fn $name(xs: Vec<Element>, ys: Vec<Element>) {
+                        let mut tree = BTree::<$degree>::new();
 
                         for x in xs.iter().copied() {
                             tree.insert(x);
