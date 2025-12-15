@@ -574,10 +574,7 @@ mod tests {
                                     vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
                                     vec![1],
                                 ),
-                                Node::new(
-                                    vec![Node::new(vec![], vec![5]), Node::new(vec![], vec![])],
-                                    vec![6],
-                                ),
+                                Node::new(vec![Node::new(vec![], vec![5])], vec![6]),
                             ],
                             vec![3],
                         ),
