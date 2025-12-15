@@ -167,7 +167,7 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
 
             for node in &self.nodes {
                 debug_assert_eq!(node.validate(), depth);
-                debug_assert!(!self.values.is_empty());
+                debug_assert!(!node.values.is_empty());
             }
 
             for ((left, value), right) in self
