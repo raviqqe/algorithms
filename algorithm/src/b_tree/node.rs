@@ -133,10 +133,18 @@ impl<T: Debug + Ord, const N: usize> Node<T, N> {
         left.values.push(self.values.remove(index));
         left.values.extend(right.values);
 
-        assert_value_count!(left);
-        assert_node_count!(left);
+        if left.is_full() {
+            let (value, node) = left.split();
 
-        // TODO Split the left node.
+            assert_value_count!(node);
+            assert_node_count!(node);
+
+            self.nodes.insert(index + 1, node);
+            self.values.insert(index, value);
+        }
+
+        assert_value_count!(self.nodes[index]);
+        assert_node_count!(self.nodes[index]);
     }
 
     pub fn flatten(&mut self) {
@@ -669,6 +677,31 @@ mod tests {
                     vec![7],
                 )
             );
+
+            node.validate();
+            node.remove(&11);
+
+            assert_eq!(
+                node,
+                Node::new(
+                    vec![
+                        Node::new(
+                            vec![Node::new(vec![], vec![0]), Node::new(vec![], vec![2])],
+                            vec![1],
+                        ),
+                        Node::new(
+                            vec![
+                                Node::new(vec![], vec![5, 6]),
+                                Node::new(vec![], vec![12, 13])
+                            ],
+                            vec![7],
+                        ),
+                    ],
+                    vec![3],
+                )
+            );
+
+            node.validate();
         }
     }
 
