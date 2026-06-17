@@ -13,7 +13,7 @@ fn solve(xs: &[usize]) -> usize {
 
     for i in 0..n {
         let x = xs[i];
-        let l = ys[..i].binary_search(&x).map_or_else(identity, identity);
+        let l = ys[..i].binary_search(&x).unwrap_or_else(identity);
 
         ys[l] = x;
     }
