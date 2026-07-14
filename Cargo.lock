@@ -173,9 +173,9 @@ dependencies = [
 
 [[package]]
 name = "proconio"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c10091de86d0dc939b37a115d74597cbe83af470032a1729d50c98ccee043cb0"
+checksum = "4a5e55af233c003f8ae4b79a006192e516243c965438dbc318e7459b910b0220"
 
 [[package]]
 name = "proptest"
