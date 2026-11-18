@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: bnjbvr/cargo-machete@v0.10.0
+      - uses: bnjbvr/cargo-machete@v0.10.1
   spell_check:
     runs-on: ubuntu-latest
     steps:
