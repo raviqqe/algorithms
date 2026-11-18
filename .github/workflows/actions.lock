@@ -6,7 +6,7 @@ workflows:
     '.github/workflows/dependabot.yaml': []
     '.github/workflows/lint.yaml':
         - 'actions/checkout@v7.0.1'
-        - 'bnjbvr/cargo-machete@v0.10.0'
+        - 'bnjbvr/cargo-machete@v0.10.1'
         - 'raviqqe/markdown-link-check@v1.0.5'
         - 'streetsidesoftware/cspell-action@v9.2.0'
         - 'swatinem/rust-cache@v2.9.3'
@@ -19,9 +19,9 @@ dependencies:
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
-    'bnjbvr/cargo-machete@v0.10.0':
-        ref: 'v0.10.0'
-        commit: 'sha1-a84eadc0a20e522e37a502609e97a7ce30c998ed'
+    'bnjbvr/cargo-machete@v0.10.1':
+        ref: 'v0.10.1'
+        commit: 'sha1-431e75731b681a69a4cfdeb1315b505778bb5c70'
         owner_id: 1180019
         repo_id: 420777439
     'lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411':
